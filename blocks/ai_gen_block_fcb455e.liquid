@@ -1,0 +1,534 @@
+{% doc %}
+  @prompt
+    Създай custom секция “Hero Car Connect” за Online Store 2.0.
+    
+    Елементи:
+    - H1 заглавие: “Интелигентно Управление. Повече Сигурност На Пътя.”
+    - Ред с 3 ползи (редактируеми): “Мигновена Синхронизация”, “Лесно Свързване”, “Карай Безопасно”
+    - Голямо изображение с заоблени ъгли
+    - Подснимков текст (italic): “Щом влезете в автомобила си, целият екран на телефона оживява директно на таблото.”
+    
+    Десктоп:
+    - H1 ~48px, центриран
+    - 3-те ползи в ред, с линии над и под
+    - Изображение 16:9, border-radius 24px
+    - Подтекст центриран
+    
+    Мобилно:
+    - H1 ~28px, центриран
+    - Ползите една под друга, без разкъсване на думи
+    - Изображение 100% ширина, border-radius 16px
+    - Подтекст 14–16px, italic, центриран
+    
+    CSS правила за мобилно:
+    text-transform: none; 
+    letter-spacing: 0; 
+    word-break: keep-all; 
+    overflow-wrap: normal; 
+    hyphens: manual;
+    , Създай custom секция “Hero Car Connect” за Online Store 2.0.
+    
+    Елементи:
+    - H1 заглавие: “Интелигентно Управление. Повече Сигурност На Пътя.”
+    - Ред с 3 кратки ползи (редактируеми заглавия, по подразбиране):
+       • Мигновена Синхронизация
+       • Лесно Свързване
+       • Карай Безопасно
+    - При клик върху всяка полза:
+       • Сменя се главното изображение с друго (редактируемо в секцията).
+       • Сменя се подснимковият текст (редактируем).
+       • Активната полза се визуализира с **bold** шрифт и подчертаване или друг стил, за да е ясно кой таб е отворен.
+    
+    Функционалност:
+    - Работи като табове без презареждане на страницата.
+    - По подразбиране е активна първата полза.
+    
+    Лейаут Десктоп:
+    - H1 центриран (~48px)
+    - Ползите в хоризонтален ред, със стилизиране на активната
+    - Изображение 16:9, border-radius 24px
+    - Подснимков текст центриран
+    
+    Лейаут Мобилно:
+    - H1 ~28px
+    - Ползите подредени вертикално
+    - Активният таб винаги bold
+    - Изображение 100% ширина, border-radius 16px
+    - Подтекст 14–16px, italic
+    
+    CSS за мобилно:
+    text-transform: none; 
+    letter-spacing: 0; 
+    word-break: keep-all; 
+    overflow-wrap: normal; 
+    hyphens: manual;
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-hero-car-connect-{{ ai_gen_id }} {
+    padding: 40px 20px;
+    background-color: {{ block.settings.background_color }};
+    text-align: center;
+  }
+
+  .ai-hero-car-connect__container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-hero-car-connect__title-{{ ai_gen_id }} {
+    font-size: 48px;
+    font-weight: 700;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 40px;
+    line-height: 1.2;
+  }
+
+  .ai-hero-car-connect__benefits-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    margin: 0 0 40px;
+  }
+
+  .ai-hero-car-connect__benefit-{{ ai_gen_id }} {
+    font-size: 18px;
+    font-weight: 500;
+    color: {{ block.settings.benefit_color }};
+    cursor: pointer;
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .ai-hero-car-connect__benefit-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.benefit_hover_color }};
+  }
+
+  .ai-hero-car-connect__benefit-{{ ai_gen_id }}.active {
+    font-weight: 700;
+    color: {{ block.settings.benefit_active_color }};
+    background-color: {{ block.settings.benefit_active_bg }};
+    border-color: {{ block.settings.benefit_active_border }};
+    text-decoration: underline;
+  }
+
+  .ai-hero-car-connect__image-wrapper-{{ ai_gen_id }} {
+    margin: 0 0 30px;
+    border-radius: 24px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background-color: #f4f4f4;
+    position: relative;
+  }
+
+  .ai-hero-car-connect__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .ai-hero-car-connect__image-{{ ai_gen_id }}.active {
+    opacity: 1;
+  }
+
+  .ai-hero-car-connect__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4;
+    position: relative;
+  }
+
+  .ai-hero-car-connect__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 200px;
+    opacity: 0.3;
+  }
+
+  .ai-hero-car-connect__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-hero-car-connect__subtitle-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-style: italic;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-hero-car-connect__subtitle-{{ ai_gen_id }}.active {
+    opacity: 1;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-hero-car-connect-{{ ai_gen_id }} {
+      padding: 30px 15px;
+    }
+
+    .ai-hero-car-connect__title-{{ ai_gen_id }} {
+      font-size: 28px;
+      margin: 0 0 30px;
+      text-transform: none;
+      letter-spacing: 0;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      hyphens: manual;
+    }
+
+    .ai-hero-car-connect__benefits-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 15px;
+      margin: 0 0 30px;
+    }
+
+    .ai-hero-car-connect__benefit-{{ ai_gen_id }} {
+      font-size: 16px;
+      width: 100%;
+      text-align: center;
+      text-transform: none;
+      letter-spacing: 0;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      hyphens: manual;
+    }
+
+    .ai-hero-car-connect__benefit-{{ ai_gen_id }}.active {
+      font-weight: 700;
+    }
+
+    .ai-hero-car-connect__image-wrapper-{{ ai_gen_id }} {
+      border-radius: 16px;
+      margin: 0 0 20px;
+    }
+
+    .ai-hero-car-connect__subtitle-{{ ai_gen_id }} {
+      font-size: 14px;
+      text-transform: none;
+      letter-spacing: 0;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      hyphens: manual;
+    }
+  }
+{% endstyle %}
+
+<hero-car-connect-{{ ai_gen_id }} class="ai-hero-car-connect-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-hero-car-connect__container-{{ ai_gen_id }}">
+    {% if block.settings.title != blank %}
+      <h1 class="ai-hero-car-connect__title-{{ ai_gen_id }}">
+        {{ block.settings.title }}
+      </h1>
+    {% endif %}
+
+    <div class="ai-hero-car-connect__benefits-{{ ai_gen_id }}">
+      {% if block.settings.benefit_1 != blank %}
+        <div 
+          class="ai-hero-car-connect__benefit-{{ ai_gen_id }} active" 
+          data-tab="1"
+        >
+          {{ block.settings.benefit_1 }}
+        </div>
+      {% endif %}
+      {% if block.settings.benefit_2 != blank %}
+        <div 
+          class="ai-hero-car-connect__benefit-{{ ai_gen_id }}" 
+          data-tab="2"
+        >
+          {{ block.settings.benefit_2 }}
+        </div>
+      {% endif %}
+      {% if block.settings.benefit_3 != blank %}
+        <div 
+          class="ai-hero-car-connect__benefit-{{ ai_gen_id }}" 
+          data-tab="3"
+        >
+          {{ block.settings.benefit_3 }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-hero-car-connect__image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.image_1 %}
+        <img
+          src="{{ block.settings.image_1 | image_url: width: 1200 }}"
+          alt="{{ block.settings.image_1.alt | escape }}"
+          class="ai-hero-car-connect__image-{{ ai_gen_id }} active"
+          data-image="1"
+          loading="lazy"
+          width="{{ block.settings.image_1.width }}"
+          height="{{ block.settings.image_1.height }}"
+        >
+      {% endif %}
+      {% if block.settings.image_2 %}
+        <img
+          src="{{ block.settings.image_2 | image_url: width: 1200 }}"
+          alt="{{ block.settings.image_2.alt | escape }}"
+          class="ai-hero-car-connect__image-{{ ai_gen_id }}"
+          data-image="2"
+          loading="lazy"
+          width="{{ block.settings.image_2.width }}"
+          height="{{ block.settings.image_2.height }}"
+        >
+      {% endif %}
+      {% if block.settings.image_3 %}
+        <img
+          src="{{ block.settings.image_3 | image_url: width: 1200 }}"
+          alt="{{ block.settings.image_3.alt | escape }}"
+          class="ai-hero-car-connect__image-{{ ai_gen_id }}"
+          data-image="3"
+          loading="lazy"
+          width="{{ block.settings.image_3.width }}"
+          height="{{ block.settings.image_3.height }}"
+        >
+      {% endif %}
+      
+      {% unless block.settings.image_1 or block.settings.image_2 or block.settings.image_3 %}
+        <div class="ai-hero-car-connect__image-placeholder-{{ ai_gen_id }}">
+          {{ 'hero-apparel-1' | placeholder_svg_tag }}
+          <div class="ai-hero-car-connect__empty-state-{{ ai_gen_id }}">
+            Добавете изображения за всяка полза
+          </div>
+        </div>
+      {% endunless %}
+    </div>
+
+    <div class="ai-hero-car-connect__subtitles-{{ ai_gen_id }}">
+      {% if block.settings.subtitle_1 != blank %}
+        <p class="ai-hero-car-connect__subtitle-{{ ai_gen_id }} active" data-subtitle="1">
+          {{ block.settings.subtitle_1 }}
+        </p>
+      {% endif %}
+      {% if block.settings.subtitle_2 != blank %}
+        <p class="ai-hero-car-connect__subtitle-{{ ai_gen_id }}" data-subtitle="2">
+          {{ block.settings.subtitle_2 }}
+        </p>
+      {% endif %}
+      {% if block.settings.subtitle_3 != blank %}
+        <p class="ai-hero-car-connect__subtitle-{{ ai_gen_id }}" data-subtitle="3">
+          {{ block.settings.subtitle_3 }}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</hero-car-connect-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HeroCarConnect{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.benefits = this.querySelectorAll('.ai-hero-car-connect__benefit-{{ ai_gen_id }}');
+        this.images = this.querySelectorAll('.ai-hero-car-connect__image-{{ ai_gen_id }}');
+        this.subtitles = this.querySelectorAll('.ai-hero-car-connect__subtitle-{{ ai_gen_id }}');
+        
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.benefits.forEach((benefit) => {
+          benefit.addEventListener('click', () => {
+            const tabNumber = benefit.getAttribute('data-tab');
+            this.switchTab(tabNumber);
+          });
+        });
+      }
+
+      switchTab(tabNumber) {
+        this.benefits.forEach((benefit) => {
+          benefit.classList.remove('active');
+        });
+        
+        this.images.forEach((image) => {
+          image.classList.remove('active');
+        });
+        
+        this.subtitles.forEach((subtitle) => {
+          subtitle.classList.remove('active');
+        });
+
+        const activeBenefit = this.querySelector(`[data-tab="${tabNumber}"]`);
+        const activeImage = this.querySelector(`[data-image="${tabNumber}"]`);
+        const activeSubtitle = this.querySelector(`[data-subtitle="${tabNumber}"]`);
+
+        if (activeBenefit) {
+          activeBenefit.classList.add('active');
+        }
+        
+        if (activeImage) {
+          activeImage.classList.add('active');
+        }
+        
+        if (activeSubtitle) {
+          activeSubtitle.classList.add('active');
+        }
+      }
+    }
+
+    customElements.define('hero-car-connect-{{ ai_gen_id }}', HeroCarConnect{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hero Car Connect",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Заглавие"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Главно заглавие",
+      "default": "Интелигентно Управление. Повече Сигурност На Пътя."
+    },
+    {
+      "type": "header",
+      "content": "Първа полза"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1",
+      "label": "Заглавие",
+      "default": "Мигновена Синхронизация"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Изображение"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_1",
+      "label": "Подзаглавие",
+      "default": "Щом влезете в автомобила си, целият екран на телефона оживява директно на таблото."
+    },
+    {
+      "type": "header",
+      "content": "Втора полза"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2",
+      "label": "Заглавие",
+      "default": "Лесно Свързване"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Изображение"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_2",
+      "label": "Подзаглавие",
+      "default": "Свържете телефона си за секунди с безжична или кабелна връзка."
+    },
+    {
+      "type": "header",
+      "content": "Трета полза"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3",
+      "label": "Заглавие",
+      "default": "Карай Безопасно"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Изображение"
+    },
+    {
+      "type": "text",
+      "id": "subtitle_3",
+      "label": "Подзаглавие",
+      "default": "Управлявайте всичко с гласови команди, без да отделяте поглед от пътя."
+    },
+    {
+      "type": "header",
+      "content": "Стил"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Фон",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Цвят на заглавието",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "benefit_color",
+      "label": "Цвят на ползите",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "benefit_hover_color",
+      "label": "Фон при hover",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "benefit_active_color",
+      "label": "Цвят на активната полза",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "benefit_active_bg",
+      "label": "Фон на активната полза",
+      "default": "#f0c417"
+    },
+    {
+      "type": "color",
+      "id": "benefit_active_border",
+      "label": "Граница на активната полза",
+      "default": "#f0c417"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Цвят на подзаглавието",
+      "default": "#666666"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Car Connect"
+    }
+  ]
+}
+{% endschema %}

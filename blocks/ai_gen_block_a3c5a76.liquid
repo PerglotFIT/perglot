@@ -1,0 +1,531 @@
+{% doc %}
+  @prompt
+    Create a new section with two columns:
+    
+    Left column: a list with icons and text:
+    
+    📺 Over 18,000 TV channels from all around the world
+    
+    🎬 Movies and series from Netflix, Amazon Prime, HBO and more
+    
+    🔊 Multi-language audio: Italian, French, Polish, Romanian, English, German, Bulgarian, Turkish, and many others
+    
+    😀 Kids channels – Cartoon Network, Baby TV, Disney and more
+    
+    🏅 HD / Full HD / 4K quality
+    
+    ⏰ 24/7 uninterrupted access
+    
+    🌍 Access to national and international channels: not only hundreds of free ones, but also premium (paid) TV channels that usually require a separate subscription
+    
+    Each row should have an icon on the left and text on the right (make keywords bold).
+    
+    Use dark blue color (#0C1B3A) for highlights.
+    
+    Arrange the text vertically with enough spacing between rows.
+    
+    Right column: an image (example: a TV screen showing a channel list).
+    
+    Style: white background, balanced padding, centered layout, clean and modern design.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-features-section-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding }}px 20px;
+  }
+
+  .ai-features-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ block.settings.column_gap }}px;
+    align-items: center;
+  }
+
+  .ai-features-list-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.row_spacing }}px;
+  }
+
+  .ai-features-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: flex-start;
+    gap: {{ block.settings.icon_text_gap }}px;
+  }
+
+  .ai-features-icon-{{ ai_gen_id }} {
+    font-size: {{ block.settings.icon_size }}px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .ai-features-text-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+
+  .ai-features-text-{{ ai_gen_id }} strong {
+    color: {{ block.settings.highlight_color }};
+    font-weight: 600;
+  }
+
+  .ai-features-image-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ai-features-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-features-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 16/10;
+    background-color: #f4f4f4;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-features-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-features-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-features-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.mobile_gap }}px;
+    }
+
+    .ai-features-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.mobile_padding }}px 20px;
+    }
+
+    .ai-features-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_text_size }}px;
+    }
+
+    .ai-features-icon-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_icon_size }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-features-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-features-container-{{ ai_gen_id }}">
+    <div class="ai-features-list-{{ ai_gen_id }}">
+      {% if block.settings.feature_1_enabled %}
+        <div class="ai-features-item-{{ ai_gen_id }}">
+          <div class="ai-features-icon-{{ ai_gen_id }}">{{ block.settings.feature_1_icon }}</div>
+          <div class="ai-features-text-{{ ai_gen_id }}">{{ block.settings.feature_1_text }}</div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.feature_2_enabled %}
+        <div class="ai-features-item-{{ ai_gen_id }}">
+          <div class="ai-features-icon-{{ ai_gen_id }}">{{ block.settings.feature_2_icon }}</div>
+          <div class="ai-features-text-{{ ai_gen_id }}">{{ block.settings.feature_2_text }}</div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.feature_3_enabled %}
+        <div class="ai-features-item-{{ ai_gen_id }}">
+          <div class="ai-features-icon-{{ ai_gen_id }}">{{ block.settings.feature_3_icon }}</div>
+          <div class="ai-features-text-{{ ai_gen_id }}">{{ block.settings.feature_3_text }}</div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.feature_4_enabled %}
+        <div class="ai-features-item-{{ ai_gen_id }}">
+          <div class="ai-features-icon-{{ ai_gen_id }}">{{ block.settings.feature_4_icon }}</div>
+          <div class="ai-features-text-{{ ai_gen_id }}">{{ block.settings.feature_4_text }}</div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.feature_5_enabled %}
+        <div class="ai-features-item-{{ ai_gen_id }}">
+          <div class="ai-features-icon-{{ ai_gen_id }}">{{ block.settings.feature_5_icon }}</div>
+          <div class="ai-features-text-{{ ai_gen_id }}">{{ block.settings.feature_5_text }}</div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.feature_6_enabled %}
+        <div class="ai-features-item-{{ ai_gen_id }}">
+          <div class="ai-features-icon-{{ ai_gen_id }}">{{ block.settings.feature_6_icon }}</div>
+          <div class="ai-features-text-{{ ai_gen_id }}">{{ block.settings.feature_6_text }}</div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.feature_7_enabled %}
+        <div class="ai-features-item-{{ ai_gen_id }}">
+          <div class="ai-features-icon-{{ ai_gen_id }}">{{ block.settings.feature_7_icon }}</div>
+          <div class="ai-features-text-{{ ai_gen_id }}">{{ block.settings.feature_7_text }}</div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-features-image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.feature_image %}
+        <img
+          src="{{ block.settings.feature_image | image_url: width: 800 }}"
+          alt="{{ block.settings.feature_image.alt | escape }}"
+          class="ai-features-image-{{ ai_gen_id }}"
+          loading="lazy"
+          width="{{ block.settings.feature_image.width }}"
+          height="{{ block.settings.feature_image.height }}"
+        >
+      {% else %}
+        <div class="ai-features-image-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+          <div class="ai-features-empty-state-{{ ai_gen_id }}">
+            Add an image to showcase your features
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Features with image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Column gap",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "min": 20,
+      "max": 60,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile gap",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Features styling"
+    },
+    {
+      "type": "range",
+      "id": "row_spacing",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Space between features",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "icon_text_gap",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon to text spacing",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "min": 16,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile icon size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_size",
+      "min": 14,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile text size",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlight color",
+      "default": "#0C1B3A"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "feature_image",
+      "label": "Feature image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Feature 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_1_enabled",
+      "label": "Enable feature 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "feature_1_icon",
+      "label": "Icon",
+      "default": "📺"
+    },
+    {
+      "type": "richtext",
+      "id": "feature_1_text",
+      "label": "Text",
+      "default": "<p>Over <strong>18,000 TV channels</strong> from all around the world</p>"
+    },
+    {
+      "type": "header",
+      "content": "Feature 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_2_enabled",
+      "label": "Enable feature 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "feature_2_icon",
+      "label": "Icon",
+      "default": "🎬"
+    },
+    {
+      "type": "richtext",
+      "id": "feature_2_text",
+      "label": "Text",
+      "default": "<p>Movies and series from <strong>Netflix, Amazon Prime, HBO</strong> and more</p>"
+    },
+    {
+      "type": "header",
+      "content": "Feature 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_3_enabled",
+      "label": "Enable feature 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "feature_3_icon",
+      "label": "Icon",
+      "default": "🔊"
+    },
+    {
+      "type": "richtext",
+      "id": "feature_3_text",
+      "label": "Text",
+      "default": "<p><strong>Multi-language audio:</strong> Italian, French, Polish, Romanian, English, German, Bulgarian, Turkish, and many others</p>"
+    },
+    {
+      "type": "header",
+      "content": "Feature 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_4_enabled",
+      "label": "Enable feature 4",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "feature_4_icon",
+      "label": "Icon",
+      "default": "😀"
+    },
+    {
+      "type": "richtext",
+      "id": "feature_4_text",
+      "label": "Text",
+      "default": "<p><strong>Kids channels</strong> – Cartoon Network, Baby TV, Disney and more</p>"
+    },
+    {
+      "type": "header",
+      "content": "Feature 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_5_enabled",
+      "label": "Enable feature 5",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "feature_5_icon",
+      "label": "Icon",
+      "default": "🏅"
+    },
+    {
+      "type": "richtext",
+      "id": "feature_5_text",
+      "label": "Text",
+      "default": "<p><strong>HD / Full HD / 4K</strong> quality</p>"
+    },
+    {
+      "type": "header",
+      "content": "Feature 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_6_enabled",
+      "label": "Enable feature 6",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "feature_6_icon",
+      "label": "Icon",
+      "default": "⏰"
+    },
+    {
+      "type": "richtext",
+      "id": "feature_6_text",
+      "label": "Text",
+      "default": "<p><strong>24/7 uninterrupted</strong> access</p>"
+    },
+    {
+      "type": "header",
+      "content": "Feature 7"
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_7_enabled",
+      "label": "Enable feature 7",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "feature_7_icon",
+      "label": "Icon",
+      "default": "🌍"
+    },
+    {
+      "type": "richtext",
+      "id": "feature_7_text",
+      "label": "Text",
+      "default": "<p>Access to <strong>national and international channels:</strong> not only hundreds of free ones, but also premium (paid) TV channels that usually require a separate subscription</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features with image"
+    }
+  ]
+}
+{% endschema %}

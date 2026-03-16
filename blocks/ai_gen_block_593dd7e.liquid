@@ -1,0 +1,614 @@
+{% doc %}
+  @prompt
+    Create a Shopify section called “How it Works” that explains the steps to activate IPTV.  
+    
+    **Layout options:**  
+    - Display steps horizontally in a row (desktop) and stacked (mobile).  
+    - Allow toggle to show as a carousel/slider.  
+    - Each step is a card with an icon, a step number, title, and description.  
+    
+    **Schema requirements:**  
+    - Global controls: background color, font family, font sizes (default 14px body, 22px heading), heading color, text color, card background color, border radius, enable/disable carousel.  
+    - Heading group: `title` (text), `subtitle` (richtext).  
+    - Repeatable block type = `step_item` with fields:  
+      - `icon` (image picker)  
+      - `step_number` (number)  
+      - `title` (text)  
+      - `description` (text)  
+    
+    Default items:  
+    1) Purchase a plan  
+    2) Receive activation code + email instructions  
+    3) Enter the code in the app and start watching
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-how-it-works-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: 60px 0;
+    font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+    font-weight: {{ block.settings.font_family.weight }};
+  }
+
+  .ai-how-it-works-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-how-it-works-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .ai-how-it-works-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_font_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 16px 0;
+    font-weight: 700;
+  }
+
+  .ai-how-it-works-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_font_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .ai-how-it-works-steps-{{ ai_gen_id }} {
+    display: flex;
+    gap: 30px;
+    align-items: stretch;
+  }
+
+  .ai-how-it-works-steps-{{ ai_gen_id }}.carousel-enabled {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-how-it-works-carousel-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.3s ease;
+    width: 100%;
+  }
+
+  .ai-how-it-works-step-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: 40px 30px;
+    text-align: center;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-how-it-works-steps-{{ ai_gen_id }}.carousel-enabled .ai-how-it-works-step-{{ ai_gen_id }} {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .ai-how-it-works-step-icon-{{ ai_gen_id }} {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    background-color: {{ block.settings.heading_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-how-it-works-step-icon-{{ ai_gen_id }} img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+
+  .ai-how-it-works-step-number-{{ ai_gen_id }} {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: {{ block.settings.heading_color }};
+    color: {{ block.settings.card_background_color }};
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    border: 3px solid {{ block.settings.card_background_color }};
+  }
+
+  .ai-how-it-works-step-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_font_size | times: 0.8 }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 16px 0;
+    font-weight: 600;
+  }
+
+  .ai-how-it-works-step-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_font_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .ai-how-it-works-carousel-controls-{{ ai_gen_id }} {
+    display: none;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .ai-how-it-works-carousel-btn-{{ ai_gen_id }} {
+    background-color: {{ block.settings.heading_color }};
+    color: {{ block.settings.card_background_color }};
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-how-it-works-carousel-btn-{{ ai_gen_id }}:hover {
+    opacity: 0.8;
+  }
+
+  .ai-how-it-works-carousel-btn-{{ ai_gen_id }}:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ai-how-it-works-carousel-dots-{{ ai_gen_id }} {
+    display: none;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .ai-how-it-works-carousel-dot-{{ ai_gen_id }} {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba({{ block.settings.heading_color | color_extract: 'red' }}, {{ block.settings.heading_color | color_extract: 'green' }}, {{ block.settings.heading_color | color_extract: 'blue' }}, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-how-it-works-carousel-dot-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.heading_color }};
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-how-it-works-{{ ai_gen_id }} {
+      padding: 40px 0;
+    }
+
+    .ai-how-it-works-header-{{ ai_gen_id }} {
+      margin-bottom: 40px;
+    }
+
+    .ai-how-it-works-steps-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ai-how-it-works-steps-{{ ai_gen_id }}.carousel-enabled {
+      flex-direction: row;
+    }
+
+    .ai-how-it-works-step-{{ ai_gen_id }} {
+      padding: 30px 20px;
+    }
+
+    .ai-how-it-works-carousel-controls-{{ ai_gen_id }} {
+      display: flex;
+    }
+
+    .ai-how-it-works-carousel-dots-{{ ai_gen_id }} {
+      display: flex;
+    }
+  }
+
+  @media screen and (min-width: 769px) {
+    .ai-how-it-works-steps-{{ ai_gen_id }}.carousel-enabled .ai-how-it-works-carousel-controls-{{ ai_gen_id }} {
+      display: flex;
+    }
+
+    .ai-how-it-works-steps-{{ ai_gen_id }}.carousel-enabled .ai-how-it-works-carousel-dots-{{ ai_gen_id }} {
+      display: flex;
+    }
+  }
+{% endstyle %}
+
+<how-it-works-{{ ai_gen_id }}
+  class="ai-how-it-works-{{ ai_gen_id }}"
+  data-carousel-enabled="{{ block.settings.enable_carousel }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-how-it-works-container-{{ ai_gen_id }}">
+    <div class="ai-how-it-works-header-{{ ai_gen_id }}">
+      {% if block.settings.title != blank %}
+        <h2 class="ai-how-it-works-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+      {% endif %}
+      {% if block.settings.subtitle != blank %}
+        <div class="ai-how-it-works-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</div>
+      {% endif %}
+    </div>
+
+    <div class="ai-how-it-works-steps-{{ ai_gen_id }} {% if block.settings.enable_carousel %}carousel-enabled{% endif %}">
+      {% if block.settings.enable_carousel %}
+        <div class="ai-how-it-works-carousel-wrapper-{{ ai_gen_id }}">
+      {% endif %}
+
+      <div class="ai-how-it-works-step-{{ ai_gen_id }}">
+        <div class="ai-how-it-works-step-icon-{{ ai_gen_id }}">
+          {% if block.settings.step_1_icon %}
+            <img
+              src="{{ block.settings.step_1_icon | image_url: width: 100 }}"
+              alt="{{ block.settings.step_1_title | escape }}"
+              loading="lazy"
+              width="50"
+              height="50"
+            >
+          {% else %}
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          {% endif %}
+          <div class="ai-how-it-works-step-number-{{ ai_gen_id }}">
+            {{ block.settings.step_1_number }}
+          </div>
+        </div>
+        <h3 class="ai-how-it-works-step-title-{{ ai_gen_id }}">{{ block.settings.step_1_title }}</h3>
+        <p class="ai-how-it-works-step-description-{{ ai_gen_id }}">{{ block.settings.step_1_description }}</p>
+      </div>
+
+      <div class="ai-how-it-works-step-{{ ai_gen_id }}">
+        <div class="ai-how-it-works-step-icon-{{ ai_gen_id }}">
+          {% if block.settings.step_2_icon %}
+            <img
+              src="{{ block.settings.step_2_icon | image_url: width: 100 }}"
+              alt="{{ block.settings.step_2_title | escape }}"
+              loading="lazy"
+              width="50"
+              height="50"
+            >
+          {% else %}
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          {% endif %}
+          <div class="ai-how-it-works-step-number-{{ ai_gen_id }}">
+            {{ block.settings.step_2_number }}
+          </div>
+        </div>
+        <h3 class="ai-how-it-works-step-title-{{ ai_gen_id }}">{{ block.settings.step_2_title }}</h3>
+        <p class="ai-how-it-works-step-description-{{ ai_gen_id }}">{{ block.settings.step_2_description }}</p>
+      </div>
+
+      <div class="ai-how-it-works-step-{{ ai_gen_id }}">
+        <div class="ai-how-it-works-step-icon-{{ ai_gen_id }}">
+          {% if block.settings.step_3_icon %}
+            <img
+              src="{{ block.settings.step_3_icon | image_url: width: 100 }}"
+              alt="{{ block.settings.step_3_title | escape }}"
+              loading="lazy"
+              width="50"
+              height="50"
+            >
+          {% else %}
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5,3 19,12 5,21 5,3"></polygon>
+            </svg>
+          {% endif %}
+          <div class="ai-how-it-works-step-number-{{ ai_gen_id }}">
+            {{ block.settings.step_3_number }}
+          </div>
+        </div>
+        <h3 class="ai-how-it-works-step-title-{{ ai_gen_id }}">{{ block.settings.step_3_title }}</h3>
+        <p class="ai-how-it-works-step-description-{{ ai_gen_id }}">{{ block.settings.step_3_description }}</p>
+      </div>
+
+      {% if block.settings.enable_carousel %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if block.settings.enable_carousel %}
+      <div class="ai-how-it-works-carousel-controls-{{ ai_gen_id }}">
+        <button class="ai-how-it-works-carousel-btn-{{ ai_gen_id }} ai-how-it-works-prev-{{ ai_gen_id }}" aria-label="Previous step">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <button class="ai-how-it-works-carousel-btn-{{ ai_gen_id }} ai-how-it-works-next-{{ ai_gen_id }}" aria-label="Next step">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-how-it-works-carousel-dots-{{ ai_gen_id }}">
+        <div class="ai-how-it-works-carousel-dot-{{ ai_gen_id }} active" data-slide="0"></div>
+        <div class="ai-how-it-works-carousel-dot-{{ ai_gen_id }}" data-slide="1"></div>
+        <div class="ai-how-it-works-carousel-dot-{{ ai_gen_id }}" data-slide="2"></div>
+      </div>
+    {% endif %}
+  </div>
+</how-it-works-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HowItWorks{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.totalSlides = 3;
+      }
+
+      connectedCallback() {
+        this.carouselEnabled = this.dataset.carouselEnabled === 'true';
+        
+        if (this.carouselEnabled) {
+          this.initCarousel();
+        }
+      }
+
+      initCarousel() {
+        this.wrapper = this.querySelector('.ai-how-it-works-carousel-wrapper-{{ ai_gen_id }}');
+        this.prevBtn = this.querySelector('.ai-how-it-works-prev-{{ ai_gen_id }}');
+        this.nextBtn = this.querySelector('.ai-how-it-works-next-{{ ai_gen_id }}');
+        this.dots = this.querySelectorAll('.ai-how-it-works-carousel-dot-{{ ai_gen_id }}');
+
+        if (this.totalSlides <= 1) return;
+
+        this.prevBtn.addEventListener('click', () => this.prevSlide());
+        this.nextBtn.addEventListener('click', () => this.nextSlide());
+
+        this.dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => this.goToSlide(index));
+        });
+
+        this.updateCarousel();
+      }
+
+      prevSlide() {
+        this.currentSlide = this.currentSlide > 0 ? this.currentSlide - 1 : this.totalSlides - 1;
+        this.updateCarousel();
+      }
+
+      nextSlide() {
+        this.currentSlide = this.currentSlide < this.totalSlides - 1 ? this.currentSlide + 1 : 0;
+        this.updateCarousel();
+      }
+
+      goToSlide(index) {
+        this.currentSlide = index;
+        this.updateCarousel();
+      }
+
+      updateCarousel() {
+        if (!this.wrapper) return;
+
+        const translateX = -this.currentSlide * (100 / this.totalSlides);
+        this.wrapper.style.transform = `translateX(${translateX}%)`;
+
+        this.dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === this.currentSlide);
+        });
+
+        this.prevBtn.disabled = false;
+        this.nextBtn.disabled = false;
+      }
+    }
+
+    customElements.define('how-it-works-{{ ai_gen_id }}', HowItWorks{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "How it Works",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "How it Works"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "<p>Follow these simple steps to activate your IPTV service</p>"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_carousel",
+      "label": "Enable carousel/slider",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font family",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading font size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "body_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Body font size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Step 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "step_1_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "number",
+      "id": "step_1_number",
+      "label": "Step number",
+      "default": 1
+    },
+    {
+      "type": "text",
+      "id": "step_1_title",
+      "label": "Title",
+      "default": "Purchase a plan"
+    },
+    {
+      "type": "textarea",
+      "id": "step_1_description",
+      "label": "Description",
+      "default": "Choose the IPTV plan that best fits your needs and complete your purchase"
+    },
+    {
+      "type": "header",
+      "content": "Step 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "step_2_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "number",
+      "id": "step_2_number",
+      "label": "Step number",
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "step_2_title",
+      "label": "Title",
+      "default": "Receive activation code"
+    },
+    {
+      "type": "textarea",
+      "id": "step_2_description",
+      "label": "Description",
+      "default": "Get your activation code and detailed email instructions within minutes of purchase"
+    },
+    {
+      "type": "header",
+      "content": "Step 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "step_3_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "number",
+      "id": "step_3_number",
+      "label": "Step number",
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "step_3_title",
+      "label": "Title",
+      "default": "Enter code and start watching"
+    },
+    {
+      "type": "textarea",
+      "id": "step_3_description",
+      "label": "Description",
+      "default": "Input the activation code in your IPTV app and enjoy unlimited streaming"
+    }
+  ],
+  "presets": [
+    {
+      "name": "How it Works"
+    }
+  ]
+}
+{% endschema %}

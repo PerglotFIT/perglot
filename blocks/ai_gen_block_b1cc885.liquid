@@ -1,0 +1,572 @@
+{% doc %}
+  @prompt
+    Create an Online Store 2.0 section in Liquid called app-download-cards for a page with direct app download buttons.
+    Design and behavior requirements:
+    
+    Layout: 2 rows, 1 card per row (total 2 cards). Container max-width 1200px, centered, with spacing 24–32px between cards.
+    
+    Each card should include:
+    
+    a large main image (16:9 ratio, object-fit: cover, rounded corners, soft shadow, hover-lift effect),
+    
+    a title (text field),
+    
+    a description (richtext field),
+    
+    a badge/icon image with a link (e.g. App Store / Google Play), clickable and opening the link in a new tab (target="_blank" rel="noopener").
+    
+    Cards must look clean and modern, using padding and spacing for readability.
+    
+    The section must be fully responsive:
+    
+    On desktop → 2 rows with large cards.
+    
+    On mobile → cards should stack nicely, images should stay full-width and scale down properly.
+    
+    Allow merchants to customize title, description, image, and link directly from the section settings in the theme editor., Create an Online Store 2.0 section in Liquid called app-download-cards.
+    Design and behavior requirements:
+    
+    Layout: grid with 3 cards per row on desktop, stacking to 1 card per row on mobile and 2 per row on tablet.
+    
+    The section must allow the merchant to add unlimited cards dynamically from the theme editor.
+    
+    Each card should include:
+    
+    a large main image (16:9 ratio, object-fit: cover, rounded corners, soft shadow, hover-lift effect),
+    
+    a title (text field),
+    
+    a description (richtext field),
+    
+    a badge/icon image with a link (e.g. App Store / Google Play), clickable and opening the link in a new tab (target="_blank" rel="noopener").
+    
+    Cards must look clean and modern, with enough padding, spacing, and alignment for readability.
+    
+    The grid must be fully responsive:
+    
+    Desktop → 3 cards per row.
+    
+    Tablet → 2 cards per row.
+    
+    Mobile → 1 card per row (full width).
+    
+    Allow merchants to customize title, description, main image, and link directly from the section settings in the theme editor.
+    
+    The section should have a maximum width of 1200px, centered, with 24–32px spacing between cards.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-app-download-grid-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-app-download-grid__container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .ai-app-download-card-{{ ai_gen_id }} {
+    background: {{ settings.background }};
+    border-radius: {{ settings.block_border_radius }}px;
+    overflow: hidden;
+    box-shadow: 
+      {{ settings.block_shadow_horizontal_offset }}px 
+      {{ settings.block_shadow_vertical_offset }}px 
+      {{ settings.block_shadow_blur }}px 
+      rgba(0, 0, 0, {{ settings.block_shadow_opacity | divided_by: 100.0 }});
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-app-download-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      {{ settings.block_shadow_horizontal_offset }}px 
+      {{ settings.block_shadow_vertical_offset | plus: 8 }}px 
+      {{ settings.block_shadow_blur | plus: 20 }}px 
+      rgba(0, 0, 0, {{ settings.block_shadow_opacity | divided_by: 100.0 | times: 1.5 }});
+  }
+
+  .ai-app-download-card__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .ai-app-download-card__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-app-download-card-{{ ai_gen_id }}:hover .ai-app-download-card__image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+  }
+
+  .ai-app-download-card__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-app-download-card__image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-app-download-card__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: {{ settings.input_border_radius }}px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-app-download-card__content-{{ ai_gen_id }} {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-grow: 1;
+  }
+
+  .ai-app-download-card__title-{{ ai_gen_id }} {
+    font-family: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
+    font-weight: {{ settings.heading_font.weight }};
+    font-style: {{ settings.heading_font.style }};
+    color: {{ settings.text_color }};
+    font-size: 22px;
+    line-height: 1.3;
+    margin: 0;
+    letter-spacing: {{ settings.heading_letter_spacing }}%;
+    text-transform: {{ settings.heading_text_transform }};
+  }
+
+  .ai-app-download-card__description-{{ ai_gen_id }} {
+    font-family: {{ settings.text_font.family }}, {{ settings.text_font.fallback_families }};
+    font-weight: {{ settings.text_font.weight }};
+    font-style: {{ settings.text_font.style }};
+    color: {{ settings.text_color }};
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    letter-spacing: {{ settings.text_font_letter_spacing }}%;
+    flex-grow: 1;
+  }
+
+  .ai-app-download-card__description-{{ ai_gen_id }} p {
+    margin: 0 0 12px;
+  }
+
+  .ai-app-download-card__description-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-app-download-card__badge-link-{{ ai_gen_id }} {
+    display: inline-block;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border-radius: {{ settings.input_border_radius }}px;
+    overflow: hidden;
+    margin-top: auto;
+  }
+
+  .ai-app-download-card__badge-link-{{ ai_gen_id }}:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+
+  .ai-app-download-card__badge-image-{{ ai_gen_id }} {
+    display: block;
+    max-width: 140px;
+    height: auto;
+    border-radius: {{ settings.input_border_radius }}px;
+  }
+
+  .ai-app-download-card__badge-placeholder-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: {{ settings.primary_button_background }};
+    color: {{ settings.primary_button_text_color }};
+    border-radius: {{ settings.button_border_radius }}px;
+    text-decoration: none;
+    font-family: {{ settings.text_font.family }}, {{ settings.text_font.fallback_families }};
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s ease;
+  }
+
+  .ai-app-download-card__badge-placeholder-{{ ai_gen_id }}:hover {
+    background-color: {{ settings.secondary_button_background }};
+    color: {{ settings.secondary_button_text_color }};
+    transform: translateY(-2px);
+  }
+
+  @media screen and (max-width: 990px) {
+    .ai-app-download-grid__container-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-app-download-grid-{{ ai_gen_id }} {
+      padding: 0 16px;
+    }
+
+    .ai-app-download-grid__container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .ai-app-download-card__content-{{ ai_gen_id }} {
+      padding: 20px;
+      gap: 12px;
+    }
+
+    .ai-app-download-card__title-{{ ai_gen_id }} {
+      font-size: 20px;
+    }
+
+    .ai-app-download-card__description-{{ ai_gen_id }} {
+      font-size: 14px;
+    }
+
+    .ai-app-download-card__badge-image-{{ ai_gen_id }} {
+      max-width: 130px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-app-download-grid-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-app-download-grid__container-{{ ai_gen_id }}">
+    {% for i in (1..6) %}
+      {% liquid
+        assign title_key = 'card_' | append: i | append: '_title'
+        assign description_key = 'card_' | append: i | append: '_description'
+        assign image_key = 'card_' | append: i | append: '_image'
+        assign badge_image_key = 'card_' | append: i | append: '_badge_image'
+        assign link_key = 'card_' | append: i | append: '_link'
+        assign enabled_key = 'card_' | append: i | append: '_enabled'
+
+        assign card_enabled = block.settings[enabled_key]
+        assign card_title = block.settings[title_key]
+        assign card_description = block.settings[description_key]
+        assign card_image = block.settings[image_key]
+        assign card_badge_image = block.settings[badge_image_key]
+        assign card_link = block.settings[link_key]
+      %}
+
+      {% if card_enabled %}
+        <div class="ai-app-download-card-{{ ai_gen_id }}">
+          <div class="ai-app-download-card__image-wrapper-{{ ai_gen_id }}">
+            {% if card_image %}
+              <img
+                src="{{ card_image | image_url: width: 600 }}"
+                alt="{{ card_image.alt | escape }}"
+                class="ai-app-download-card__image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="{{ card_image.width }}"
+                height="{{ card_image.height }}"
+              >
+            {% else %}
+              <div class="ai-app-download-card__image-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+                <div class="ai-app-download-card__empty-state-{{ ai_gen_id }}">
+                  Add an image for card {{ i }}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ai-app-download-card__content-{{ ai_gen_id }}">
+            {% if card_title != blank %}
+              <h3 class="ai-app-download-card__title-{{ ai_gen_id }}">{{ card_title }}</h3>
+            {% endif %}
+
+            {% if card_description != blank %}
+              <div class="ai-app-download-card__description-{{ ai_gen_id }}">{{ card_description }}</div>
+            {% endif %}
+
+            {% if card_link != blank %}
+              <a
+                href="{{ card_link }}"
+                class="ai-app-download-card__badge-link-{{ ai_gen_id }}"
+                target="_blank"
+                rel="noopener"
+                aria-label="Download {{ card_title | default: 'app' }}"
+              >
+                {% if card_badge_image %}
+                  <img
+                    src="{{ card_badge_image | image_url: width: 280 }}"
+                    alt="{{ card_badge_image.alt | escape }}"
+                    class="ai-app-download-card__badge-image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="{{ card_badge_image.width }}"
+                    height="{{ card_badge_image.height }}"
+                  >
+                {% else %}
+                  <span class="ai-app-download-card__badge-placeholder-{{ ai_gen_id }}">
+                    Download App
+                  </span>
+                {% endif %}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "App download cards",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Create up to 6 app download cards. Enable each card and customize its content below."
+    },
+    {
+      "type": "header",
+      "content": "Card 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_1_enabled",
+      "label": "Enable card 1",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "card_1_title",
+      "label": "Title",
+      "default": "iOS App"
+    },
+    {
+      "type": "richtext",
+      "id": "card_1_description",
+      "label": "Description",
+      "default": "<p>Download our iOS app from the App Store for the best mobile shopping experience.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_image",
+      "label": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_badge_image",
+      "label": "Badge image"
+    },
+    {
+      "type": "url",
+      "id": "card_1_link",
+      "label": "Download link"
+    },
+    {
+      "type": "header",
+      "content": "Card 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_2_enabled",
+      "label": "Enable card 2",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "card_2_title",
+      "label": "Title",
+      "default": "Android App"
+    },
+    {
+      "type": "richtext",
+      "id": "card_2_description",
+      "label": "Description",
+      "default": "<p>Get our Android app from Google Play and shop on the go with ease.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_image",
+      "label": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_badge_image",
+      "label": "Badge image"
+    },
+    {
+      "type": "url",
+      "id": "card_2_link",
+      "label": "Download link"
+    },
+    {
+      "type": "header",
+      "content": "Card 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_3_enabled",
+      "label": "Enable card 3",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "card_3_title",
+      "label": "Title",
+      "default": "Web App"
+    },
+    {
+      "type": "richtext",
+      "id": "card_3_description",
+      "label": "Description",
+      "default": "<p>Access our progressive web app directly from your browser for instant shopping.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_image",
+      "label": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_3_badge_image",
+      "label": "Badge image"
+    },
+    {
+      "type": "url",
+      "id": "card_3_link",
+      "label": "Download link"
+    },
+    {
+      "type": "header",
+      "content": "Card 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_4_enabled",
+      "label": "Enable card 4",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "card_4_title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "card_4_description",
+      "label": "Description"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_4_image",
+      "label": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_4_badge_image",
+      "label": "Badge image"
+    },
+    {
+      "type": "url",
+      "id": "card_4_link",
+      "label": "Download link"
+    },
+    {
+      "type": "header",
+      "content": "Card 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_5_enabled",
+      "label": "Enable card 5",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "card_5_title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "card_5_description",
+      "label": "Description"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_5_image",
+      "label": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_5_badge_image",
+      "label": "Badge image"
+    },
+    {
+      "type": "url",
+      "id": "card_5_link",
+      "label": "Download link"
+    },
+    {
+      "type": "header",
+      "content": "Card 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_6_enabled",
+      "label": "Enable card 6",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "card_6_title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "card_6_description",
+      "label": "Description"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_6_image",
+      "label": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_6_badge_image",
+      "label": "Badge image"
+    },
+    {
+      "type": "url",
+      "id": "card_6_link",
+      "label": "Download link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "App download cards"
+    }
+  ]
+}
+{% endschema %}

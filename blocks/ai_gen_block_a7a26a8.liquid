@@ -1,0 +1,942 @@
+{% doc %}
+  @prompt
+    Structure:
+    
+    Header (centered):
+    
+    Title (H2): “Гледай навсякъде – един абонамент, всички екрани”
+    
+    Subheading (centered, max-width 760px): “След поръчка получаваш уникален код за активиране и стъпка-по-стъпка инструкции на имейл. Активираш за минути – без устройства, без кабели, без сложни настройки.”
+    
+    Compatibility grid (5 items, 2–3 колони на desktop, 1 колона на mobile). Each item = icon (left/top) + bold title + short description:
+    
+    Смарт телевизор — Samsung, LG, Android TV, Fire TV и др.
+    
+    Смарт телефон — iOS и Android.
+    
+    Таблет — голям екран, гладко стриймване.
+    
+    Автомобилен екран — забавление по време на път.
+    
+    Компютър — Windows, macOS и уеб плеър.
+    Style: rounded-2xl cards, soft shadow, 20–28px gap, subtle divider.
+    
+    How it works (3 horizontal steps with 1–2 lines text, numbered badges):
+    
+    Избираш план и финализираш поръчката.
+    
+    Получаваш код + инструкции на имейл.
+    
+    Въвеждаш кода в приложението и гледаш веднага.
+    
+    Downloads area – three large cards side-by-side on desktop, stacked on mobile. Each card = image (top), product title, small version text, bullet(s)/links, CTA buttons. Use contrasting white cards on a very light lavender/gray background strip for separation. Buttons with rounded-full, medium size, brand-blue hover.
+    
+    Android App — “Download Latest Version (v5.0)”; include:
+    • Link line for Direct .APK: [PUT APK URL HERE]
+    • Small pill with Downloader App code: 6468112
+    • Buttons: “Direct .APK” and “Google Play” (second button links to [PUT PLAY URL]).
+    
+    iOS App — “Download Latest Version (v1.1.3)”; button “App Store” → [PUT APP STORE URL].
+    
+    macOS App — “Download Latest Version (v1.1.2)”; button “Download for macOS” → [PUT MAC URL].
+    Optionally add a small fourth card “Web Player” → [PUT WEB URL].
+    
+    General styling: white page background; section max-width 1200px; generous padding (80px top/bottom); center content; large, readable typography; use #0C1B3A for headings and accents; light gray #F5F7FB strip behind the downloads cards; icons simple line style; ensure goo, Create a reusable Shopify “Compatibility + Activation + Downloads” section with a clean, modern look and dark-blue accents #0C1B3A.
+    
+    Typography (important):
+    
+    Title: ~28px (H2)
+    
+    Subheading: ~16px (max-width 700px, centered)
+    
+    Grid / body text: ~14px
+    
+    Buttons: ~14px, medium weight
+    
+    Layout:
+    
+    Header (centered): Title + Subheading.
+    
+    Compatibility grid: cards listing where IPTV works.
+    
+    How it works: three simple steps.
+    
+    Downloads: platform cards (Android, iOS, macOS, optional Web Player).
+    
+    CRITICAL — Make it fully customizable via schema settings:
+    
+    All blocks repeatable so I can add/remove/reorder them.
+    
+    Every block must include image/icon pickers and text fields.
+    
+    I must be able to replace icons/images anytime and add new options/cards without editing code.
+    
+    Schema requirements:
+    
+    Global settings:
+    
+    Title font size (default 28px), body font size (default 14px), padding controls, main color (#0C1B3A).
+    
+    Header group: title, subheading.
+    
+    Compatibility blocks (repeatable): icon (image picker), title (text), description (text). Default items: Smart TV, Smartphone, Tablet, Car Screen, Computer.
+    
+    Steps blocks (repeatable): number, title, text. Default 3 steps: Purchase → Receive activation code + instructions → Enter code in app and watch.
+    
+    Download cards (repeatable): platform_name, version_text, hero_image, primary_button_label/url, secondary_button_label/url, extra_note. Default: Android, iOS, macOS (+ optional Web Player).
+    
+    Style:
+    
+    White background, max-width 1200px, balanced spacing (60px top/bottom).
+    
+    Compatibility cards: small icons, ~14px text.
+    
+    Steps: numbered badges, compact layout.
+    
+    Downloads: three small but clean cards side-by-side (stack on mobile).
+    
+    Rounded corners, soft shadows, subtle accent color.
+    
+    Accessibility: real text (not in images), alt text for all icons/images, buttons clearly labeled., add title for each section , Create a Shopify section called “Compatibility” that showcases all the devices IPTV works on.  
+    
+    **Layout options:**  
+    - Display as a responsive grid (2–3 columns on desktop, 1 on mobile) OR toggle to show as a carousel/slider.  
+    - Each item is a card with an icon (image upload), a bold title, and a short description.  
+    
+    **Schema requirements:**  
+    - Global controls: background color, font family, font size (default 14px body, 24px heading), heading color, text color, card background color, card border radius, enable/disable carousel.  
+    - Heading group: `title` (text), `subtitle` (richtext).  
+    - Repeatable block type = `compatibility_item` with fields:  
+      - `icon` (image picker)  
+      - `title` (text)  
+      - `description` (text)  
+    
+    Default items:  
+    - Smart TV – Samsung, LG, Android TV, Fire TV  
+    - Smartphone – iOS & Android  
+    - Tablet – larger screen streaming  
+    - Car Screen – in-car entertainment  
+    - Computer – Windows, macOS, Web Player
+    , add left and right padding , add padding for the subtitle as well 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-compatibility-section-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_left }}px {{ block.settings.section_padding_bottom }}px {{ block.settings.section_padding_right }}px;
+    font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+    font-weight: {{ block.settings.font_family.weight }};
+  }
+
+  .ai-compatibility-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-compatibility-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 48px;
+    padding: 0 {{ block.settings.subtitle_padding_left }}px 0 {{ block.settings.subtitle_padding_right }}px;
+  }
+
+  .ai-compatibility-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_font_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 16px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .ai-compatibility-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_font_size }}px;
+    color: {{ block.settings.text_color }};
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  .ai-compatibility-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.desktop_columns }}, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-compatibility-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.mobile_columns }}, 1fr);
+    }
+  }
+
+  .ai-compatibility-carousel-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-compatibility-carousel-track-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.grid_gap }}px;
+    transition: transform 0.3s ease;
+    scroll-behavior: smooth;
+  }
+
+  .ai-compatibility-carousel-{{ ai_gen_id }} .ai-compatibility-card-{{ ai_gen_id }} {
+    flex: 0 0 calc(33.333% - {{ block.settings.grid_gap | divided_by: 3 | times: 2 }}px);
+    min-width: 280px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-compatibility-carousel-{{ ai_gen_id }} .ai-compatibility-card-{{ ai_gen_id }} {
+      flex: 0 0 calc(100% - 20px);
+    }
+  }
+
+  .ai-compatibility-carousel-controls-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .ai-compatibility-carousel-btn-{{ ai_gen_id }} {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: {{ block.settings.card_background_color }};
+    border: 2px solid {{ block.settings.heading_color }};
+    color: {{ block.settings.heading_color }};
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .ai-compatibility-carousel-btn-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.heading_color }};
+    color: {{ block.settings.card_background_color }};
+  }
+
+  .ai-compatibility-carousel-btn-{{ ai_gen_id }}:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .ai-compatibility-card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background_color }};
+    padding: 32px 24px;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .ai-compatibility-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .ai-compatibility-icon-{{ ai_gen_id }} {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    display: block;
+  }
+
+  .ai-compatibility-icon-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ai-compatibility-icon-placeholder-{{ ai_gen_id }} {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    background-color: {{ block.settings.heading_color | color_modify: 'alpha', 0.1 }};
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-compatibility-icon-placeholder-{{ ai_gen_id }} svg {
+    width: 32px;
+    height: 32px;
+    color: {{ block.settings.heading_color }};
+  }
+
+  .ai-compatibility-card-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_font_size | plus: 2 }}px;
+    font-weight: 600;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 12px;
+    line-height: 1.3;
+  }
+
+  .ai-compatibility-card-desc-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_font_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-compatibility-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_left | times: 0.5 }}px {{ block.settings.section_padding_bottom }}px {{ block.settings.section_padding_right | times: 0.5 }}px;
+    }
+    
+    .ai-compatibility-header-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.subtitle_padding_left | times: 0.5 }}px 0 {{ block.settings.subtitle_padding_right | times: 0.5 }}px;
+    }
+    
+    .ai-compatibility-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_font_size | times: 0.8 }}px;
+    }
+    
+    .ai-compatibility-card-{{ ai_gen_id }} {
+      padding: 24px 20px;
+    }
+  }
+{% endstyle %}
+
+<compatibility-section-{{ ai_gen_id }} class="ai-compatibility-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-compatibility-container-{{ ai_gen_id }}">
+    
+    {% comment %} Header {% endcomment %}
+    {% if block.settings.title != blank or block.settings.subtitle != blank %}
+      <div class="ai-compatibility-header-{{ ai_gen_id }}">
+        {% if block.settings.title != blank %}
+          <h2 class="ai-compatibility-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% endif %}
+        {% if block.settings.subtitle != blank %}
+          <div class="ai-compatibility-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% comment %} Content {% endcomment %}
+    {% assign enabled_items = 0 %}
+    {% for i in (1..8) %}
+      {% liquid
+        assign enabled_key = 'item_' | append: i | append: '_enabled'
+        assign enabled = block.settings[enabled_key]
+      %}
+      {% if enabled %}
+        {% assign enabled_items = enabled_items | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+
+    {% if block.settings.enable_carousel and enabled_items > 3 %}
+      <div class="ai-compatibility-carousel-{{ ai_gen_id }}" data-carousel>
+        <div class="ai-compatibility-carousel-track-{{ ai_gen_id }}" data-track>
+          {% for i in (1..8) %}
+            {% liquid
+              assign title_key = 'item_' | append: i | append: '_title'
+              assign desc_key = 'item_' | append: i | append: '_description'
+              assign icon_key = 'item_' | append: i | append: '_icon'
+              assign enabled_key = 'item_' | append: i | append: '_enabled'
+              
+              assign title = block.settings[title_key]
+              assign desc = block.settings[desc_key]
+              assign icon = block.settings[icon_key]
+              assign enabled = block.settings[enabled_key]
+            %}
+            
+            {% if enabled and title != blank %}
+              <div class="ai-compatibility-card-{{ ai_gen_id }}">
+                {% if icon != blank %}
+                  <div class="ai-compatibility-icon-{{ ai_gen_id }}">
+                    <img src="{{ icon | image_url: width: 128 }}" 
+                         alt="{{ title | escape }}" 
+                         loading="lazy">
+                  </div>
+                {% else %}
+                  <div class="ai-compatibility-icon-placeholder-{{ ai_gen_id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                {% endif %}
+                
+                <h3 class="ai-compatibility-card-title-{{ ai_gen_id }}">{{ title }}</h3>
+                
+                {% if desc != blank %}
+                  <p class="ai-compatibility-card-desc-{{ ai_gen_id }}">{{ desc }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        
+        <div class="ai-compatibility-carousel-controls-{{ ai_gen_id }}">
+          <button class="ai-compatibility-carousel-btn-{{ ai_gen_id }}" data-prev aria-label="Previous">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button class="ai-compatibility-carousel-btn-{{ ai_gen_id }}" data-next aria-label="Next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    {% else %}
+      <div class="ai-compatibility-grid-{{ ai_gen_id }}">
+        {% for i in (1..8) %}
+          {% liquid
+            assign title_key = 'item_' | append: i | append: '_title'
+            assign desc_key = 'item_' | append: i | append: '_description'
+            assign icon_key = 'item_' | append: i | append: '_icon'
+            assign enabled_key = 'item_' | append: i | append: '_enabled'
+            
+            assign title = block.settings[title_key]
+            assign desc = block.settings[desc_key]
+            assign icon = block.settings[icon_key]
+            assign enabled = block.settings[enabled_key]
+          %}
+          
+          {% if enabled and title != blank %}
+            <div class="ai-compatibility-card-{{ ai_gen_id }}">
+              {% if icon != blank %}
+                <div class="ai-compatibility-icon-{{ ai_gen_id }}">
+                  <img src="{{ icon | image_url: width: 128 }}" 
+                       alt="{{ title | escape }}" 
+                       loading="lazy">
+                </div>
+              {% else %}
+                <div class="ai-compatibility-icon-placeholder-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              {% endif %}
+              
+              <h3 class="ai-compatibility-card-title-{{ ai_gen_id }}">{{ title }}</h3>
+              
+              {% if desc != blank %}
+                <p class="ai-compatibility-card-desc-{{ ai_gen_id }}">{{ desc }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</compatibility-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CompatibilitySection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.itemsPerView = 3;
+      }
+
+      connectedCallback() {
+        this.carousel = this.querySelector('[data-carousel]');
+        if (!this.carousel) return;
+
+        this.track = this.querySelector('[data-track]');
+        this.prevBtn = this.querySelector('[data-prev]');
+        this.nextBtn = this.querySelector('[data-next]');
+        this.items = this.querySelectorAll('.ai-compatibility-card-{{ ai_gen_id }}');
+
+        if (this.items.length <= this.itemsPerView) {
+          const controls = this.querySelector('.ai-compatibility-carousel-controls-{{ ai_gen_id }}');
+          if (controls) controls.style.display = 'none';
+          return;
+        }
+
+        this.setupEventListeners();
+        this.updateButtons();
+        this.handleResize();
+        
+        window.addEventListener('resize', () => this.handleResize());
+      }
+
+      setupEventListeners() {
+        if (this.prevBtn) {
+          this.prevBtn.addEventListener('click', () => this.prev());
+        }
+        
+        if (this.nextBtn) {
+          this.nextBtn.addEventListener('click', () => this.next());
+        }
+      }
+
+      handleResize() {
+        if (window.innerWidth <= 768) {
+          this.itemsPerView = 1;
+        } else {
+          this.itemsPerView = 3;
+        }
+        this.updateCarousel();
+        this.updateButtons();
+      }
+
+      prev() {
+        if (this.currentIndex > 0) {
+          this.currentIndex--;
+          this.updateCarousel();
+          this.updateButtons();
+        }
+      }
+
+      next() {
+        const maxIndex = Math.max(0, this.items.length - this.itemsPerView);
+        if (this.currentIndex < maxIndex) {
+          this.currentIndex++;
+          this.updateCarousel();
+          this.updateButtons();
+        }
+      }
+
+      updateCarousel() {
+        if (!this.track) return;
+        
+        const cardWidth = this.items[0].offsetWidth;
+        const gap = {{ block.settings.grid_gap }};
+        const translateX = -(this.currentIndex * (cardWidth + gap));
+        
+        this.track.style.transform = `translateX(${translateX}px)`;
+      }
+
+      updateButtons() {
+        if (!this.prevBtn || !this.nextBtn) return;
+        
+        const maxIndex = Math.max(0, this.items.length - this.itemsPerView);
+        
+        this.prevBtn.disabled = this.currentIndex === 0;
+        this.nextBtn.disabled = this.currentIndex >= maxIndex;
+      }
+    }
+
+    customElements.define('compatibility-section-{{ ai_gen_id }}', CompatibilitySection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Compatibility",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Device Compatibility"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "<p>Watch your favorite content on any device, anywhere</p>"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_carousel",
+      "label": "Enable carousel",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_left",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "section_padding_right",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "subtitle_padding_left",
+      "min": 0,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Subtitle left padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "subtitle_padding_right",
+      "min": 0,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Subtitle right padding",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "desktop_columns",
+      "label": "Desktop columns",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Mobile columns",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 16,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font family",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 18,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading font size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "body_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Body font size",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Item 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_1_enabled",
+      "label": "Enable item 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "item_1_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_1_title",
+      "label": "Title",
+      "default": "Smart TV"
+    },
+    {
+      "type": "text",
+      "id": "item_1_description",
+      "label": "Description",
+      "default": "Samsung, LG, Android TV, Fire TV"
+    },
+    {
+      "type": "header",
+      "content": "Item 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_2_enabled",
+      "label": "Enable item 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "item_2_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_2_title",
+      "label": "Title",
+      "default": "Smartphone"
+    },
+    {
+      "type": "text",
+      "id": "item_2_description",
+      "label": "Description",
+      "default": "iOS & Android"
+    },
+    {
+      "type": "header",
+      "content": "Item 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_3_enabled",
+      "label": "Enable item 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "item_3_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_3_title",
+      "label": "Title",
+      "default": "Tablet"
+    },
+    {
+      "type": "text",
+      "id": "item_3_description",
+      "label": "Description",
+      "default": "Larger screen streaming"
+    },
+    {
+      "type": "header",
+      "content": "Item 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_4_enabled",
+      "label": "Enable item 4",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "item_4_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_4_title",
+      "label": "Title",
+      "default": "Car Screen"
+    },
+    {
+      "type": "text",
+      "id": "item_4_description",
+      "label": "Description",
+      "default": "In-car entertainment"
+    },
+    {
+      "type": "header",
+      "content": "Item 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_5_enabled",
+      "label": "Enable item 5",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "item_5_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_5_title",
+      "label": "Title",
+      "default": "Computer"
+    },
+    {
+      "type": "text",
+      "id": "item_5_description",
+      "label": "Description",
+      "default": "Windows, macOS, Web Player"
+    },
+    {
+      "type": "header",
+      "content": "Item 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_6_enabled",
+      "label": "Enable item 6",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "item_6_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_6_title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "item_6_description",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Item 7"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_7_enabled",
+      "label": "Enable item 7",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "item_7_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_7_title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "item_7_description",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Item 8"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_8_enabled",
+      "label": "Enable item 8",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "item_8_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_8_title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "item_8_description",
+      "label": "Description"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Compatibility"
+    }
+  ]
+}
+{% endschema %}
