@@ -1,0 +1,423 @@
+{%- if section.blocks.size > 0 -%}
+  {%- render 'section-spacing-collapsing' -%}
+
+  <div {% render 'section-properties' %}>
+    <div class="ctm_everything_love section-stack">
+      {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.title, heading_color: section.settings.heading_color, heading_gradient: section.settings.heading_gradient, content: section.settings.content, link_text: section.settings.link_text, link_url: section.settings.link_url -%}
+
+      <div class="icon_slider">
+        <div class="swiper marquee-swiper">
+          <div class="swiper-wrapper">
+  {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'icon_item' -%}
+                  {%  if block.settings.icon != blank %}
+                  <div class="slide_item_icon swiper-slide">
+                    <img src="{{ block.settings.icon | img_url : 'master' }}" alt="icon">
+                   </div>
+                  {% endif %}
+                {% endcase %}
+      {%endfor %}
+        {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'icon_item' -%}
+                  {%  if block.settings.icon != blank %}
+                  <div class="slide_item_icon swiper-slide">
+                    <img src="{{ block.settings.icon | img_url : 'master' }}" alt="icon">
+                   </div>
+                  {% endif %}
+                {% endcase %}
+      {%endfor %}
+      {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'icon_item' -%}
+                  {%  if block.settings.icon != blank %}
+                  <div class="slide_item_icon swiper-slide">
+                    <img src="{{ block.settings.icon | img_url : 'master' }}" alt="icon">
+                   </div>
+                  {% endif %}
+                {% endcase %}
+      {%endfor %}
+      </div>
+      </div>
+  </div>
+
+
+ <div class="head_link_list">
+  {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                 {%- when 'link_item' -%}
+                   <a class="link_item" href="{%if block.settings.link != blank %}{{ block.settings.link }}{% else %}javascript:void(0);{% endif %}">{{ block.settings.link_txt }}</a>
+                {% endcase %}
+      {%endfor %}
+  </div>
+      <div class="scrollable-with-controls">
+        {%- assign scroll_area_id = 'scroll-area-' | append: section.id -%}
+
+         <div class=" slider-column">
+        <div class="swiper everything-slider">
+            <div class="swiper-wrapper">
+          {%- for block in section.blocks -%}
+              {%- case block.type -%}
+            {%- when 'item' -%}
+             <div class="swiper-slide multi-column__item justify-{{ section.settings.text_alignment }} snap-start" style="--multi-column-item-column-count: span {{ 12.0 | divided_by: block.settings.column_size | round }}" {{ block.shopify_attributes }}>
+                {%- if block.settings.video != blank -%}
+                  <video-media autoplay style="--aspect-ratio: {{ block.settings.video.aspect_ratio }}">
+                    {{ block.settings.video | video_tag: playsinline: true, muted: true, loop: true, preload: 'metadata', class: 'rounded' }}
+                  </video-media>
+                {%- elsif block.settings.image != blank -%}
+                  <div class="imgwrap">
+                  {%- capture sizes -%}(max-width: 699px) calc(73vw - 40px), (max-width: 999px) calc(38vw - 64px), calc(min({{ settings.page_width }}px, 100vw) / {{ block.settings.column_size }}){%- endcapture -%}
+                  {{- block.settings.image | image_url: width: block.settings.image.width | image_tag: loading: 'lazy', sizes: sizes, widths: '300,400,500,600,800,1000,1200,1400,1600,1800', class: 'rounded' -}}
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.title != blank or block.settings.content != blank or block.settings.link_text != blank -%}
+                  <div class="v-stack gap-4 text-{{ section.settings.text_alignment }}">
+
+                    {% if block.settings.step_number != blank %}
+                    <div class="step_text">
+                      <span class="step_number">
+                        {{ block.settings.step_number }}
+                      </span>
+                    </div>
+                  {% endif %}
+                    {%- if block.settings.title != blank -%}
+                      <p class="{{ block.settings.heading_tag }}">{{ block.settings.title | escape }}</p>
+                    {%- endif -%}
+
+                    {%- if block.settings.content != blank or block.settings.link_text != blank -%}
+                      <div class="prose">
+                        {{- block.settings.content -}}
+
+                        {%- if block.settings.link_text != blank -%}
+                          <div>
+                            {%- if block.settings.link_style == 'link' -%}
+                              <a href="{{ block.settings.link_url }}" class="link">{{ block.settings.link_text | escape }}</a>
+                            {%- else -%}
+                              {%- render 'button', href: block.settings.link_url, content: block.settings.link_text, size: 'lg' -%}
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+              {% endcase %}
+        {%  endfor %}
+        </div>
+        <span class="swiper-pagination"></span>
+        </div>
+    </div>
+
+        {%- unless section.settings.stack_testimonials -%}
+          {%- assign default_progress = 3.0 | divided_by: section.blocks.size -%}
+          {%- render 'scrollbar', observes: scroll_area_id, default_progress: default_progress, show_buttons: true -%}
+        {%- endunless -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Everything Love",
+  "class": "shopify-section--testimonials",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "tag": "section",
+  "blocks": [
+        {
+      "type": "link_item",
+      "name": "Link Item",
+      "settings": [
+      {
+        "id":"link_txt",
+        "type":"text",
+        "label":"Link Text"
+      },
+      {
+        "id":"link",
+        "type":"url",
+        "label":"Link URL"
+      }
+      ]
+    },
+    {
+      "type": "icon_item",
+      "name": "Icon Item",
+      "settings": [
+          {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Image"
+        },
+      ]
+    },
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+         {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video",
+          "info": "Video are muted automatically and will autoplay."
+        },
+        {
+          "type": "select",
+          "id": "column_size",
+          "label": "Desktop item size",
+          "options": [
+            {
+              "value": "4",
+              "label": "25%"
+            },
+            {
+              "value": "3",
+              "label": "33%"
+            },
+            {
+              "value": "2",
+              "label": "50%"
+            },
+            {
+              "value": "1.5",
+              "label": "66%"
+            }
+          ],
+          "default": "3"
+        },
+        {
+          "id":"step_number",
+          "label":"Step Number",
+          "type":"text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Column title"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Heading style",
+          "options": [
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            },
+            {
+              "value": "h4",
+              "label": "H4"
+            },
+            {
+              "value": "h5",
+              "label": "H5"
+            },
+            {
+              "value": "h6",
+              "label": "H6"
+            }
+          ],
+          "default": "h4"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text"
+        },
+        {
+          "type": "select",
+          "id": "link_style",
+          "label": "Link style",
+          "options": [
+            {
+              "value": "link",
+              "label": "Link"
+            },
+            {
+              "value": "button",
+              "label": "Button"
+            }
+          ],
+          "default": "link"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "stack_testimonials",
+      "label": "Stack testimonials",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Testimonials"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text"
+    },
+    {
+      "type": "header",
+      "content": "Colors",
+      "info": "Gradient replaces solid colors when set."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color_background",
+      "id": "heading_gradient",
+      "label": "Heading gradient"
+    },
+    {
+      "type": "color",
+      "id": "testimonial_card_background",
+      "label": "Testimonial card background"
+    },
+    {
+      "type": "color",
+      "id": "testimonial_card_text_color",
+      "label": "Testimonial card text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Everything Love"
+    }
+  ]
+}
+{% endschema %}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+  const swiper = new Swiper('.everything-slider', {
+    slidesPerView: 1.2,
+    mousewheel: {
+      forceToAxis: true,
+      releaseOnEdges: true,
+    },
+    spaceBetween: 16,
+    loop: true, // keep loop enabled
+    pagination: {
+      el: ".swiper-pagination",
+      dynamicBullets: false,
+      clickable: true
+    },
+    breakpoints: {
+      768: { slidesPerView: 2 },
+      1024: { slidesPerView: 3 },
+    },
+    grabCursor: true,
+  });
+
+  // Navigation links
+  const navLinks = document.querySelectorAll('.head_link_list .link_item');
+
+  navLinks.forEach((link, index) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      swiper.slideToLoop(index); // important when loop:true
+      // highlight clicked link
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+
+  // Sync nav with slider
+  swiper.on('slideChange', () => {
+    navLinks.forEach(l => l.classList.remove('active'));
+    const activeIndex = swiper.realIndex; // correct index with loop
+    if (navLinks[activeIndex]) {
+      navLinks[activeIndex].classList.add('active');
+    }
+  });
+});
+
+var swiper = new Swiper(".marquee-swiper", {
+  slidesPerView: "auto",
+  spaceBetween: 16,
+  loop: true,
+  speed: 2000,                   // ➝ можеш да намалиш за по-бързо (примерно 3000 или 2000)
+  allowTouchMove: false,
+  autoplay: {
+    delay: 1,                    // ➝ от 1 на 0, за да няма пауза
+    disableOnInteraction: false
+  }
+});
+
+
+</script>

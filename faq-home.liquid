@@ -1,0 +1,713 @@
+{% comment %}
+  FAQ Accordion Section - Perglot Edition
+  Expandable frequently asked questions with full customization
+{% endcomment %}
+
+<section class="faq-section" style="
+  --section-padding-top: {{ section.settings.padding_top }}px;
+  --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  --bg-color: {{ section.settings.background_color }};
+  --title-color: {{ section.settings.title_color }};
+  --subtitle-color: {{ section.settings.subtitle_color }};
+  --question-bg: {{ section.settings.question_bg_color }};
+  --question-text: {{ section.settings.question_text_color }};
+  --answer-text: {{ section.settings.answer_text_color }};
+  --border-color: {{ section.settings.border_color }};
+  --accent-color: {{ section.settings.accent_color }};
+  ">
+  <div class="faq-container">
+    <div class="faq-header" style="text-align: {{ section.settings.text_alignment }};">
+      {% if section.settings.title != blank %}
+        <h2 class="faq-title" style="
+          font-size: {{ section.settings.title_size }}px;
+          font-weight: {{ section.settings.title_weight }};
+          margin-bottom: {{ section.settings.title_margin }}px;
+          ">{{ section.settings.title }}</h2>
+      {% endif %}
+      
+      {% if section.settings.subtitle != blank %}
+        <p class="faq-subtitle" style="
+          font-size: {{ section.settings.subtitle_size }}px;
+          max-width: {{ section.settings.subtitle_max_width }}px;
+          ">{{ section.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+    
+    <div class="faq-list" style="max-width: {{ section.settings.faq_max_width }}px;">
+      {% for block in section.blocks %}
+        <div class="faq-item" {{ block.shopify_attributes }} style="
+          border-radius: {{ section.settings.item_border_radius }}px;
+          margin-bottom: {{ section.settings.item_spacing }}px;
+          ">
+          <button class="faq-question" onclick="toggleFaq(this)" style="
+            padding: {{ section.settings.question_padding_v }}px {{ section.settings.question_padding_h }}px;
+            font-size: {{ section.settings.question_size }}px;
+            ">
+            <span>{{ block.settings.question }}</span>
+            <span class="faq-icon" style="font-size: {{ section.settings.icon_size }}px;">▼</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-content" style="
+              padding: 0 {{ section.settings.question_padding_h }}px {{ section.settings.answer_padding_bottom }}px;
+              font-size: {{ section.settings.answer_size }}px;
+              line-height: {{ section.settings.answer_line_height }};
+              ">
+              {{ block.settings.answer }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-section {
+    padding: var(--section-padding-top) 0 var(--section-padding-bottom);
+    background: var(--bg-color);
+  }
+
+  .faq-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .faq-header {
+    margin-bottom: 50px;
+  }
+
+  .faq-title {
+    color: var(--title-color);
+    line-height: 1.2;
+  }
+
+  .faq-subtitle {
+    color: var(--subtitle-color);
+    margin: 0 auto;
+  }
+
+  .faq-list {
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    border: {{ section.settings.border_width }}px solid var(--border-color);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .faq-item:hover {
+    border-color: var(--accent-color);
+  }
+
+  .faq-item.active {
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  }
+
+  .faq-question {
+    width: 100%;
+    text-align: left;
+    background: var(--question-bg);
+    color: var(--question-text);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .faq-question:hover {
+    background: rgba(0,0,0,0.02);
+  }
+
+  .faq-item.active .faq-question {
+    background: rgba({{ section.settings.accent_color | remove: '#' | split: '' | join: ',' }}{{ section.settings.accent_color | remove: '#' | split: '' | join: ',' }}, 0.05);
+  }
+
+  .faq-icon {
+    color: var(--accent-color);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 15px;
+  }
+
+  .faq-item.active .faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+  }
+
+  .faq-item.active .faq-answer {
+    max-height: 1000px;
+    transition: max-height 0.6s ease-in;
+  }
+
+  .faq-answer-content {
+    color: var(--answer-text);
+  }
+
+  .faq-answer-content p {
+    margin: 0 0 15px 0;
+  }
+
+  .faq-answer-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .faq-container {
+      padding: 0 20px;
+    }
+
+    .faq-header {
+      margin-bottom: 35px;
+    }
+
+    .faq-title {
+      font-size: {{ section.settings.mobile_title_size }}px !important;
+    }
+
+    .faq-subtitle {
+      font-size: {{ section.settings.mobile_subtitle_size }}px !important;
+    }
+
+    .faq-question {
+      padding: {{ section.settings.mobile_question_padding }}px !important;
+      font-size: {{ section.settings.mobile_question_size }}px !important;
+    }
+
+    .faq-answer-content {
+      padding: 0 {{ section.settings.mobile_question_padding }}px {{ section.settings.mobile_answer_padding }}px !important;
+      font-size: {{ section.settings.mobile_answer_size }}px !important;
+    }
+
+    .faq-icon {
+      font-size: {{ section.settings.mobile_icon_size }}px !important;
+    }
+
+    .faq-item {
+      margin-bottom: {{ section.settings.mobile_item_spacing }}px !important;
+    }
+  }
+</style>
+
+<script>
+  function toggleFaq(button) {
+    const faqItem = button.parentElement;
+    const wasActive = faqItem.classList.contains('active');
+    
+    // Close all items
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    // Open clicked item if it wasn't active
+    if (!wasActive) {
+      faqItem.classList.add('active');
+    }
+  }
+
+  // Optional: Open first item by default
+  {% if section.settings.open_first %}
+  document.addEventListener('DOMContentLoaded', function() {
+    const firstItem = document.querySelector('.faq-item');
+    if (firstItem) {
+      firstItem.classList.add('active');
+    }
+  });
+  {% endif %}
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Pro",
+  "settings": [
+    {
+      "type": "header",
+      "content": "📐 Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Section Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Section Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "faq_max_width",
+      "min": 600,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "FAQ List Max Width",
+      "default": 900
+    },
+    {
+      "type": "header",
+      "content": "📝 Header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Често задавани въпроси"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title Size",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "title_margin",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Title Bottom Margin",
+      "default": 15
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Имате въпроси? Ние имаме отговори"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_max_width",
+      "min": 400,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "label": "Subtitle Max Width",
+      "default": 700
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "🎨 FAQ Items Style"
+    },
+    {
+      "type": "color",
+      "id": "question_bg_color",
+      "label": "Question Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "question_text_color",
+      "label": "Question Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "answer_text_color",
+      "label": "Answer Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border Width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (icon & active border)",
+      "default": "#2B5FA8"
+    },
+    {
+      "type": "range",
+      "id": "item_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Item Border Radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Space Between Items",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "📏 Question Sizing"
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Question Font Size",
+      "default": 17
+    },
+    {
+      "type": "range",
+      "id": "question_padding_v",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Question Padding Vertical",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "question_padding_h",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Question Padding Horizontal",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 14,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon Size",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "📄 Answer Sizing"
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Answer Font Size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "answer_line_height",
+      "min": 1.3,
+      "max": 2.0,
+      "step": 0.1,
+      "label": "Answer Line Height",
+      "default": 1.7
+    },
+    {
+      "type": "range",
+      "id": "answer_padding_bottom",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Answer Padding Bottom",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open First Item by Default",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "📱 Mobile Settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_title_size",
+      "min": 20,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Title Size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "mobile_subtitle_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Subtitle Size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_question_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Question Size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_question_padding",
+      "min": 15,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Question Padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_answer_size",
+      "min": 13,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Answer Size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_answer_padding",
+      "min": 15,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Answer Padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "min": 14,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Icon Size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "mobile_item_spacing",
+      "min": 10,
+      "max": 25,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Space Between Items",
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Your question here?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Your answer here.</p>"
+        }
+      ]
+    }
+  ],
+"presets": [
+    {
+      "name": "FAQ Perglot Store",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Кои сте вие и какво правите?",
+            "answer": "<p>Perglot е специализиран онлайн магазин за CarPlay и Android Auto решения в Европа. Работим изключително с висококачествени устройства, които разширяват възможностите на автомобилните екрани. Освен това предлагаме IPTV абонаменти чрез нашата услуга Streamo. Обслужваме клиенти в цяла Европа с фокус върху качество, надеждност и отлично обслужване.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Как мога да поръчам от вас?",
+            "answer": "<p>Поръчването е изключително лесно - разглеждате нашите продукти, избирате този който ви харесва, добавяте го в количката и завършвате поръчката онлайн. Приемаме плащания с карта, PayPal, банков превод и наложен платеж (в България). След потвърждение на поръчката, изпращаме вашия продукт в рамките на 24 часа.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Колко струва доставката и колко време отнема?",
+            "answer": "<p>Предлагаме безплатна доставка за България при поръчки над определена сума. Стандартната доставка в България отнема 1-2 работни дни, а в останалите европейски държави 3-7 работни дни. Имаме опция и за експресна доставка. Работим с проверени куриерски фирми като Econt, Speedy и DHL за сигурна и бърза доставка.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Какви са условията за връщане?",
+            "answer": "<p>Предлагаме 30-дневен период за връщане без въпроси. Ако по каквато и да е причина не сте доволни от покупката, можете да върнете продукта за пълно възстановяване на сумата. Продуктът трябва да е в оригиналната си опаковка и неизползван. Просто се свържете с нашата поддръжка и ние ще организираме връщането.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Предлагате ли гаранция?",
+            "answer": "<p>Да! Всички наши продукти идват с минимум 2 години гаранция срещу производствени дефекти. Ако възникне проблем, просто се свържете с нас и ще го решим бързо - или чрез подмяна на продукта, или чрез ремонт. Гаранцията не покрива механични повреди или неправилна употреба. Ние сме тук, за да сме сигурни че сте доволни.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Как мога да получа помощ ако имам проблем?",
+            "answer": "<p>Нашият екип за поддръжка е на разположение 24/7 и говори български език. Можете да се свържете с нас чрез email, телефон, WhatsApp или чат на сайта. Помагаме с всичко - от избор на правилния продукт, през инсталация, до решаване на технически проблеми. Повечето въпроси решаваме за минути, а за по-сложни случаи предлагаме видео консултации.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Оригинални ли са вашите продукти?",
+            "answer": "<p>Абсолютно! Работим само с оригинални продукти директно от производителите или техни официални дистрибутори. Всеки продукт идва с оригинална опаковка, гаранционна карта и всички необходими аксесоари. Не предлагаме подделки или копия. Качеството е наш приоритет номер едно и затова избираме само най-добрите производители.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Какво представлява IPTV услугата Streamo?",
+            "answer": "<p>Streamo е нашата собствена IPTV платформа с над 17,500 канала, 84,000 филма и 21,000 сериала за само €1.50/месец. Това включва спорт, новини, филми, сериали и детски канали от цял свят. Можете да я използвате на вашия CarPlay устройство, Smart TV, компютър или мобилно устройство. Абонаментът е без договор и може да се прекрати по всяко време.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Имате ли физически магазин?",
+            "answer": "<p>В момента работим само онлайн, което ни позволява да предлагаме най-добри цени и бърза доставка в цяла Европа. Въпреки че нямаме физически магазин, нашата онлайн поддръжка е на разположение 24/7 и можем да ви помогнем със всичко - от избор на продукт до инсталация. Доставяме директно до вашата врата за максимално удобство.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Защо да избера Perglot вместо други магазини?",
+            "answer": "<p>Perglot се специализира единствено в CarPlay и стрийминг решения - това е всичко което правим. Това означава експертни съвети, внимателно подбрани продукти и дълбоко познаване на материята. Предлагаме 30-дневен тест период, 2 години гаранция, безплатна доставка, 24/7 поддръжка на български и хиляди доволни клиенти. Когато купувате от нас, купувате спокойствие.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Безопасно ли е да пазарувам при вас?",
+            "answer": "<p>Абсолютно! Нашият сайт използва SSL криптиране за защита на вашите данни. Не съхраняваме данни за вашата банкова карта. Работим с проверени платежни системи като Stripe и PayPal. Сме регистрирана фирма с ДДС номер и предоставяме фактури за всяка покупка. Имаме стотици положителни отзиви от реални клиенти и прозрачни условия за връщане.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Предлагате ли фирмени отстъпки или партньорства?",
+            "answer": "<p>Да! За фирмени клиенти, автосервизи, автокъщи и търговци предлагаме специални B2B условия с по-добри цени при по-големи количества. Можем да предоставим и маркетингови материали за вашия бизнес. Свържете се с нас на нашия B2B имейл за индивидуална оферта. Работим с множество партньори в цяла Европа.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

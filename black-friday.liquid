@@ -1,0 +1,1113 @@
+{% comment %}
+  ============================================
+  BLACK FRIDAY GIFTS HERO - PERGLOT
+  ============================================
+  
+  Секция за Black Friday оферта с:
+  - Perglot зелена тема
+  - Countdown таймер
+  - Динамични цени (автоматична конверсия)
+  - Превеждаеми текстове
+  - Реални продукти като подаръци
+  - Комбинирани спестявания
+  
+  ИНСТАЛАЦИЯ:
+  1. Копирай в sections/black-friday-gifts.liquid
+  2. Добави преводите в locales/*.json
+  3. Theme Customizer → Add section
+{% endcomment %}
+
+{%- liquid
+  # Section always shows - you control visibility by adding/removing it in Theme Customizer
+  assign show_section = true
+  
+  # Calculate product discount (only if on product page)
+  assign product_discount = 0
+  if product != blank and product.compare_at_price > product.price
+    assign product_discount = product.compare_at_price | minus: product.price
+  endif
+  
+  # Calculate gifts total from blocks (use actual price, not compare_at_price)
+  assign gifts_total = 0
+  for block in section.blocks
+    if block.type == 'gift_product'
+      if block.settings.product != blank
+        assign gift_product = block.settings.product
+        if block.settings.custom_value > 0
+          assign gifts_total = gifts_total | plus: block.settings.custom_value
+        else
+          assign gifts_total = gifts_total | plus: gift_product.price
+        endif
+      endif
+    endif
+  endfor
+  
+  # Total savings
+  assign total_savings = product_discount | plus: gifts_total
+-%}
+
+{% if show_section %}
+<section 
+  class="bf-gifts-hero" 
+  id="bf-gifts-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-end-date="{{ section.settings.countdown_end }}"
+>
+  <div class="bf-gifts__container">
+    
+    {%- comment -%} === HEADER === {%- endcomment -%}
+    <div class="bf-gifts__header">
+      
+      {%- comment -%} Badge {%- endcomment -%}
+      {% if section.settings.badge_text != blank %}
+        <div class="bf-gifts__badge">
+          {{ section.settings.badge_text }}
+        </div>
+      {% endif %}
+      
+      {%- comment -%} Title {%- endcomment -%}
+      <h2 class="bf-gifts__title">
+        <span class="bf-gifts__title-highlight">{{ section.settings.title_highlight }}</span>
+        <br>
+        <span class="bf-gifts__title-sub">{{ section.settings.title_sub }}</span>
+      </h2>
+      
+      {%- comment -%} Countdown {%- endcomment -%}
+      {% if section.settings.show_countdown %}
+        <div class="bf-gifts__countdown">
+          <div class="bf-gifts__countdown-label">
+            {{ section.settings.countdown_label }}
+          </div>
+          <div class="bf-gifts__countdown-timer" id="countdown-{{ section.id }}">
+            <div class="bf-gifts__countdown-item">
+              <span class="bf-gifts__countdown-value" data-days>00</span>
+              <span class="bf-gifts__countdown-unit">{{ section.settings.countdown_days }}</span>
+            </div>
+            <div class="bf-gifts__countdown-item">
+              <span class="bf-gifts__countdown-value" data-hours>00</span>
+              <span class="bf-gifts__countdown-unit">{{ section.settings.countdown_hours }}</span>
+            </div>
+            <div class="bf-gifts__countdown-item">
+              <span class="bf-gifts__countdown-value" data-minutes>00</span>
+              <span class="bf-gifts__countdown-unit">{{ section.settings.countdown_minutes }}</span>
+            </div>
+            <div class="bf-gifts__countdown-item">
+              <span class="bf-gifts__countdown-value" data-seconds>00</span>
+              <span class="bf-gifts__countdown-unit">{{ section.settings.countdown_seconds }}</span>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      
+    </div>
+
+    {%- comment -%} === GIFTS GRID === {%- endcomment -%}
+    <div class="bf-gifts__grid bf-gifts__grid--{{ section.blocks.size }}">
+      {% for block in section.blocks %}
+        {% if block.type == 'gift_product' %}
+          {% assign gift = block.settings.product %}
+          {% if gift != blank %}
+            
+            {%- liquid
+              # Use actual price for gifts (not compare_at_price)
+              if block.settings.custom_value > 0
+                assign gift_value = block.settings.custom_value | times: 100
+              else
+                assign gift_value = gift.price
+              endif
+            -%}
+            
+            <div class="bf-gifts__card" {{ block.shopify_attributes }}>
+              
+              {%- comment -%} Free Badge {%- endcomment -%}
+              <div class="bf-gifts__card-badge">
+                {{ section.settings.free_badge_text }}
+              </div>
+              
+              {%- comment -%} Product Image {%- endcomment -%}
+              <div class="bf-gifts__card-image">
+                {% if gift.featured_image != blank %}
+                  {{ gift.featured_image | image_url: width: 300 | image_tag: 
+                    loading: 'lazy',
+                    alt: gift.title,
+                    class: 'bf-gifts__card-img'
+                  }}
+                {% else %}
+                  <div class="bf-gifts__card-placeholder">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+              
+              {%- comment -%} Content {%- endcomment -%}
+              <div class="bf-gifts__card-content">
+                <h3 class="bf-gifts__card-title">
+                  {% if block.settings.custom_title != blank %}
+                    {{ block.settings.custom_title }}
+                  {% else %}
+                    {{ gift.title }}
+                  {% endif %}
+                </h3>
+                {% if block.settings.custom_description != blank %}
+                  <p class="bf-gifts__card-desc">{{ block.settings.custom_description }}</p>
+                {% endif %}
+              </div>
+              
+              {%- comment -%} Price {%- endcomment -%}
+              <div class="bf-gifts__card-price">
+                <span class="bf-gifts__card-price--old">
+                  {{ gift_value | money }}
+                </span>
+                <span class="bf-gifts__card-price--free">
+                  {{ 0 | money }}
+                </span>
+              </div>
+              
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {%- comment -%} === SAVINGS BOX === {%- endcomment -%}
+    <div class="bf-gifts__savings">
+      
+      {%- comment -%} Breakdown {%- endcomment -%}
+      <div class="bf-gifts__savings-breakdown">
+        <div class="bf-gifts__savings-title">
+          {{ section.settings.savings_title }}
+        </div>
+        
+        <div class="bf-gifts__savings-rows">
+          {%- comment -%} Product Discount Row {%- endcomment -%}
+          {% if product_discount > 0 %}
+            <div class="bf-gifts__savings-row bf-gifts__savings-row--discount">
+              <span class="bf-gifts__savings-label">
+                {{ section.settings.discount_label }}
+              </span>
+              <span class="bf-gifts__savings-value bf-gifts__savings-value--red">
+                -{{ product_discount | money }}
+              </span>
+            </div>
+          {% endif %}
+          
+          {%- comment -%} Gifts Row {%- endcomment -%}
+          {% if gifts_total > 0 %}
+            <div class="bf-gifts__savings-row bf-gifts__savings-row--gifts">
+              <span class="bf-gifts__savings-label">
+                {{ section.settings.gifts_label }} ({{ section.blocks.size }})
+              </span>
+              <span class="bf-gifts__savings-value bf-gifts__savings-value--green">
+                -{{ gifts_total | money }}
+              </span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      
+      {%- comment -%} Total Bar {%- endcomment -%}
+      <div class="bf-gifts__savings-total">
+        <div class="bf-gifts__savings-total-inner">
+          <span class="bf-gifts__savings-total-label">
+            {{ section.settings.total_label }}
+          </span>
+          <span class="bf-gifts__savings-total-value">
+            {{ total_savings | money }}
+          </span>
+        </div>
+      </div>
+      
+    </div>
+
+    {%- comment -%} === TRUST ELEMENTS === {%- endcomment -%}
+    {% if section.settings.show_trust %}
+      <div class="bf-gifts__trust">
+        {% if section.settings.trust_1 != blank %}
+          <span class="bf-gifts__trust-item">
+            <span class="bf-gifts__trust-icon bf-gifts__trust-icon--green">✓</span>
+            {{ section.settings.trust_1 }}
+          </span>
+        {% endif %}
+        {% if section.settings.trust_2 != blank %}
+          <span class="bf-gifts__trust-item">
+            <span class="bf-gifts__trust-icon bf-gifts__trust-icon--green">✓</span>
+            {{ section.settings.trust_2 }}
+          </span>
+        {% endif %}
+        {% if section.settings.urgency_text != blank %}
+          <span class="bf-gifts__trust-item bf-gifts__trust-item--urgent">
+            <span class="bf-gifts__trust-icon">🔥</span>
+            {{ section.settings.urgency_text }}
+          </span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{%- comment -%} === STYLES === {%- endcomment -%}
+<style>
+  /* ============================================
+     CSS VARIABLES - PERGLOT GREEN THEME
+     ============================================ */
+  .bf-gifts-hero {
+    --bf-bg-start: #1a3a2f;
+    --bf-bg-mid: #2d5a4a;
+    --bf-bg-end: #1a3a2f;
+    --bf-green-light: #E7F4E9;
+    --bf-green-accent: rgba(231, 244, 233, 0.15);
+    --bf-blue: #1755A0;
+    --bf-gold: #FFD700;
+    --bf-gold-dark: #FFA500;
+    --bf-red: #dc2626;
+    --bf-red-dark: #b91c1c;
+    --bf-success: #22c55e;
+    --bf-text: #ffffff;
+    --bf-text-muted: rgba(255, 255, 255, 0.7);
+    --bf-text-very-muted: rgba(255, 255, 255, 0.5);
+    --bf-card-bg: rgba(231, 244, 233, 0.08);
+    --bf-card-border: rgba(231, 244, 233, 0.2);
+    --bf-radius: 16px;
+    --bf-radius-sm: 10px;
+    --bf-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  .bf-gifts-hero {
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+    background: linear-gradient(180deg, var(--bf-bg-start) 0%, var(--bf-bg-mid) 50%, var(--bf-bg-end) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bf-gifts-hero::before,
+  .bf-gifts-hero::after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 160%;
+    top: -30%;
+    pointer-events: none;
+  }
+
+  .bf-gifts-hero::before {
+    left: -15%;
+    background: radial-gradient(ellipse, var(--bf-green-accent) 0%, transparent 70%);
+  }
+
+  .bf-gifts-hero::after {
+    right: -15%;
+    background: radial-gradient(ellipse, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
+  }
+
+  .bf-gifts__container {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============================================
+     HEADER
+     ============================================ */
+  .bf-gifts__header {
+    text-align: center;
+    margin-bottom: 35px;
+  }
+
+  .bf-gifts__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--bf-gold) 0%, var(--bf-gold-dark) 100%);
+    color: #000;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 25px rgba(255, 215, 0, 0.4);
+    animation: bf-pulse 2s infinite;
+  }
+
+  @keyframes bf-pulse {
+    0%, 100% { box-shadow: 0 4px 25px rgba(255, 215, 0, 0.4); }
+    50% { box-shadow: 0 4px 35px rgba(255, 215, 0, 0.6); }
+  }
+
+  .bf-gifts__title {
+    font-size: 38px;
+    font-weight: 900;
+    color: var(--bf-text);
+    margin: 0 0 12px 0;
+    line-height: 1.1;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .bf-gifts__title-highlight {
+    color: var(--bf-gold);
+  }
+
+  .bf-gifts__title-sub {
+    font-size: 28px;
+    font-weight: 600;
+  }
+
+  /* ============================================
+     COUNTDOWN
+     ============================================ */
+  .bf-gifts__countdown {
+    display: inline-block;
+    background: rgba(220, 38, 38, 0.2);
+    border: 2px solid rgba(220, 38, 38, 0.5);
+    border-radius: var(--bf-radius);
+    padding: 20px 30px;
+    margin-top: 15px;
+  }
+
+  .bf-gifts__countdown-label {
+    color: var(--bf-text);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .bf-gifts__countdown-timer {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .bf-gifts__countdown-item {
+    text-align: center;
+  }
+
+  .bf-gifts__countdown-value {
+    display: block;
+    background: linear-gradient(180deg, var(--bf-red) 0%, var(--bf-red-dark) 100%);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: var(--bf-radius-sm);
+    font-size: 32px;
+    font-weight: 900;
+    min-width: 60px;
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.5);
+    font-family: ui-monospace, monospace;
+  }
+
+  .bf-gifts__countdown-unit {
+    display: block;
+    font-size: 11px;
+    color: var(--bf-text-muted);
+    margin-top: 6px;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  /* ============================================
+     GIFTS GRID - OPTIMIZED FOR 3 ITEMS
+     ============================================ */
+  .bf-gifts__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .bf-gifts__grid--1 { grid-template-columns: 1fr; max-width: 280px; margin-left: auto; margin-right: auto; }
+  .bf-gifts__grid--2 { grid-template-columns: repeat(2, 1fr); max-width: 550px; margin-left: auto; margin-right: auto; }
+  .bf-gifts__grid--3 { grid-template-columns: repeat(3, 1fr); max-width: 800px; margin-left: auto; margin-right: auto; }
+  .bf-gifts__grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+  /* ============================================
+     GIFT CARD - LARGER FOR 3 ITEMS
+     ============================================ */
+  .bf-gifts__card {
+    background: var(--bf-card-bg);
+    border: 1px solid var(--bf-card-border);
+    border-radius: var(--bf-radius);
+    padding: 32px 22px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .bf-gifts__card:hover {
+    transform: translateY(-4px);
+    border-color: var(--bf-green-light);
+    box-shadow: 0 12px 35px rgba(231, 244, 233, 0.15);
+  }
+
+  .bf-gifts__card-badge {
+    position: absolute;
+    top: -12px;
+    right: 12px;
+    background: linear-gradient(135deg, var(--bf-success) 0%, #16a34a 100%);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+  }
+
+  .bf-gifts__card-image {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bf-gifts__card-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .bf-gifts__card-placeholder {
+    width: 60px;
+    height: 60px;
+    opacity: 0.5;
+  }
+
+  .bf-gifts__card-placeholder svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .bf-gifts__card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--bf-text);
+    margin: 0 0 5px 0;
+  }
+
+  .bf-gifts__card-desc {
+    font-size: 12px;
+    color: var(--bf-text-very-muted);
+    margin: 0 0 12px 0;
+  }
+
+  .bf-gifts__card-price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .bf-gifts__card-price--old {
+    font-size: 14px;
+    color: var(--bf-text-very-muted);
+    text-decoration: line-through;
+  }
+
+  .bf-gifts__card-price--free {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--bf-success);
+  }
+
+  /* ============================================
+     SAVINGS BOX
+     ============================================ */
+  .bf-gifts__savings {
+    background: var(--bf-card-bg);
+    border: 1px solid var(--bf-card-border);
+    border-radius: var(--bf-radius);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    margin-bottom: 25px;
+  }
+
+  .bf-gifts__savings-breakdown {
+    padding: 24px;
+  }
+
+  .bf-gifts__savings-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--bf-text);
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .bf-gifts__savings-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .bf-gifts__savings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: var(--bf-radius-sm);
+  }
+
+  .bf-gifts__savings-row--discount {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+  }
+
+  .bf-gifts__savings-row--gifts {
+    background: rgba(231, 244, 233, 0.1);
+    border: 1px solid rgba(231, 244, 233, 0.2);
+  }
+
+  .bf-gifts__savings-label {
+    font-size: 14px;
+    color: var(--bf-text-muted);
+  }
+
+  .bf-gifts__savings-value {
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .bf-gifts__savings-value--red {
+    color: #ef4444;
+  }
+
+  .bf-gifts__savings-value--green {
+    color: var(--bf-success);
+  }
+
+  .bf-gifts__savings-total {
+    background: linear-gradient(135deg, var(--bf-gold) 0%, var(--bf-gold-dark) 100%);
+    padding: 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bf-gifts__savings-total::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: bf-shine 3s infinite;
+  }
+
+  @keyframes bf-shine {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+  }
+
+  .bf-gifts__savings-total-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .bf-gifts__savings-total-label {
+    color: #000;
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .bf-gifts__savings-total-value {
+    color: #000;
+    font-size: 38px;
+    font-weight: 900;
+  }
+
+  /* ============================================
+     TRUST ELEMENTS
+     ============================================ */
+  .bf-gifts__trust {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+
+  .bf-gifts__trust-item {
+    font-size: 13px;
+    color: var(--bf-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .bf-gifts__trust-item--urgent {
+    color: #ef4444;
+    font-weight: 700;
+  }
+
+  .bf-gifts__trust-icon {
+    font-size: 14px;
+  }
+
+  .bf-gifts__trust-icon--green {
+    color: var(--bf-success);
+  }
+
+  /* ============================================
+     RESPONSIVE - OPTIMIZED FOR 3 ITEMS
+     ============================================ */
+  @media (max-width: 900px) {
+    .bf-gifts__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .bf-gifts__grid--3 {
+      max-width: 100%;
+    }
+    .bf-gifts__grid--4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .bf-gifts-hero {
+      padding: 30px 15px 40px;
+    }
+
+    .bf-gifts__badge {
+      padding: 10px 20px;
+      font-size: 12px;
+    }
+
+    .bf-gifts__title {
+      font-size: 26px;
+    }
+
+    .bf-gifts__title-sub {
+      font-size: 20px;
+    }
+
+    .bf-gifts__countdown {
+      padding: 15px 20px;
+    }
+
+    .bf-gifts__countdown-timer {
+      gap: 8px;
+    }
+
+    .bf-gifts__countdown-value {
+      font-size: 22px;
+      padding: 8px 10px;
+      min-width: 42px;
+    }
+
+    .bf-gifts__countdown-unit {
+      font-size: 9px;
+    }
+
+    /* 3 columns on mobile - compact cards */
+    .bf-gifts__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .bf-gifts__card {
+      padding: 16px 10px;
+    }
+
+    .bf-gifts__card-badge {
+      font-size: 8px;
+      padding: 4px 8px;
+      top: -8px;
+      right: 5px;
+    }
+
+    .bf-gifts__card-image {
+      width: 70px;
+      height: 70px;
+      margin-bottom: 10px;
+    }
+
+    .bf-gifts__card-title {
+      font-size: 11px;
+    }
+
+    .bf-gifts__card-desc {
+      font-size: 9px;
+      margin-bottom: 8px;
+    }
+
+    .bf-gifts__card-price--old {
+      font-size: 10px;
+    }
+
+    .bf-gifts__card-price--free {
+      font-size: 14px;
+    }
+
+    .bf-gifts__card-price {
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .bf-gifts__savings-breakdown {
+      padding: 18px;
+    }
+
+    .bf-gifts__savings-label {
+      font-size: 12px;
+    }
+
+    .bf-gifts__savings-value {
+      font-size: 14px;
+    }
+
+    .bf-gifts__savings-total {
+      padding: 16px 20px;
+    }
+
+    .bf-gifts__savings-total-label {
+      font-size: 13px;
+    }
+
+    .bf-gifts__savings-total-value {
+      font-size: 28px;
+    }
+
+    .bf-gifts__trust {
+      gap: 15px;
+    }
+
+    .bf-gifts__trust-item {
+      font-size: 11px;
+    }
+  }
+
+  /* Extra small screens */
+  @media (max-width: 380px) {
+    .bf-gifts__grid {
+      gap: 8px;
+    }
+    
+    .bf-gifts__card {
+      padding: 14px 8px;
+    }
+
+    .bf-gifts__card-image {
+      width: 55px;
+      height: 55px;
+    }
+
+    .bf-gifts__card-title {
+      font-size: 10px;
+    }
+
+    .bf-gifts__card-desc {
+      display: none;
+    }
+
+    .bf-gifts__card-price--old {
+      font-size: 9px;
+    }
+
+    .bf-gifts__card-price--free {
+      font-size: 12px;
+    }
+  }
+</style>
+
+{%- comment -%} === JAVASCRIPT === {%- endcomment -%}
+<script>
+  (function() {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+    
+    const endDateStr = section.dataset.endDate;
+    if (!endDateStr) return;
+    
+    const endDate = new Date(endDateStr).getTime();
+    const countdown = document.getElementById('countdown-{{ section.id }}');
+    if (!countdown) return;
+    
+    const daysEl = countdown.querySelector('[data-days]');
+    const hoursEl = countdown.querySelector('[data-hours]');
+    const minutesEl = countdown.querySelector('[data-minutes]');
+    const secondsEl = countdown.querySelector('[data-seconds]');
+    
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = endDate - now;
+      
+      if (distance < 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        return;
+      }
+      
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      daysEl.textContent = String(days).padStart(2, '0');
+      hoursEl.textContent = String(hours).padStart(2, '0');
+      minutesEl.textContent = String(minutes).padStart(2, '0');
+      secondsEl.textContent = String(seconds).padStart(2, '0');
+    }
+    
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  })();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "🖤 Black Friday Gifts",
+  "tag": "section",
+  "class": "bf-gifts-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "🏷️ Badge"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Текст на badge",
+      "default": "🖤 BLACK FRIDAY ОФЕРТА"
+    },
+    {
+      "type": "header",
+      "content": "📝 Заглавие"
+    },
+    {
+      "type": "text",
+      "id": "title_highlight",
+      "label": "Заглавие (акцент)",
+      "default": "3 ПОДАРЪКА"
+    },
+    {
+      "type": "text",
+      "id": "title_sub",
+      "label": "Заглавие (подтекст)",
+      "default": "безплатно към поръчката"
+    },
+    {
+      "type": "header",
+      "content": "⏰ Countdown"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Покажи countdown",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "countdown_end",
+      "label": "Крайна дата (ISO формат)",
+      "info": "Пример: 2024-11-29T23:59:59",
+      "default": "2024-11-29T23:59:59"
+    },
+    {
+      "type": "text",
+      "id": "countdown_label",
+      "label": "Етикет над таймера",
+      "default": "⏰ ОФЕРТАТА ИЗТИЧА СЛЕД:"
+    },
+    {
+      "type": "text",
+      "id": "countdown_days",
+      "label": "Дни (текст)",
+      "default": "ДНИ"
+    },
+    {
+      "type": "text",
+      "id": "countdown_hours",
+      "label": "Часове (текст)",
+      "default": "ЧАСА"
+    },
+    {
+      "type": "text",
+      "id": "countdown_minutes",
+      "label": "Минути (текст)",
+      "default": "МИН"
+    },
+    {
+      "type": "text",
+      "id": "countdown_seconds",
+      "label": "Секунди (текст)",
+      "default": "СЕК"
+    },
+    {
+      "type": "header",
+      "content": "🎁 Подаръци"
+    },
+    {
+      "type": "text",
+      "id": "free_badge_text",
+      "label": "Текст на FREE badge",
+      "default": "🎁 FREE"
+    },
+    {
+      "type": "header",
+      "content": "💰 Спестявания"
+    },
+    {
+      "type": "text",
+      "id": "savings_title",
+      "label": "Заглавие на секция спестявания",
+      "default": "📊 Твоите спестявания"
+    },
+    {
+      "type": "text",
+      "id": "discount_label",
+      "label": "Етикет за отстъпка от продукт",
+      "default": "🏷️ Black Friday отстъпка"
+    },
+    {
+      "type": "text",
+      "id": "gifts_label",
+      "label": "Етикет за подаръци",
+      "default": "🎁 Безплатни подаръци"
+    },
+    {
+      "type": "text",
+      "id": "total_label",
+      "label": "Етикет за общо",
+      "default": "🖤 ОБЩО СПЕСТЯВАШ:"
+    },
+    {
+      "type": "header",
+      "content": "✅ Trust елементи"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust",
+      "label": "Покажи trust елементи",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_1",
+      "label": "Trust текст 1",
+      "default": "Безплатна доставка"
+    },
+    {
+      "type": "text",
+      "id": "trust_2",
+      "label": "Trust текст 2",
+      "default": "Преглед преди плащане"
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "Urgency текст",
+      "default": "Остават 23 броя"
+    },
+    {
+      "type": "header",
+      "content": "📐 Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Максимална ширина",
+      "min": 800,
+      "max": 1200,
+      "step": 50,
+      "default": 900,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding отгоре",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding отдолу",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 55,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gift_product",
+      "name": "🎁 Подарък продукт",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Избери продукт"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom заглавие (опционално)",
+          "info": "Остави празно за да се използва името на продукта"
+        },
+        {
+          "type": "text",
+          "id": "custom_description",
+          "label": "Кратко описание"
+        },
+        {
+          "type": "number",
+          "id": "custom_value",
+          "label": "Custom стойност (опционално)",
+          "info": "В основна валута (без десетични). Остави 0 за да се използва цената на продукта"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "🖤 Black Friday Gifts",
+      "blocks": [
+        {
+          "type": "gift_product",
+          "settings": {
+            "custom_title": "Задна камера",
+            "custom_description": "За паркиране"
+          }
+        },
+        {
+          "type": "gift_product",
+          "settings": {
+            "custom_title": "Вакуумна стойка",
+            "custom_description": "Ultra Grip"
+          }
+        },
+        {
+          "type": "gift_product",
+          "settings": {
+            "custom_title": "IPTV 1 месец",
+            "custom_description": "ТВ и Филми"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,295 @@
+{%- if section.blocks.size > 0 -%}
+  {%- render 'section-spacing-collapsing' -%}
+
+  <style>
+
+    @media screen and (min-width: 700px) {
+      #shopify-section-{{ section.id }} {
+        --testimonial-list-items-per-row: 2;
+        --testimonial-list-carousel-item-width: 52vw;
+      }
+    }
+
+    @media screen and (min-width: 1000px) {
+      #shopify-section-{{ section.id }} {
+        --testimonial-list-carousel-item-width: 36vw;
+      }
+    }
+
+    @media screen and (min-width: 1150px) {
+      #shopify-section-{{ section.id }} {
+        --testimonial-list-items-per-row: 3;
+        --testimonial-list-carousel-item-width: calc(100% / 3 - (var(--grid-gutter) / 3 * 2));
+      }
+    }
+  </style>
+
+  <div {% render 'section-properties' %}>
+    <div class="ctm_{{ section.settings.css_class }} section-stack">
+      {%- render 'section-header', subheading: section.settings.subheading, heading: section.settings.title, heading_color: section.settings.heading_color, heading_gradient: section.settings.heading_gradient, content: section.settings.content, link_text: section.settings.link_text, link_url: section.settings.link_url -%}
+<div class="comparison-table_wrap">
+      <table class="comparison-table">
+<thead>
+<tr>
+<th>Feature</th>
+<th class="highlight-col">
+{% if section.settings.brand_image %}
+<div class="table_img">
+<img src="{{ section.settings.brand_image | image_url: width: 400 }}" alt="{{ section.settings.brand_name }}">
+</div>
+{% endif %}
+{{ section.settings.brand_name }}
+</th>
+<th>
+{% if section.settings.other_image %}
+<div class="table_img">
+<img src="{{ section.settings.other_image | image_url: width: 400 }}" alt="{{ section.settings.other_name }}">
+</div>
+{% endif %}
+{{ section.settings.other_name }}
+</th>
+</tr>
+</thead>
+<tbody>
+{% for block in section.blocks %}
+<tr>
+<td>{{ block.settings.feature_text }}</td>
+<td class="highlight-col">
+{% if block.settings.brand_status == 'check' %}{% render 'check-icon' %}{% else %}{% render 'cross-icon' %}{% endif %}
+</td>
+<td>
+{% if block.settings.other_status == 'check' %}{% render 'check-icon' %}{% else %}{%if block.settings.show_warning == true %}{% render 'warning-icon' %} {% else %}{% render 'cross-icon' %}{% endif %}{% endif %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "class": "shopify-section--testimonials",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "tag": "section",
+  "blocks": [
+    {
+"type": "feature_row",
+"name": "Feature Row",
+"settings": [
+{
+"type": "text",
+"id": "feature_text",
+"label": "Feature Text",
+"default": "Feature description here"
+},
+{
+"type": "select",
+"id": "brand_status",
+"label": "Brand Status",
+"default": "check",
+"options": [
+{"value": "check", "label": "✔ Check"},
+{"value": "cross", "label": "✖ Cross"}
+]
+},
+{
+"type": "select",
+"id": "other_status",
+"label": "Other Brand Status",
+"default": "cross",
+"options": [
+{"value": "check", "label": "✔ Check"},
+{"value": "cross", "label": "✖ Cross"}
+]
+},
+{
+  "id":"show_warning",
+  "type":"checkbox",
+  "label":"Show Warning",
+  "default": false,
+  "visible_if": "{{ block.settings.other_status == 'cross' }}"
+}
+]
+}
+  ],
+  "settings": [
+                {
+      "id":"css_class",
+      "type":"text",
+      "label":"Css Class"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Testimonials"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text"
+    },
+    {
+"type": "image_picker",
+"id": "brand_image",
+"label": "Brand Image"
+},
+{
+"type": "text",
+"id": "brand_name",
+"label": "Brand Name"
+},
+{
+"type": "image_picker",
+"id": "other_image",
+"label": "Other Brand Image"
+},
+{
+"type": "text",
+"id": "other_name",
+"label": "Other Brand Name",
+"default": "Other Brands"
+},
+    {
+      "type": "header",
+      "content": "Colors",
+      "info": "Gradient replaces solid colors when set."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color_background",
+      "id": "heading_gradient",
+      "label": "Heading gradient"
+    },
+  ],
+  "presets": [
+    {
+      "name": "Comparison table"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    min-width: 600px;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 12px;
+    border: 1px solid #BFBEC4;
+    vertical-align: middle;
+    font-size: 16px;
+    font-weight: 500;
+    color: #28282C;
+        text-align: center;
+  }
+
+  .comparison-table thead th {
+    font-weight: 700;
+  }
+
+  .highlight-col {
+    background-color: #CFE9D4;
+        border-left: 0 !important;
+    border-right: 0 !important;
+  }
+
+  .icon-yes {
+    color: green;
+  }
+
+  .icon-no {
+    color: red;
+  }
+  .icon-warning {
+    color: #eab308;
+  }
+  .comparison-table td:first-child {
+    text-align: left;
+  }
+.comparison-table tr:last-child td {
+    border-bottom: 0;
+}
+.comparison-table tr td:first-child {
+    border-right: 0;
+    border-left: 0;
+}
+.highlight-col~td {
+    border-left: 0;
+}
+.comparison-table tr td:last-child {
+    border-right: 0;
+}
+.comparison-table thead tr th:first-child {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+      opacity: 0;
+    width: 100%;
+}
+.comparison-table thead tr th {
+    border-top: 0;
+}
+.comparison-table thead tr th:last-child {
+    border-top: 0;
+    border-right: 0;
+}
+.comparison-table thead tr .highlight-col {
+    border: 0;
+}
+.comparison-table thead tr .highlight-col~th {
+    border-left: 0;
+}
+  
+</style>

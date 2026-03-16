@@ -1,0 +1,111 @@
+{% comment %}
+  Full Screen Image Section - Simple
+  - Показва изображение без празно пространство
+  - С контрол за padding отгоре и отдолу
+{% endcomment %}
+
+<section 
+  class="fullscreen-image-section" 
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  {% if section.settings.image != blank %}
+    <img 
+      src="{{ section.settings.image | image_url: width: 1920 }}"
+      srcset="
+        {{ section.settings.image | image_url: width: 750 }} 750w,
+        {{ section.settings.image | image_url: width: 1080 }} 1080w,
+        {{ section.settings.image | image_url: width: 1440 }} 1440w,
+        {{ section.settings.image | image_url: width: 1920 }} 1920w,
+        {{ section.settings.image | image_url: width: 2560 }} 2560w
+      "
+      sizes="100vw"
+      alt="{{ section.settings.image.alt | default: 'Fullscreen image' }}"
+      class="fullscreen-image"
+      loading="eager"
+      fetchpriority="high"
+    >
+  {% else %}
+    <div class="fullscreen-image-placeholder">
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {% endif %}
+</section>
+
+<style>
+  .fullscreen-image-section {
+    width: 100%;
+  }
+
+  .fullscreen-image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .fullscreen-image-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+  }
+
+  .fullscreen-image-placeholder .placeholder-svg {
+    width: 50%;
+    max-width: 400px;
+    opacity: 0.3;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Fullscreen Image",
+  "tag": "section",
+  "class": "section-fullscreen-image",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Препоръчителен размер: 1920x1080px (16:9)"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fullscreen Image",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

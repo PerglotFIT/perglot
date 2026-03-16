@@ -1,0 +1,761 @@
+{%- render 'section-spacing-collapsing' -%}
+
+{%- assign product = section.settings.product -%}
+{%- if product == blank -%}
+  {%- assign product = all_products.first -%}
+{%- endif -%}
+
+{%- assign primary_color = section.settings.primary_color -%}
+{%- assign bg_gradient_start = section.settings.bg_gradient_start -%}
+{%- assign bg_gradient_end = section.settings.bg_gradient_end -%}
+{%- assign badge_variant_id = section.settings.badge_variant_id -%}
+{%- assign badge_text = section.settings.badge_text -%}
+
+<style>
+  /* ============================================
+     IPTV PRODUCT SECTION - CUSTOMIZABLE
+     ============================================ */
+
+  #iptv-product-{{ section.id }} {
+    background: linear-gradient(135deg, {{ bg_gradient_start }} 0%, {{ bg_gradient_end }} 100%);
+    padding: 60px 0;
+    min-height: auto;
+  }
+
+  .iptv-product-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .iptv-product-wrapper {
+    display: grid;
+    grid-template-columns: 45% 55%;
+    gap: 60px;
+    align-items: start;
+    background: rgba(45, 55, 72, 0.4);
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid {{ primary_color }}33;
+    backdrop-filter: blur(10px);
+  }
+
+  @media screen and (max-width: 999px) {
+    .iptv-product-wrapper {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      padding: 30px 20px;
+    }
+    
+    .iptv-product-gallery {
+      order: 2;
+    }
+    
+    .iptv-product-info {
+      order: 1;
+    }
+  }
+
+  /* Product Gallery */
+  .iptv-product-gallery {
+    position: sticky;
+    top: 20px;
+  }
+  
+  @media screen and (max-width: 999px) {
+    .iptv-product-gallery {
+      position: relative;
+      top: 0;
+    }
+  }
+
+  .iptv-product-image {
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid {{ primary_color }}4D;
+  }
+
+  /* Product Info */
+  .iptv-product-info {
+    padding-top: 10px;
+  }
+  
+  @media screen and (max-width: 999px) {
+    .iptv-product-info {
+      padding-top: 0;
+    }
+  }
+
+  /* Title */
+  .iptv-product-title {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #ffffff;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  @media screen and (max-width: 999px) {
+    .iptv-product-title {
+      font-size: 28px;
+    }
+  }
+
+  /* Description */
+  .iptv-product-description {
+    font-size: 16px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid {{ primary_color }}26;
+  }
+
+  /* Product Form */
+  .iptv-product-form {
+    margin-bottom: 24px;
+  }
+
+  /* Variant Selector */
+  .iptv-variant-selector {
+    margin-bottom: 24px;
+  }
+
+  .iptv-variant-label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #cbd5e1;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .iptv-variants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+
+  .iptv-variant-option {
+    position: relative;
+  }
+
+  .iptv-variant-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .iptv-variant-label-box {
+    display: block;
+    background: rgba(45, 55, 72, 0.6);
+    border: 2px solid {{ primary_color }}33;
+    border-radius: 10px;
+    padding: 14px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .iptv-variant-label-box:hover {
+    border-color: {{ primary_color }};
+    background: {{ primary_color }}14;
+    transform: translateY(-2px);
+  }
+
+  .iptv-variant-input:checked + .iptv-variant-label-box {
+    border-color: {{ primary_color }};
+    background: {{ primary_color }}33;
+    box-shadow: 0 4px 16px {{ primary_color }}40;
+  }
+
+  .iptv-variant-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2px;
+  }
+
+  .iptv-variant-input:checked + .iptv-variant-label-box .iptv-variant-name {
+    color: {{ primary_color }};
+  }
+
+  .iptv-variant-sublabel {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+
+  /* Custom Badge - Only for specified variant */
+  .iptv-variant-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #1a202c;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4);
+    display: none;
+  }
+
+  .iptv-variant-option[data-show-badge="true"] .iptv-variant-badge {
+    display: block;
+  }
+
+  /* Price Display */
+  .iptv-price-wrapper {
+    margin-bottom: 24px;
+  }
+
+  .iptv-price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .iptv-price-current {
+    font-size: 48px;
+    font-weight: 700;
+    color: {{ primary_color }};
+    line-height: 1;
+    text-shadow: 0 2px 16px {{ primary_color }}66;
+  }
+
+  @media screen and (max-width: 768px) {
+    .iptv-price-current {
+      font-size: 38px;
+    }
+  }
+
+  .iptv-price-compare {
+    font-size: 24px;
+    color: #64748b;
+    text-decoration: line-through;
+    font-weight: 400;
+    display: none;
+  }
+
+  .iptv-price-compare.visible {
+    display: inline;
+  }
+
+  .iptv-price-savings {
+    display: none;
+    align-items: center;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    color: #34d399;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .iptv-price-savings.visible {
+    display: inline-flex;
+  }
+
+  /* Quantity Selector */
+  .iptv-quantity-wrapper {
+    margin-bottom: 20px;
+  }
+
+  .iptv-quantity-label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #cbd5e1;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .iptv-quantity-selector {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(45, 55, 72, 0.6);
+    border-radius: 10px;
+    border: 2px solid {{ primary_color }}33;
+    overflow: hidden;
+  }
+
+  .iptv-quantity-btn {
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: none;
+    color: {{ primary_color }};
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .iptv-quantity-btn:hover {
+    background: {{ primary_color }}26;
+  }
+
+  .iptv-quantity-btn:active {
+    background: {{ primary_color }}40;
+  }
+
+  .iptv-quantity-input {
+    width: 60px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    background: transparent;
+    border: none;
+    border-left: 1px solid {{ primary_color }}33;
+    border-right: 1px solid {{ primary_color }}33;
+    padding: 0;
+  }
+
+  .iptv-quantity-input::-webkit-inner-spin-button,
+  .iptv-quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Add to Cart Button */
+  .iptv-add-to-cart-btn {
+    width: 100%;
+    background: linear-gradient(135deg, {{ primary_color }} 0%, {{ primary_color }}CC 100%);
+    color: #ffffff;
+    border: none;
+    padding: 18px 36px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 24px {{ primary_color }}59;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .iptv-add-to-cart-btn::after {
+    content: '→';
+    font-size: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .iptv-add-to-cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px {{ primary_color }}80;
+    background: linear-gradient(135deg, {{ primary_color }}CC 0%, {{ primary_color }}99 100%);
+  }
+
+  .iptv-add-to-cart-btn:hover::after {
+    transform: translateX(4px);
+  }
+
+  .iptv-add-to-cart-btn:active {
+    transform: translateY(0);
+  }
+
+  .iptv-add-to-cart-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Features List */
+  .iptv-features-list {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid {{ primary_color }}26;
+  }
+
+  .iptv-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: #e2e8f0;
+    font-size: 14px;
+  }
+
+  .iptv-feature-icon {
+    width: 22px;
+    height: 22px;
+    background: {{ primary_color }}26;
+    border: 1px solid {{ primary_color }}4D;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ primary_color }};
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Trust Badges */
+  .iptv-trust-badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid {{ primary_color }}1A;
+  }
+
+  .iptv-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  .iptv-trust-icon {
+    font-size: 16px;
+  }
+</style>
+
+<div id="iptv-product-{{ section.id }}" class="iptv-product-section">
+  <div class="iptv-product-container">
+    <div class="iptv-product-wrapper">
+      
+      <!-- Product Gallery -->
+      <div class="iptv-product-gallery">
+        {%- if product.featured_media -%}
+          <img 
+            src="{{ product.featured_media | image_url: width: 700 }}" 
+            alt="{{ product.title | escape }}"
+            class="iptv-product-image"
+            loading="lazy"
+          >
+        {%- else -%}
+          <div class="iptv-product-image" style="background: {{ primary_color }}1A; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; color: {{ primary_color }};">
+            No Image
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Product Info -->
+      <div class="iptv-product-info">
+        
+        <h1 class="iptv-product-title">{{ product.title }}</h1>
+        
+        <div class="iptv-product-description">
+          {{ product.description | strip_html | truncate: 180 }}
+        </div>
+
+        <!-- Product Form -->
+        <form action="/cart/add" method="post" class="iptv-product-form" id="iptv-product-form-{{ section.id }}">
+          
+          <!-- Variant Selector -->
+          {%- unless product.has_only_default_variant -%}
+            <div class="iptv-variant-selector">
+              <label class="iptv-variant-label">Избери план:</label>
+              <div class="iptv-variants-grid">
+                {%- for variant in product.variants -%}
+                  <div class="iptv-variant-option" data-show-badge="{% if variant.id == badge_variant_id and badge_text != blank %}true{% else %}false{% endif %}">
+                    <input 
+                      type="radio" 
+                      name="id" 
+                      value="{{ variant.id }}" 
+                      id="variant-{{ section.id }}-{{ variant.id }}"
+                      class="iptv-variant-input"
+                      data-variant-id="{{ variant.id }}"
+                      data-price="{{ variant.price }}"
+                      data-compare-price="{{ variant.compare_at_price }}"
+                      data-has-compare="{% if variant.compare_at_price > variant.price %}true{% else %}false{% endif %}"
+                      {% if variant.available %}
+                        {% if forloop.first %}checked{% endif %}
+                      {% else %}
+                        disabled
+                      {% endif %}
+                    >
+                    <label for="variant-{{ section.id }}-{{ variant.id }}" class="iptv-variant-label-box">
+                      <div class="iptv-variant-name">{{ variant.title }}</div>
+                      <div class="iptv-variant-sublabel">Месеца</div>
+                      {%- if variant.id == badge_variant_id and badge_text != blank -%}
+                        <div class="iptv-variant-badge">{{ badge_text }}</div>
+                      {%- endif -%}
+                    </label>
+                  </div>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- else -%}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          {%- endunless -%}
+
+          <!-- Price Display -->
+          <div class="iptv-price-wrapper">
+            <div class="iptv-price-main">
+              <div class="iptv-price-current" id="iptv-current-price-{{ section.id }}">
+                {{ product.selected_or_first_available_variant.price | divided_by: 100.0 | round: 2 }} лв
+              </div>
+              <div class="iptv-price-compare {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}visible{% endif %}" id="iptv-compare-price-{{ section.id }}">
+                {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+                  {{ product.selected_or_first_available_variant.compare_at_price | divided_by: 100.0 | round: 2 }} лв
+                {% endif %}
+              </div>
+            </div>
+            {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
+              {%- assign savings_amount = product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price -%}
+              <div class="iptv-price-savings visible" id="iptv-savings-{{ section.id }}">
+                Спестяваш {{ savings_amount | divided_by: 100.0 | round: 2 }} лв
+              </div>
+            {%- else -%}
+              <div class="iptv-price-savings" id="iptv-savings-{{ section.id }}"></div>
+            {%- endif -%}
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="iptv-quantity-wrapper">
+            <label class="iptv-quantity-label">Количество:</label>
+            <div class="iptv-quantity-selector">
+              <button type="button" class="iptv-quantity-btn" onclick="updateIptvQuantity('{{ section.id }}', -1)">−</button>
+              <input 
+                type="number" 
+                name="quantity" 
+                value="1" 
+                min="1" 
+                class="iptv-quantity-input" 
+                id="iptv-quantity-{{ section.id }}"
+                readonly
+              >
+              <button type="button" class="iptv-quantity-btn" onclick="updateIptvQuantity('{{ section.id }}', 1)">+</button>
+            </div>
+          </div>
+
+          <!-- Add to Cart Button -->
+          <button 
+            type="submit" 
+            class="iptv-add-to-cart-btn"
+            {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+          >
+            {% if product.selected_or_first_available_variant.available %}
+              Добави в количка
+            {% else %}
+              Изчерпан
+            {% endif %}
+          </button>
+
+        </form>
+
+        <!-- Features -->
+        <div class="iptv-features-list">
+          <div class="iptv-feature-item">
+            <div class="iptv-feature-icon">✓</div>
+            <span>Без договор, без скрити такси</span>
+          </div>
+          <div class="iptv-feature-item">
+            <div class="iptv-feature-icon">✓</div>
+            <span>Моментална активация след поръчка</span>
+          </div>
+          <div class="iptv-feature-item">
+            <div class="iptv-feature-icon">✓</div>
+            <span>Работи на всяко устройство</span>
+          </div>
+          <div class="iptv-feature-item">
+            <div class="iptv-feature-icon">✓</div>
+            <span>HD/4K качество на стрийминг</span>
+          </div>
+          <div class="iptv-feature-item">
+            <div class="iptv-feature-icon">✓</div>
+            <span>Техническа поддръжка 24/7</span>
+          </div>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="iptv-trust-badges">
+          <div class="iptv-trust-item">
+            <span class="iptv-trust-icon">🔒</span>
+            <span>Сигурно плащане</span>
+          </div>
+          <div class="iptv-trust-item">
+            <span class="iptv-trust-icon">⚡</span>
+            <span>Instant активация</span>
+          </div>
+          <div class="iptv-trust-item">
+            <span class="iptv-trust-icon">✓</span>
+            <span>Гаранция за качество</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const sectionId = '{{ section.id }}';
+  
+  // Quantity Update Function
+  window.updateIptvQuantity = function(id, change) {
+    const input = document.getElementById('iptv-quantity-' + id);
+    if (!input) return;
+    
+    let value = parseInt(input.value) || 1;
+    value += change;
+    if (value < 1) value = 1;
+    input.value = value;
+  };
+
+  // Format price helper - converts cents to BGN Lev
+  function formatPrice(cents) {
+    const amount = (cents / 100).toFixed(2);
+    return amount + ' лв';
+  }
+
+  // Variant Change Handler
+  function handleVariantChange() {
+    const form = document.getElementById('iptv-product-form-' + sectionId);
+    if (!form) return;
+
+    const checkedInput = form.querySelector('.iptv-variant-input:checked');
+    if (!checkedInput) return;
+
+    // Get prices in cents
+    const priceCents = parseInt(checkedInput.dataset.price);
+    const comparePriceCents = parseInt(checkedInput.dataset.comparePrice);
+    const hasCompare = checkedInput.dataset.hasCompare === 'true';
+
+    // Update current price
+    const currentPriceEl = document.getElementById('iptv-current-price-' + sectionId);
+    if (currentPriceEl && priceCents) {
+      currentPriceEl.textContent = formatPrice(priceCents);
+    }
+
+    // Update compare price
+    const comparePriceEl = document.getElementById('iptv-compare-price-' + sectionId);
+    if (comparePriceEl) {
+      if (hasCompare && comparePriceCents) {
+        comparePriceEl.textContent = formatPrice(comparePriceCents);
+        comparePriceEl.classList.add('visible');
+      } else {
+        comparePriceEl.classList.remove('visible');
+      }
+    }
+
+    // Update savings
+    const savingsEl = document.getElementById('iptv-savings-' + sectionId);
+    if (savingsEl) {
+      if (hasCompare && comparePriceCents && priceCents) {
+        const savingsCents = comparePriceCents - priceCents;
+        savingsEl.textContent = 'Спестяваш ' + formatPrice(savingsCents);
+        savingsEl.classList.add('visible');
+      } else {
+        savingsEl.classList.remove('visible');
+      }
+    }
+  }
+
+  // Initialize variant listeners
+  function initVariantListeners() {
+    const form = document.getElementById('iptv-product-form-' + sectionId);
+    if (!form) return;
+
+    const variantInputs = form.querySelectorAll('.iptv-variant-input');
+    variantInputs.forEach(input => {
+      input.addEventListener('change', handleVariantChange);
+    });
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVariantListeners);
+  } else {
+    initVariantListeners();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "IPTV Product Section",
+  "class": "shopify-section--iptv-product",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Продукт"
+    },
+    {
+      "type": "header",
+      "content": "Цветове"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Основен цвят",
+      "default": "#5cadde"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_start",
+      "label": "Фон градиент - начало",
+      "default": "#1a2332"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_end",
+      "label": "Фон градиент - край",
+      "default": "#2d3748"
+    },
+    {
+      "type": "header",
+      "content": "Badge настройки"
+    },
+    {
+      "type": "paragraph",
+      "content": "Badge ще се покаже само за избрания вариант по-долу"
+    },
+    {
+      "type": "product",
+      "id": "badge_product",
+      "label": "Продукт за badge (трябва да е същия)"
+    },
+    {
+      "type": "text",
+      "id": "badge_variant_id",
+      "label": "ID на вариант за badge",
+      "info": "Въведи ID на варианта (намери го в Admin → Products → Variants)"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Текст на badge",
+      "default": "Най-изгодно",
+      "placeholder": "напр. -30% или Най-изгодно"
+    }
+  ],
+  "presets": [
+    {
+      "name": "IPTV Product Section"
+    }
+  ]
+}
+{% endschema %}

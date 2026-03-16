@@ -1,0 +1,1181 @@
+{% comment %}
+  Comparison Section - Standard vs Premium
+  CSS-only responsive design
+{% endcomment %}
+
+<div class="comparison-section-wrapper" data-section-id="{{ section.id }}">
+  <div class="comparison-container">
+    {% if section.settings.show_section_title %}
+      <div class="comparison-header">
+        {% if section.settings.section_title != blank %}
+          <h2 class="comparison-title">{{ section.settings.section_title }}</h2>
+        {% endif %}
+        {% if section.settings.section_description != blank %}
+          <p class="comparison-description">{{ section.settings.section_description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="comparison-table-wrapper">
+      <div class="comparison-table">
+        <!-- Table Header -->
+        <div class="comparison-row comparison-row-header">
+          <div class="comparison-cell comparison-cell-header">
+            {{ section.settings.feature_column_title }}
+          </div>
+          <div class="comparison-cell comparison-cell-header">
+            {{ section.settings.standard_column_title }}
+          </div>
+          <div class="comparison-cell comparison-cell-header">
+            {{ section.settings.premium_column_title }}
+          </div>
+        </div>
+        
+        <!-- Comparison Rows (Blocks) -->
+        {% for block in section.blocks %}
+          <div class="comparison-row" {{ block.shopify_attributes }}>
+            <div class="comparison-cell comparison-cell-feature">
+              {% if block.settings.feature_icon != blank %}
+                <span class="feature-icon">{{ block.settings.feature_icon }}</span>
+              {% endif %}
+              <span class="feature-name">{{ block.settings.feature_name }}</span>
+            </div>
+            
+            <div class="comparison-cell comparison-cell-standard">
+              {% if block.settings.standard_value_type == 'text' %}
+                <span class="value-text">{{ block.settings.standard_text_value }}</span>
+              {% elsif block.settings.standard_value_type == 'checkmark' %}
+                <span class="value-checkmark" style="color: {{ section.settings.checkmark_color }};">✓</span>
+              {% elsif block.settings.standard_value_type == 'cross' %}
+                <span class="value-cross" style="color: {{ section.settings.cross_color }};">✕</span>
+              {% endif %}
+              <span class="mobile-label">{{ section.settings.standard_column_title }}</span>
+            </div>
+            
+            <div class="comparison-cell comparison-cell-premium">
+              {% if block.settings.premium_value_type == 'text' %}
+                <span class="value-text value-text-premium">{{ block.settings.premium_text_value }}</span>
+              {% elsif block.settings.premium_value_type == 'checkmark' %}
+                <span class="value-checkmark value-checkmark-premium" style="color: {{ section.settings.premium_checkmark_color }};">✓</span>
+              {% elsif block.settings.premium_value_type == 'double-checkmark' %}
+                <span class="value-checkmark value-checkmark-premium" style="color: {{ section.settings.premium_checkmark_color }};">✓✓</span>
+              {% elsif block.settings.premium_value_type == 'cross' %}
+                <span class="value-cross" style="color: {{ section.settings.cross_color }};">✕</span>
+              {% endif %}
+              <span class="mobile-label">{{ section.settings.premium_column_title }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    
+    {% if section.settings.show_cta_buttons %}
+      <div class="comparison-cta">
+        {% if section.settings.standard_button_text != blank %}
+          <a href="{{ section.settings.standard_button_link }}" class="comparison-btn comparison-btn-standard">
+            {{ section.settings.standard_button_text }}
+          </a>
+        {% endif %}
+        
+        {% if section.settings.premium_button_text != blank %}
+          <a href="{{ section.settings.premium_button_link }}" class="comparison-btn comparison-btn-premium">
+            {{ section.settings.premium_button_text }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.comparison-section-wrapper {
+  padding: {{ section.settings.section_padding_top }}px 20px {{ section.settings.section_padding_bottom }}px;
+  background-color: {{ section.settings.background_color }};
+}
+
+.comparison-container {
+  max-width: {{ section.settings.container_max_width }}px;
+  margin: 0 auto;
+}
+
+.comparison-header {
+  text-align: center;
+  margin-bottom: {{ section.settings.header_margin_bottom }}px;
+}
+
+.comparison-title {
+  font-size: {{ section.settings.title_font_size }}px;
+  font-weight: {{ section.settings.title_font_weight }};
+  color: {{ section.settings.title_color }};
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.comparison-description {
+  font-size: {{ section.settings.description_font_size }}px;
+  color: {{ section.settings.description_color }};
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.comparison-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 30px;
+}
+
+.comparison-table {
+  background: {{ section.settings.table_background_color }};
+  border-radius: {{ section.settings.table_border_radius }}px;
+  overflow: hidden;
+  box-shadow: {{ section.settings.table_shadow }};
+  min-width: 600px;
+}
+
+.comparison-row {
+  display: grid;
+  grid-template-columns: {{ section.settings.feature_column_width }} 1fr 1fr;
+  border-bottom: 1px solid {{ section.settings.row_border_color }};
+}
+
+.comparison-row:last-child {
+  border-bottom: none;
+}
+
+.comparison-row-header {
+  background: {{ section.settings.header_background }};
+}
+
+.comparison-cell {
+  padding: {{ section.settings.cell_padding_vertical }}px {{ section.settings.cell_padding_horizontal }}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comparison-cell-header {
+  font-weight: {{ section.settings.header_font_weight }};
+  font-size: {{ section.settings.header_font_size }}px;
+  color: {{ section.settings.header_text_color }};
+}
+
+.comparison-cell-feature {
+  justify-content: flex-start;
+  gap: 12px;
+  padding-left: 30px;
+}
+
+.feature-icon {
+  font-size: {{ section.settings.feature_icon_size }}px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.feature-name {
+  font-weight: {{ section.settings.feature_name_font_weight }};
+  font-size: {{ section.settings.feature_name_font_size }}px;
+  color: {{ section.settings.feature_name_color }};
+}
+
+.comparison-cell-standard,
+.comparison-cell-premium {
+  flex-direction: column;
+  gap: 0;
+}
+
+.mobile-label {
+  display: none;
+}
+
+.value-text {
+  font-size: {{ section.settings.value_text_font_size }}px;
+  color: {{ section.settings.standard_text_color }};
+}
+
+.value-text-premium {
+  font-weight: {{ section.settings.premium_text_font_weight }};
+  color: {{ section.settings.premium_text_color }};
+  font-size: {{ section.settings.premium_value_font_size }}px;
+}
+
+.value-checkmark,
+.value-cross {
+  font-size: {{ section.settings.icon_font_size }}px;
+  font-weight: 700;
+}
+
+.value-checkmark-premium {
+  font-size: {{ section.settings.premium_icon_font_size }}px;
+}
+
+/* Highlight Premium Column */
+{% if section.settings.highlight_premium_column %}
+.comparison-row-header .comparison-cell-premium {
+  background-color: {{ section.settings.premium_column_bg_color }};
+}
+
+.comparison-row:not(.comparison-row-header) .comparison-cell-premium {
+  background-color: {{ section.settings.premium_column_bg_color }};
+}
+{% endif %}
+
+/* CTA Buttons */
+.comparison-cta {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.comparison-btn {
+  padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+  border-radius: {{ section.settings.button_border_radius }}px;
+  font-size: {{ section.settings.button_font_size }}px;
+  font-weight: {{ section.settings.button_font_weight }};
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  text-align: center;
+  min-width: 200px;
+}
+
+.comparison-btn-standard {
+  background-color: {{ section.settings.standard_button_bg_color }};
+  color: {{ section.settings.standard_button_text_color }};
+  border-color: {{ section.settings.standard_button_border_color }};
+}
+
+.comparison-btn-standard:hover {
+  background-color: {{ section.settings.standard_button_hover_bg_color }};
+  color: {{ section.settings.standard_button_hover_text_color }};
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.comparison-btn-premium {
+  background-color: {{ section.settings.premium_button_bg_color }};
+  color: {{ section.settings.premium_button_text_color }};
+  border-color: {{ section.settings.premium_button_border_color }};
+}
+
+.comparison-btn-premium:hover {
+  background-color: {{ section.settings.premium_button_hover_bg_color }};
+  color: {{ section.settings.premium_button_hover_text_color }};
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .comparison-title {
+    font-size: {{ section.settings.title_font_size | times: 0.75 }}px;
+  }
+  
+  .comparison-description {
+    font-size: {{ section.settings.description_font_size | times: 0.9 }}px;
+  }
+  
+  .comparison-table {
+    min-width: 100%;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+  }
+  
+  .comparison-table-wrapper {
+    overflow-x: visible;
+    margin-bottom: 0;
+  }
+  
+  /* Hide header on mobile */
+  .comparison-row-header {
+    display: none !important;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    border: none;
+  }
+  
+  /* Each row becomes a card */
+  .comparison-row {
+    display: flex;
+    flex-wrap: wrap;
+    background: {{ section.settings.table_background_color }};
+    border-radius: 12px;
+    margin-bottom: 15px;
+    border: 1px solid {{ section.settings.row_border_color }};
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  
+  /* Feature takes full width */
+  .comparison-cell-feature {
+    width: 100%;
+    background: {{ section.settings.mobile_feature_bg_color }};
+    padding: 15px 20px;
+    justify-content: center;
+    border-bottom: 1px solid {{ section.settings.row_border_color }};
+  }
+  
+  .feature-icon {
+    font-size: {{ section.settings.feature_icon_size | times: 1.1 }}px;
+  }
+  
+  /* Standard and Premium side by side */
+  .comparison-cell-standard,
+  .comparison-cell-premium {
+    width: 50%;
+    padding: 20px 15px;
+    gap: 8px;
+  }
+  
+  .comparison-cell-standard {
+    border-right: 1px solid {{ section.settings.row_border_color }};
+  }
+  
+  /* Show labels on mobile */
+  .mobile-label {
+    display: block;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.7;
+    margin-bottom: 8px;
+    color: {{ section.settings.feature_name_color }};
+  }
+  
+  .comparison-cell-premium .mobile-label {
+    color: {{ section.settings.premium_text_color }};
+  }
+  
+  .comparison-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .comparison-section-wrapper {
+    padding: {{ section.settings.section_padding_top | times: 0.6 }}px 15px {{ section.settings.section_padding_bottom | times: 0.6 }}px;
+  }
+  
+  .comparison-cell-feature {
+    padding: 12px 15px;
+  }
+  
+  .feature-icon {
+    font-size: {{ section.settings.feature_icon_size }}px;
+  }
+  
+  .feature-name {
+    font-size: {{ section.settings.feature_name_font_size | times: 0.95 }}px;
+  }
+  
+  .comparison-cell-standard,
+  .comparison-cell-premium {
+    padding: 18px 12px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Стандарт vs Premium",
+  "tag": "section",
+  "class": "section-comparison",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Заглавна част"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_title",
+      "label": "Покажи заглавие на секцията",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Заглавие",
+      "default": "Стандарт срещу Premium"
+    },
+    {
+      "type": "textarea",
+      "id": "section_description",
+      "label": "Описание",
+      "default": "Вижте защо Premium абонаментът е най-добрият избор"
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Разстояние под заглавието",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Колони в таблицата"
+    },
+    {
+      "type": "text",
+      "id": "feature_column_title",
+      "label": "Заглавие колона Характеристики",
+      "default": "Характеристики"
+    },
+    {
+      "type": "text",
+      "id": "standard_column_title",
+      "label": "Заглавие Стандарт колона",
+      "default": "Стандарт"
+    },
+    {
+      "type": "text",
+      "id": "premium_column_title",
+      "label": "Заглавие Premium колона",
+      "default": "Premium"
+    },
+    {
+      "type": "select",
+      "id": "feature_column_width",
+      "label": "Широчина на колона Характеристики",
+      "options": [
+        {
+          "value": "1.5fr",
+          "label": "Малка"
+        },
+        {
+          "value": "2fr",
+          "label": "Средна"
+        },
+        {
+          "value": "2.5fr",
+          "label": "Голяма"
+        }
+      ],
+      "default": "2fr"
+    },
+    {
+      "type": "header",
+      "content": "Цветове - Общи"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Фон на секцията",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "table_background_color",
+      "label": "Фон на таблицата",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "row_border_color",
+      "label": "Цвят на бордюри",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Цветове - Заглавие"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Цвят на заглавието",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Цвят на описанието",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Цветове - Header на таблица"
+    },
+    {
+      "type": "color_background",
+      "id": "header_background",
+      "label": "Фон на header",
+      "default": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Цвят на текст в header",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Цветове - Характеристики"
+    },
+    {
+      "type": "color",
+      "id": "feature_name_color",
+      "label": "Цвят на име на характеристика",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Цветове - Стойности"
+    },
+    {
+      "type": "color",
+      "id": "standard_text_color",
+      "label": "Цвят на Стандарт текст",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "premium_text_color",
+      "label": "Цвят на Premium текст",
+      "default": "#667eea"
+    },
+    {
+      "type": "color",
+      "id": "checkmark_color",
+      "label": "Цвят на отметка (✓)",
+      "default": "#10b981"
+    },
+    {
+      "type": "color",
+      "id": "premium_checkmark_color",
+      "label": "Цвят на Premium отметка",
+      "default": "#667eea"
+    },
+    {
+      "type": "color",
+      "id": "cross_color",
+      "label": "Цвят на кръстче (✕)",
+      "default": "#ef4444"
+    },
+    {
+      "type": "header",
+      "content": "Маркиране на Premium колона"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight_premium_column",
+      "label": "Маркирай Premium колона",
+      "default": false,
+      "info": "Добави фонов цвят на Premium колоната"
+    },
+    {
+      "type": "color",
+      "id": "premium_column_bg_color",
+      "label": "Фон на Premium колона",
+      "default": "#f0f4ff"
+    },
+    {
+      "type": "color",
+      "id": "mobile_feature_bg_color",
+      "label": "Фон на характеристики на мобилен",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "header",
+      "content": "Шрифтове - Заглавие"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Размер на заглавие",
+      "default": 42
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Дебелина на заглавие",
+      "options": [
+        {
+          "value": "400",
+          "label": "Нормално"
+        },
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        },
+        {
+          "value": "800",
+          "label": "Много удебелено"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на описание",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Шрифтове - Header на таблица"
+    },
+    {
+      "type": "range",
+      "id": "header_font_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на текст в header",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "header_font_weight",
+      "label": "Дебелина на текст в header",
+      "options": [
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        },
+        {
+          "value": "800",
+          "label": "Много удебелено"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Шрифтове - Характеристики"
+    },
+    {
+      "type": "range",
+      "id": "feature_icon_size",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Размер на икони",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "feature_name_font_size",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на име на характеристика",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "feature_name_font_weight",
+      "label": "Дебелина на име на характеристика",
+      "options": [
+        {
+          "value": "400",
+          "label": "Нормално"
+        },
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Шрифтове - Стойности"
+    },
+    {
+      "type": "range",
+      "id": "value_text_font_size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на текстови стойности",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "premium_value_font_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на Premium стойности",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "premium_text_font_weight",
+      "label": "Дебелина на Premium текст",
+      "options": [
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        },
+        {
+          "value": "800",
+          "label": "Много удебелено"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "icon_font_size",
+      "min": 18,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Размер на икони (✓/✕)",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "premium_icon_font_size",
+      "min": 20,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Размер на Premium икони",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Размери - Контейнер"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Максимална широчина",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Горна подложка",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Долна подложка",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Размери - Таблица"
+    },
+    {
+      "type": "range",
+      "id": "table_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Заоблени ъгли на таблица",
+      "default": 16
+    },
+    {
+      "type": "text",
+      "id": "table_shadow",
+      "label": "Сянка на таблица",
+      "default": "0 10px 40px rgba(0,0,0,0.1)",
+      "info": "CSS box-shadow стойност"
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_vertical",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Вертикална подложка на клетки",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_horizontal",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Хоризонтална подложка на клетки",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "CTA Бутони"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta_buttons",
+      "label": "Покажи CTA бутони",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "standard_button_text",
+      "label": "Текст на Стандарт бутон",
+      "default": "Избери Стандарт"
+    },
+    {
+      "type": "url",
+      "id": "standard_button_link",
+      "label": "Линк на Стандарт бутон"
+    },
+    {
+      "type": "text",
+      "id": "premium_button_text",
+      "label": "Текст на Premium бутон",
+      "default": "Избери Premium"
+    },
+    {
+      "type": "url",
+      "id": "premium_button_link",
+      "label": "Линк на Premium бутон"
+    },
+    {
+      "type": "header",
+      "content": "Стил на бутони"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на текст в бутон",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "button_font_weight",
+      "label": "Дебелина на текст в бутон",
+      "options": [
+        {
+          "value": "500",
+          "label": "Средно"
+        },
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 10,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Вертикална подложка на бутон",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Хоризонтална подложка на бутон",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Заоблени ъгли на бутон",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Цветове - Стандарт бутон"
+    },
+    {
+      "type": "color",
+      "id": "standard_button_bg_color",
+      "label": "Фон",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "standard_button_text_color",
+      "label": "Цвят на текст",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "standard_button_border_color",
+      "label": "Цвят на бордюр",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "standard_button_hover_bg_color",
+      "label": "Фон при hover",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "color",
+      "id": "standard_button_hover_text_color",
+      "label": "Цвят на текст при hover",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Цветове - Premium бутон"
+    },
+    {
+      "type": "color",
+      "id": "premium_button_bg_color",
+      "label": "Фон",
+      "default": "#667eea"
+    },
+    {
+      "type": "color",
+      "id": "premium_button_text_color",
+      "label": "Цвят на текст",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "premium_button_border_color",
+      "label": "Цвят на бордюр",
+      "default": "#667eea"
+    },
+    {
+      "type": "color",
+      "id": "premium_button_hover_bg_color",
+      "label": "Фон при hover",
+      "default": "#5568d3"
+    },
+    {
+      "type": "color",
+      "id": "premium_button_hover_text_color",
+      "label": "Цвят на текст при hover",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "comparison_row",
+      "name": "Ред за сравнение",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_icon",
+          "label": "Икона/Емоджи",
+          "default": "🎬",
+          "info": "Копирай и постави емоджи или икона"
+        },
+        {
+          "type": "text",
+          "id": "feature_name",
+          "label": "Име на характеристика",
+          "default": "Брой Канали"
+        },
+        {
+          "type": "header",
+          "content": "Стандарт Стойност"
+        },
+        {
+          "type": "select",
+          "id": "standard_value_type",
+          "label": "Тип стойност за Стандарт",
+          "options": [
+            {
+              "value": "text",
+              "label": "Текст"
+            },
+            {
+              "value": "checkmark",
+              "label": "Отметка (✓)"
+            },
+            {
+              "value": "cross",
+              "label": "Кръстче (✕)"
+            }
+          ],
+          "default": "text"
+        },
+        {
+          "type": "text",
+          "id": "standard_text_value",
+          "label": "Текстова стойност за Стандарт",
+          "default": "8,000+",
+          "info": "Използва се само ако типът е 'Текст'"
+        },
+        {
+          "type": "header",
+          "content": "Premium Стойност"
+        },
+        {
+          "type": "select",
+          "id": "premium_value_type",
+          "label": "Тип стойност за Premium",
+          "options": [
+            {
+              "value": "text",
+              "label": "Текст"
+            },
+            {
+              "value": "checkmark",
+              "label": "Отметка (✓)"
+            },
+            {
+              "value": "double-checkmark",
+              "label": "Двойна отметка (✓✓)"
+            },
+            {
+              "value": "cross",
+              "label": "Кръстче (✕)"
+            }
+          ],
+          "default": "text"
+        },
+        {
+          "type": "text",
+          "id": "premium_text_value",
+          "label": "Текстова стойност за Premium",
+          "default": "15,000+",
+          "info": "Използва се само ако типът е 'Текст'"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Стандарт vs Premium",
+      "blocks": [
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_icon": "🎬",
+            "feature_name": "Брой Канали",
+            "standard_value_type": "text",
+            "standard_text_value": "8,000+",
+            "premium_value_type": "text",
+            "premium_text_value": "15,000+"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_icon": "🎥",
+            "feature_name": "Филми и Сериали",
+            "standard_value_type": "text",
+            "standard_text_value": "40,000+",
+            "premium_value_type": "text",
+            "premium_text_value": "100,000+"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_icon": "📺",
+            "feature_name": "4K / HD Качество",
+            "standard_value_type": "checkmark",
+            "premium_value_type": "double-checkmark"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_icon": "🔒",
+            "feature_name": "VPN Защита",
+            "standard_value_type": "cross",
+            "premium_value_type": "checkmark"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_icon": "⚡",
+            "feature_name": "Анти-Фрийз Технология",
+            "standard_value_type": "cross",
+            "premium_value_type": "checkmark"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_icon": "🎯",
+            "feature_name": "Приоритетна Поддръжка",
+            "standard_value_type": "cross",
+            "premium_value_type": "checkmark"
+          }
+        },
+        {
+          "type": "comparison_row",
+          "settings": {
+            "feature_icon": "🔄",
+            "feature_name": "Едновременни Устройства",
+            "standard_value_type": "text",
+            "standard_text_value": "1-2",
+            "premium_value_type": "text",
+            "premium_text_value": "До 5"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

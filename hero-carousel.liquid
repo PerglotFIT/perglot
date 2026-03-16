@@ -1,0 +1,419 @@
+{% comment %}
+  Hero Carousel Section
+  Fully editable hero carousel with up to 5 slides
+{% endcomment %}
+
+<section class="hero-carousel">
+  {% for block in section.blocks %}
+    <div class="hero-slide {% if forloop.first %}active{% endif %}" style="background-image: url('{{ block.settings.background_image | img_url: '1600x' }}');">
+      <div class="hero-overlay">
+        <div class="container">
+          <div class="hero-content">
+            {% if block.settings.tag != blank %}
+              <span class="hero-tag">{{ block.settings.tag }}</span>
+            {% endif %}
+            
+            <h1 class="hero-headline">{{ block.settings.headline }}</h1>
+            
+            {% if block.settings.subheadline != blank %}
+              <p class="hero-subheadline">{{ block.settings.subheadline }}</p>
+            {% endif %}
+            
+            <div class="hero-features">
+              {% if block.settings.feature_1_icon != blank %}
+                <div class="hero-feature">
+                  <span class="hero-feature-icon">{{ block.settings.feature_1_icon }}</span>
+                  <span class="hero-feature-text">{{ block.settings.feature_1_text }}</span>
+                </div>
+              {% endif %}
+              
+              {% if block.settings.feature_2_icon != blank %}
+                <div class="hero-feature">
+                  <span class="hero-feature-icon">{{ block.settings.feature_2_icon }}</span>
+                  <span class="hero-feature-text">{{ block.settings.feature_2_text }}</span>
+                </div>
+              {% endif %}
+              
+              {% if block.settings.feature_3_icon != blank %}
+                <div class="hero-feature">
+                  <span class="hero-feature-icon">{{ block.settings.feature_3_icon }}</span>
+                  <span class="hero-feature-text">{{ block.settings.feature_3_text }}</span>
+                </div>
+              {% endif %}
+            </div>
+            
+            <div class="hero-cta">
+              {% if block.settings.button_1_text != blank %}
+                <a href="{{ block.settings.button_1_link }}" class="btn btn-primary">
+                  {{ block.settings.button_1_text }}
+                </a>
+              {% endif %}
+              
+              {% if block.settings.button_2_text != blank %}
+                <a href="{{ block.settings.button_2_link }}" class="btn btn-secondary">
+                  {{ block.settings.button_2_text }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  
+  <!-- Carousel Controls -->
+  <button class="carousel-nav prev" onclick="changeSlide(-1)">‹</button>
+  <button class="carousel-nav next" onclick="changeSlide(1)">›</button>
+  
+  <div class="carousel-dots">
+    {% for block in section.blocks %}
+      <span class="dot {% if forloop.first %}active{% endif %}" onclick="currentSlide({{ forloop.index }})"></span>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  /* Common Styles - Self-contained */
+  .hero-carousel .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .hero-carousel .btn {
+    padding: 15px 35px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .hero-carousel .btn-primary {
+    background: #2B5FA8;
+    color: white;
+  }
+
+  .hero-carousel .btn-primary:hover {
+    background: #1E4A7C;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(43, 95, 168, 0.4);
+  }
+
+  .hero-carousel .btn-secondary {
+    background: white;
+    color: #2B5FA8;
+    border: 2px solid white;
+  }
+
+  .hero-carousel .btn-secondary:hover {
+    background: transparent;
+    color: white;
+  }
+
+  /* Section Specific Styles */
+  .hero-carousel {
+    position: relative;
+    overflow: hidden;
+    background: #f8f9fa;
+  }
+
+  .hero-slide {
+    display: none;
+    position: relative;
+    min-height: 600px;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .hero-slide.active {
+    display: block;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(43, 95, 168, 0.9) 0%, rgba(30, 74, 124, 0.85) 100%);
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-content {
+    max-width: 600px;
+    color: white;
+    padding: 40px;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: #F4C430;
+    color: #1a1a1a;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .hero-headline {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  .hero-subheadline {
+    font-size: 20px;
+    margin-bottom: 30px;
+    opacity: 0.95;
+    line-height: 1.5;
+  }
+
+  .hero-features {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 35px;
+    flex-wrap: wrap;
+  }
+
+  .hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-feature-icon {
+    font-size: 24px;
+  }
+
+  .hero-feature-text {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    gap: 15px;
+  }
+
+  .carousel-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .dot.active {
+    background: white;
+    width: 30px;
+    border-radius: 6px;
+  }
+
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.3);
+    border: none;
+    color: white;
+    font-size: 30px;
+    padding: 15px 20px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+    z-index: 10;
+  }
+
+  .carousel-nav:hover {
+    background: rgba(255,255,255,0.5);
+  }
+
+  .carousel-nav.prev {
+    left: 20px;
+  }
+
+  .carousel-nav.next {
+    right: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .hero-headline {
+      font-size: 28px;
+    }
+    
+    .hero-features {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+</style>
+
+<script>
+  let slideIndex = 1;
+  showSlides(slideIndex);
+
+  function changeSlide(n) {
+    showSlides(slideIndex += n);
+  }
+
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  }
+
+  function showSlides(n) {
+    let slides = document.getElementsByClassName("hero-slide");
+    let dots = document.getElementsByClassName("dot");
+    
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].classList.remove("active");
+    }
+    
+    for (let i = 0; i < dots.length; i++) {
+      dots[i].classList.remove("active");
+    }
+    
+    slides[slideIndex-1].classList.add("active");
+    dots[slideIndex-1].classList.add("active");
+  }
+
+  // Auto-slide every 5 seconds
+  setInterval(() => {
+    changeSlide(1);
+  }, 5000);
+</script>
+
+{% schema %}
+{
+  "name": "Hero Carousel",
+  "max_blocks": 5,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background Image"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag (Optional)",
+          "default": "Нов продукт",
+          "info": "Small label above headline"
+        },
+        {
+          "type": "textarea",
+          "id": "headline",
+          "label": "Headline",
+          "default": "Your Headline Here"
+        },
+        {
+          "type": "textarea",
+          "id": "subheadline",
+          "label": "Subheadline",
+          "default": "Your subheadline text here"
+        },
+        {
+          "type": "header",
+          "content": "Features (Icons with text)"
+        },
+        {
+          "type": "text",
+          "id": "feature_1_icon",
+          "label": "Feature 1 - Icon",
+          "default": "🚗",
+          "info": "Use emoji or icon"
+        },
+        {
+          "type": "text",
+          "id": "feature_1_text",
+          "label": "Feature 1 - Text",
+          "default": "Съвместимост"
+        },
+        {
+          "type": "text",
+          "id": "feature_2_icon",
+          "label": "Feature 2 - Icon",
+          "default": "📱"
+        },
+        {
+          "type": "text",
+          "id": "feature_2_text",
+          "label": "Feature 2 - Text",
+          "default": "Свързване"
+        },
+        {
+          "type": "text",
+          "id": "feature_3_icon",
+          "label": "Feature 3 - Icon",
+          "default": "🎬"
+        },
+        {
+          "type": "text",
+          "id": "feature_3_text",
+          "label": "Feature 3 - Text",
+          "default": "Стрийминг"
+        },
+        {
+          "type": "header",
+          "content": "Call to Action Buttons"
+        },
+        {
+          "type": "text",
+          "id": "button_1_text",
+          "label": "Button 1 - Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_1_link",
+          "label": "Button 1 - Link"
+        },
+        {
+          "type": "text",
+          "id": "button_2_text",
+          "label": "Button 2 - Text (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "button_2_link",
+          "label": "Button 2 - Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Carousel",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

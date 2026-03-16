@@ -1,0 +1,680 @@
+{% comment %}
+  IPTV Hero Section - Customizable
+{% endcomment %}
+
+<style>
+  .iptv-hero-{{ section.id }} {
+    background: {{ section.settings.background_gradient_start }};
+    background: linear-gradient(135deg, {{ section.settings.background_gradient_start }} 0%, {{ section.settings.background_gradient_end }} 100%);
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .iptv-hero-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, {{ section.settings.accent_color }}26 0%, transparent 70%);
+    border-radius: 50%;
+    top: -200px;
+    right: -200px;
+  }
+
+  .iptv-hero-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, {{ section.settings.secondary_color }}1a 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -150px;
+    left: -150px;
+  }
+
+  .iptv-hero-content-{{ section.id }} {
+    max-width: {{ section.settings.content_width }}px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .iptv-hero-badge-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    background: {{ section.settings.badge_background }};
+    border: 1px solid {{ section.settings.badge_border }};
+    padding: 8px 20px;
+    border-radius: 50px;
+    color: {{ section.settings.badge_text_color }};
+    font-size: {{ section.settings.badge_font_size }}px;
+    font-weight: 600;
+    margin-bottom: 30px;
+  }
+
+  .iptv-hero-badge-{{ section.id }} svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+  }
+
+  .iptv-hero-{{ section.id }} h1 {
+    font-size: {{ section.settings.heading_font_size }}px;
+    font-weight: 800;
+    color: {{ section.settings.heading_color }};
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .iptv-hero-{{ section.id }} .highlight {
+    background: linear-gradient(135deg, {{ section.settings.highlight_gradient_start }} 0%, {{ section.settings.highlight_gradient_end }} 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .iptv-hero-subtitle-{{ section.id }} {
+    font-size: {{ section.settings.subtitle_font_size }}px;
+    color: {{ section.settings.subtitle_color }};
+    max-width: 700px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .iptv-hero-stats-{{ section.id }} {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .stat-item-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-number-{{ section.id }} {
+    font-size: {{ section.settings.stat_number_size }}px;
+    font-weight: 800;
+    color: {{ section.settings.stat_number_color }};
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+
+  .stat-label-{{ section.id }} {
+    font-size: {{ section.settings.stat_label_size }}px;
+    color: {{ section.settings.stat_label_color }};
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .iptv-hero-cta-{{ section.id }} {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary-{{ section.id }} {
+    background: linear-gradient(135deg, {{ section.settings.primary_btn_gradient_start }} 0%, {{ section.settings.primary_btn_gradient_end }} 100%);
+    color: {{ section.settings.primary_btn_text_color }};
+    padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: {{ section.settings.button_font_size }}px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px {{ section.settings.primary_btn_shadow }};
+  }
+
+  .btn-primary-{{ section.id }}:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px {{ section.settings.primary_btn_shadow }};
+  }
+
+  .btn-secondary-{{ section.id }} {
+    color: {{ section.settings.secondary_btn_text_color }};
+    padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+    border: 2px solid {{ section.settings.secondary_btn_border }};
+    border-radius: {{ section.settings.button_border_radius }}px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: {{ section.settings.button_font_size }}px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    background: {{ section.settings.secondary_btn_background }};
+    backdrop-filter: blur(10px);
+  }
+
+  .btn-secondary-{{ section.id }}:hover {
+    background: {{ section.settings.secondary_btn_hover_bg }};
+    border-color: {{ section.settings.secondary_btn_hover_border }};
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .iptv-hero-{{ section.id }} h1 {
+      font-size: {{ section.settings.heading_font_size | divided_by: 1.5 }}px;
+    }
+
+    .iptv-hero-subtitle-{{ section.id }} {
+      font-size: {{ section.settings.subtitle_font_size | minus: 4 }}px;
+    }
+
+    .iptv-hero-cta-{{ section.id }} {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .btn-primary-{{ section.id }},
+    .btn-secondary-{{ section.id }} {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<section class="iptv-hero-{{ section.id }}">
+  <div class="iptv-hero-content-{{ section.id }}">
+    {% if section.settings.show_badge %}
+      <div class="iptv-hero-badge-{{ section.id }}">
+        {% if section.settings.show_badge_icon %}
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        {% endif %}
+        {{ section.settings.badge_text }}
+      </div>
+    {% endif %}
+    
+    <h1>
+      {% assign line1 = section.settings.heading_line_1 | replace: '[[', '<span class="highlight">' | replace: ']]', '</span>' %}
+      {{ line1 }}
+      {% if section.settings.heading_line_2 != blank %}
+        <br>
+        {% assign line2 = section.settings.heading_line_2 | replace: '[[', '<span class="highlight">' | replace: ']]', '</span>' %}
+        {{ line2 }}
+      {% endif %}
+    </h1>
+    
+    {% if section.settings.subtitle != blank %}
+      <p class="iptv-hero-subtitle-{{ section.id }}">
+        {{ section.settings.subtitle }}
+      </p>
+    {% endif %}
+    
+    {% if section.settings.show_stats %}
+      <div class="iptv-hero-stats-{{ section.id }}">
+        {% for block in section.blocks %}
+          {% if block.type == 'stat' %}
+            <div class="stat-item-{{ section.id }}">
+              <div class="stat-number-{{ section.id }}">{{ block.settings.stat_number }}</div>
+              <div class="stat-label-{{ section.id }}">{{ block.settings.stat_label }}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    <div class="iptv-hero-cta-{{ section.id }}">
+      {% if section.settings.primary_button_text != blank %}
+        <a href="{{ section.settings.primary_button_link }}" class="btn-primary-{{ section.id }}">
+          {{ section.settings.primary_button_text }}
+          {% if section.settings.show_primary_icon %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          {% endif %}
+        </a>
+      {% endif %}
+      
+      {% if section.settings.secondary_button_text != blank %}
+        <a href="{{ section.settings.secondary_button_link }}" class="btn-secondary-{{ section.id }}">
+          {{ section.settings.secondary_button_text }}
+          {% if section.settings.show_secondary_icon %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polygon points="10 8 16 12 10 16 10 8"></polygon>
+            </svg>
+          {% endif %}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "IPTV Hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Content Width",
+      "default": 1200
+    },
+    {
+      "type": "header",
+      "content": "Background Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_gradient_start",
+      "label": "Background Gradient Start",
+      "default": "#1a1a2e"
+    },
+    {
+      "type": "color",
+      "id": "background_gradient_end",
+      "label": "Background Gradient End",
+      "default": "#16213e"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color (Top Right Effect)",
+      "default": "#00adb5"
+    },
+    {
+      "type": "color",
+      "id": "secondary_color",
+      "label": "Secondary Color (Bottom Left Effect)",
+      "default": "#ef233c"
+    },
+    {
+      "type": "header",
+      "content": "Badge Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show Badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge_icon",
+      "label": "Show Badge Icon",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "Активация за секунди"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge Font Size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge Background",
+      "default": "#00adb526"
+    },
+    {
+      "type": "color",
+      "id": "badge_border",
+      "label": "Badge Border",
+      "default": "#00adb54d"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#00adb5"
+    },
+    {
+      "type": "header",
+      "content": "Heading Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Heading Line 1",
+      "default": "Неограничена [[Телевизия]]",
+      "info": "Използвай [[текст]] за highlight ефект"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Heading Line 2",
+      "default": "Навсякъде, По Всяко Време",
+      "info": "Използвай [[текст]] за highlight ефект"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 24,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Font Size",
+      "default": 56
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "highlight_gradient_start",
+      "label": "Highlight Gradient Start",
+      "default": "#00adb5"
+    },
+    {
+      "type": "color",
+      "id": "highlight_gradient_end",
+      "label": "Highlight Gradient End",
+      "default": "#00d9e1"
+    },
+    {
+      "type": "header",
+      "content": "Subtitle Settings"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Гледай над 18,000+ канала, хиляди филми и сериали в HD/4K качество на всяко устройство. Без договори, без инсталация, без скрити такси."
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Font Size",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#ffffffcc"
+    },
+    {
+      "type": "header",
+      "content": "Stats Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show Stats",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "stat_number_size",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Stat Number Size",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "stat_number_color",
+      "label": "Stat Number Color",
+      "default": "#00adb5"
+    },
+    {
+      "type": "range",
+      "id": "stat_label_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Stat Label Size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "stat_label_color",
+      "label": "Stat Label Color",
+      "default": "#ffffffb3"
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primary Button Text",
+      "default": "Избери План"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_primary_icon",
+      "label": "Show Primary Button Icon",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "primary_btn_gradient_start",
+      "label": "Primary Button Gradient Start",
+      "default": "#00adb5"
+    },
+    {
+      "type": "color",
+      "id": "primary_btn_gradient_end",
+      "label": "Primary Button Gradient End",
+      "default": "#00d9e1"
+    },
+    {
+      "type": "color",
+      "id": "primary_btn_text_color",
+      "label": "Primary Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "primary_btn_shadow",
+      "label": "Primary Button Shadow Color",
+      "default": "#00adb54d"
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary Button Text",
+      "default": "Как работи?"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_icon",
+      "label": "Show Secondary Button Icon",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "secondary_btn_text_color",
+      "label": "Secondary Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_btn_border",
+      "label": "Secondary Button Border",
+      "default": "#ffffff4d"
+    },
+    {
+      "type": "color",
+      "id": "secondary_btn_background",
+      "label": "Secondary Button Background",
+      "default": "#ffffff0d"
+    },
+    {
+      "type": "color",
+      "id": "secondary_btn_hover_bg",
+      "label": "Secondary Button Hover Background",
+      "default": "#ffffff1a"
+    },
+    {
+      "type": "color",
+      "id": "secondary_btn_hover_border",
+      "label": "Secondary Button Hover Border",
+      "default": "#ffffff80"
+    },
+    {
+      "type": "header",
+      "content": "Button Style"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Button Font Size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Vertical Padding",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Button Horizontal Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button Border Radius",
+      "default": 12
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat_number",
+          "label": "Stat Number",
+          "default": "18,000+"
+        },
+        {
+          "type": "text",
+          "id": "stat_label",
+          "label": "Stat Label",
+          "default": "ТВ Канала"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "IPTV Hero",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "18,000+",
+            "stat_label": "ТВ Канала"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "120,000+",
+            "stat_label": "Филми & Сериали"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "24/7",
+            "stat_label": "Достъп"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat_number": "4K",
+            "stat_label": "Качество"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

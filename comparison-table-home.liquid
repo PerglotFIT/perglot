@@ -1,0 +1,220 @@
+{% comment %}
+  Comparison Table Section
+  Side-by-side comparison of dealer vs Perglot
+{% endcomment %}
+
+<section class="comparison">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title }}</h2>
+      {% if section.settings.subtitle != blank %}
+        <p class="section-subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+    
+    <div class="comparison-table">
+      <!-- Left Column (Competitor) -->
+      <div class="comparison-column">
+        <h3 class="comparison-title">{{ section.settings.left_title }}</h3>
+        
+        {% assign left_items = section.settings.left_items | split: '|' %}
+        {% for item in left_items %}
+          <div class="comparison-item">
+            <span class="comparison-icon negative">✗</span>
+            <span>{{ item }}</span>
+          </div>
+        {% endfor %}
+        
+        <div class="comparison-price">{{ section.settings.left_price }}</div>
+      </div>
+
+      <!-- Right Column (Perglot - Highlighted) -->
+      <div class="comparison-column highlight">
+        <h3 class="comparison-title">{{ section.settings.right_title }}</h3>
+        
+        {% assign right_items = section.settings.right_items | split: '|' %}
+        {% for item in right_items %}
+          <div class="comparison-item">
+            <span class="comparison-icon positive">✓</span>
+            <span>{{ item }}</span>
+          </div>
+        {% endfor %}
+        
+        <div class="comparison-price">{{ section.settings.right_price }}</div>
+        
+        {% if section.settings.button_text != blank %}
+          <a href="{{ section.settings.button_link }}" class="btn btn-primary" style="width: 100%;">
+            {{ section.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .comparison {
+    padding: 80px 0;
+    background: #f8f9fa;
+  }
+
+  .comparison-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .comparison-column {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+    position: relative;
+  }
+
+  .comparison-column.highlight {
+    border-color: #28a745;
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.2);
+  }
+
+  .comparison-column.highlight::before {
+    content: "Препоръчваме";
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #28a745;
+    color: white;
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .comparison-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  .comparison-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .comparison-icon {
+    font-size: 20px;
+    margin-top: 2px;
+  }
+
+  .comparison-icon.positive {
+    color: #28a745;
+  }
+
+  .comparison-icon.negative {
+    color: #dc3545;
+  }
+
+  .comparison-price {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin: 25px 0;
+    color: #2B5FA8;
+  }
+
+  @media (max-width: 1024px) {
+    .comparison-table {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Comparison Table",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Спестете от скъпите обновления"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Защо да плащате хиляди, когато можете да получите същото за част от цената?"
+    },
+    {
+      "type": "header",
+      "content": "Left Column (Competitor)"
+    },
+    {
+      "type": "text",
+      "id": "left_title",
+      "label": "Left Column Title",
+      "default": "Дилърско обновление"
+    },
+    {
+      "type": "textarea",
+      "id": "left_items",
+      "label": "Left Column Items",
+      "default": "Цена: €1,000 - €2,000+|Анулира гаранцията|Дълго чакане (дни/седмици)|Сложна инсталация|Ограничени приложения",
+      "info": "Separate items with | (pipe character)"
+    },
+    {
+      "type": "text",
+      "id": "left_price",
+      "label": "Left Column Price",
+      "default": "€1,500"
+    },
+    {
+      "type": "header",
+      "content": "Right Column (Your Product - Highlighted)"
+    },
+    {
+      "type": "text",
+      "id": "right_title",
+      "label": "Right Column Title",
+      "default": "Perglot адаптер"
+    },
+    {
+      "type": "textarea",
+      "id": "right_items",
+      "label": "Right Column Items",
+      "default": "Цена: само €105|2 години гаранция|Готов за секунди|Plug & Play|Netflix, YouTube, IPTV и повече",
+      "info": "Separate items with | (pipe character)"
+    },
+    {
+      "type": "text",
+      "id": "right_price",
+      "label": "Right Column Price",
+      "default": "€105"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Изберете Perglot"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comparison Table"
+    }
+  ]
+}
+{% endschema %}

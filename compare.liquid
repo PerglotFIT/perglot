@@ -1,0 +1,659 @@
+
+<div class="compare-table-wrapper section-{{ section.id }}-padding isolate">
+ <div class="b-compare-table l page-width">
+ <div class="c-title-v1">
+     <div class="inner">
+       <h2 class="rich-text__heading rte {{ section.settings.heading_size }}" {{ section.shopify_attributes }}>
+                {{ section.settings.heading | replace: 'p>', 'span>' }}
+        </h2>
+         {{ section.settings.des  }}
+    </div>
+</div>
+
+
+<div class="b-compare-table__content">
+   <div class="b-compare-table__wrapper">
+     <div class="zone fixed-zone">
+       <div class="col">
+         {% for block in section.blocks %}
+         <div class="cell"><p>{{ block.settings.title }}</p></div>
+         {% endfor %}
+      </div>
+       
+     <div class="col">
+       
+       
+       
+
+     <div class="cell">
+     <div class="logo">
+         <img loading="lazy" src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ section.settings.logo.alt }}">
+    </div>
+  </div>
+
+ 
+ 
+ 
+ 
+ {% for block in section.blocks %}
+   
+   <div class="cell">
+     
+     <span class="circle">
+       {% if block.settings.block_value != blank %}
+         {{ block.settings.block_value }}
+         {% else %}
+          {% if block.settings.this_store == 'yes' %}
+           <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+           <path d="M1 10L9 17L22.5 1.5" stroke="white" stroke-width="3"></path>
+          </svg>
+         {% else %}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+           <path d="M22 2L2 22" stroke="white" stroke-width="3"></path>
+           <path d="M2 2L22 22" stroke="white" stroke-width="3"></path>
+          </svg>
+         {% endif %}
+        {% endif %}
+        </span>
+    </div>
+
+
+
+
+         {% endfor %}
+    
+     </div>
+       
+    </div>
+
+         
+     <div class="swiper-table">
+     <div class="zone scroll-zone swiper-wrapper" id="swiper-wrapper-3ee840bc8ce45b2c" aria-live="polite">
+     <!--
+     <div class='them'> -->
+     <div class="col swiper-slide">
+      <div class="cell">
+       <p>{{ section.settings.other }}</p>
+     </div>
+       
+
+       {% for block in section.blocks %}
+   <div class="cell">
+
+     <span class="circle right_table_feature">
+       {% if block.settings.block_value != blank %}
+         {{ block.settings.block_value }}
+         {% else %}
+          {% if block.settings.other_store == 'yes' %}
+           <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+           <path d="M1 10L9 17L22.5 1.5" stroke="white" stroke-width="3"></path>
+          </svg>
+         {% else %}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+           <path d="M22 2L2 22" stroke="{{ section.settings.circle_bg_right_c }}" stroke-width="3"></path>
+           <path d="M2 2L22 22" stroke="{{ section.settings.circle_bg_right_c }}" stroke-width="3"></path>
+          </svg>
+         {% endif %}
+        {% endif %}
+        </span>
+     
+   </div>
+  {% endfor %} 
+  
+
+       
+     </div>
+     
+     
+     <!--
+    </div> -->
+    </div>
+     <div class="swiper-pagination swiper-table-pagination"></div>
+    </div>
+  </div>
+</div>
+ </div>
+</div>
+<style>
+
+  .cell .logo img {
+	max-width: 140px;
+	width: 100%;
+}
+.compare-table-wrapper {
+	background: {{section.settings.section_bg}};
+	text-align: center;
+}
+.compare-table-wrapper {
+  position: relative;
+  padding-top: 3.6rem;
+  padding-bottom: 2rem; }
+  @media (min-width: 1024px) {
+    .compare-table-wrapper {
+      padding-top: 3rem;
+      padding-bottom: 2rem; } }
+  .compare-table-wrapper .shape {
+    position: absolute;
+    z-index: 0;
+    left: 1rem;
+    top: 34.6rem; }
+  .compare-table-wrapper .c-title-v1 {
+    margin-bottom: 4.2rem; }
+    @media (min-width: 1024px) {
+      .compare-table-wrapper .c-title-v1 {
+        margin-bottom: 4.3rem; } }
+
+.b-compare-table {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  margin-bottom: 4.5rem; }
+
+  @media (max-width: 1024px) {
+    .b-compare-table .swiper-table {
+      overflow: hidden;
+      margin-top: 0.1rem; } }
+  .b-compare-table .swiper-table .swiper-pagination {
+    position: static;
+    margin-top: 4rem; }
+    @media (min-width: 1024px) {
+      .b-compare-table .swiper-table .swiper-pagination {
+        display: none; } }
+  .b-compare-table .swiper-table .swiper-pagination-bullets,
+  .b-compare-table .swiper-table .swiper-pagination-custom,
+  .b-compare-table .swiper-table .swiper-pagination-fraction {
+    width: 100%; }
+  .b-compare-table .swiper-table .swiper-pagination-bullets .swiper-pagination-bullet {
+    margin: 0 0.6rem; }
+  .b-compare-table .swiper-table .swiper-pagination-bullet {
+    width: 1.3rem;
+    height: 1.3rem;
+    border: 2px solid #6b70ed;
+    background-color: transparent;
+    border-radius: 100%;
+    -webkit-transition: all 0.35s ease-in-out;
+    -o-transition: all 0.35s ease-in-out;
+    transition: all 0.35s ease-in-out; }
+  .b-compare-table .swiper-table .swiper-pagination-bullet-active {
+    background-color: #6b70ed; }
+  .b-compare-table__content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
+  .b-compare-table__wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    color: #000;
+    width: 100%;
+    position: relative;
+    margin-bottom: 2rem;
+    font-size: 1.5rem; }
+    @media (min-width: 1024px) {
+      .b-compare-table__wrapper {
+        font-size: 1.8rem; } }
+    @media (min-width: 1024px) {
+      .b-compare-table__wrapper {
+        margin-bottom: 6rem;
+        width: auto;
+        margin: 0 auto; } }
+  .b-compare-table .zone {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start; }
+
+  .b-compare-table .fixed-zone .col {
+    margin-top: 8rem;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border: 1px solid #fff;
+    border-right: none;
+    overflow: hidden;
+    width: 10.6rem; }
+  .b-compare-table__wrapper {
+	justify-content: center;
+}
+.b-compare-table .fixed-zone .col {
+	width: 120px;
+}
+
+  
+    @media (min-width: 1024px) {
+      .b-compare-table .fixed-zone .col {
+        width: 30.5rem; } }
+    .b-compare-table .fixed-zone .col:nth-child(1) .cell {
+      font-weight: 700;
+      -webkit-box-align: start;
+          -ms-flex-align: start;
+              align-items: flex-start;
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      background-color: #fff;
+      border-bottom: 1px solid #D7EEFF; }
+      @media (min-width: 1024px) {
+        .b-compare-table .fixed-zone .col:nth-child(1) .cell {
+          -webkit-box-align: start;
+              -ms-flex-align: start;
+                  align-items: flex-start; } }
+      .b-compare-table .fixed-zone .col:nth-child(1) .cell:last-of-type {
+        border-bottom: 1px solid #fff; }
+    .b-compare-table .fixed-zone .col:nth-child(2) {
+      margin-top: 0;
+      -webkit-box-shadow: 0px 4px 60px 10px {{section.settings.table_bg_shadow }};
+              box-shadow: 0px 4px 60px 10px {{section.settings.table_bg_shadow }};
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid {{section.settings.table_bg}};
+      width: 11.2rem; }
+      @media (min-width: 1024px) {
+        .b-compare-table .fixed-zone .col:nth-child(2) {
+          width: 17.7rem; } }
+      .b-compare-table .fixed-zone .col:nth-child(2) .cell {
+        background-color: {{section.settings.table_bg}}; }
+        .b-compare-table .fixed-zone .col:nth-child(2) .cell:first-of-type {
+          height: 8rem;
+          -webkit-box-orient: vertical;
+          -webkit-box-direction: normal;
+              -ms-flex-flow: column;
+                  flex-flow: column; }
+        .b-compare-table .fixed-zone .col:nth-child(2) .cell:last-of-type {
+          height: 8rem; }
+      .b-compare-table .fixed-zone .col:nth-child(2) .logo {
+        display: block; }
+        .b-compare-table .fixed-zone .col:nth-child(2) .logo svg {
+          width: 7rem; }
+          @media (min-width: 1024px) {
+            .b-compare-table .fixed-zone .col:nth-child(2) .logo svg {
+              width: 10.4rem; } }
+  .b-compare-table .scroll-zone {
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    margin-top: 1rem; }
+    @media (min-width: 1024px) {
+      .b-compare-table .scroll-zone {
+        overflow-x: hidden;
+        border: 1px solid #fff;
+        border-left: none;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px; } }
+    .b-compare-table .scroll-zone .col {
+      min-width: 9.5rem;
+      border-right: 1px solid #fff; }
+      @media (min-width: 1024px) {
+        .b-compare-table .scroll-zone .col {
+          min-width: 18.1rem;
+          width: auto; } }
+      .b-compare-table .scroll-zone .col:last-of-type {
+        border-right: none; }
+        .b-compare-table .scroll-zone .col:last-of-type .cell:first-of-type {
+          border-right: none; }
+      .b-compare-table .scroll-zone .col .cell:first-of-type {
+        background-color: #fff;
+        text-transform: uppercase;
+        border-right: 1px solid #D7EEFF; }
+    @media (max-width: 1024px) {
+      .b-compare-table .scroll-zone .swiper-slide .cell {
+        min-width: 10.6rem;
+        max-width: 10.6rem;
+        margin-left: auto; }
+        .b-compare-table .scroll-zone .swiper-slide .cell:first-of-type {
+          border-right: 1px solid #fff; }
+        .b-compare-table .scroll-zone .swiper-slide .cell:last-of-type {
+          border-bottom: 1px solid #fff; }
+        .b-compare-table .scroll-zone .swiper-slide .cell p {
+          text-align: center; } }
+    @media (max-width: 1024px) {
+      .b-compare-table .scroll-zone .swiper-slide.col:last-of-type {
+        border-right: 1px solid #fff; } }
+  .b-compare-table .col {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: column nowrap;
+            flex-flow: column nowrap; }
+  .b-compare-table .cell {
+    font: inherit;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-flow: column;
+            flex-flow: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    border-bottom: 1px solid #fff;
+    padding: 0 2.1rem;
+    height: 7rem; }
+    @media (min-width: 1024px) {
+      .b-compare-table .cell {
+        padding: 0 2.7rem; } }
+    .b-compare-table .cell:last-of-type {
+      border-bottom: none; }
+    .b-compare-table .cell span {
+      font-size: 1.8rem;
+      font-weight: 700; }
+    .b-compare-table .cell p {
+      text-align: left; }
+  .b-compare-table .circle {
+    width: 4.5rem;
+    height: 4.5rem;
+    background: {{section.settings.circle_bg}};
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    border-radius: 100%;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: #fff; }
+    .b-compare-table .circle.blue {
+      background: transparent; }
+      .b-compare-table .circle.blue path {
+        stroke: #6b70ed; }
+
+.inner p {
+	line-height: 1.3;
+}
+.c-title-v1 .rte {
+  margin-bottom: 5px !important;
+}
+.c-title-v1 {
+  max-width: 800px;
+  margin: 0 auto;
+}
+  
+    @media (max-width: 450px) {
+
+.b-compare-table .cell p {
+	line-height: 1.2;
+  	font-weight: normal;
+}
+     
+.b-compare-table .fixed-zone .col:nth-child(1) .cell {
+	padding-right: 0;
+}
+      
+.b-compare-table .cell {
+	padding: 0px 1rem;
+}
+
+.b-compare-table .cell {
+  padding: 0px 1rem;
+}
+.b-compare-table .fixed-zone .col:nth-child(2) {
+  width: 9rem;
+}
+.b-compare-table .circle {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.b-compare-table .scroll-zone .col {
+
+  width: 9rem;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  border-bottom-right-radius: 10px;
+}
+
+
+.b-compare-table .cell {
+  padding: 0px 1rem;
+}
+.b-compare-table .fixed-zone .col:nth-child(2) {
+  width: 9rem;
+}
+.b-compare-table .circle {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.b-compare-table .scroll-zone .col {
+  width: 9rem;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  border-bottom-right-radius: 10px;
+}
+      
+      }
+.b-compare-table .scroll-zone .col {
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  border-bottom-right-radius: 10px;
+}
+
+    .circle.right_table_feature {
+    	background: {{ section.settings.circle_bg_right }};
+    }
+</style>
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+  {
+    "name": "Comparison V2",
+    "settings": [
+
+       {
+          "type": "color",
+          "id": "section_bg",
+          "label": "Section BG Color",
+           "default": "#D5D9EC"
+      },
+       {
+          "type": "color",
+          "id": "table_bg",
+          "label": "Midlle Table BG",
+           "default": "#a891f6"
+      },
+          {
+          "type": "color",
+          "id": "table_bg_shadow",
+          "label": "Midlle Table Shadow",
+           "default": "#a891f6"
+      },
+               {
+          "type": "color",
+          "id": "circle_bg",
+          "label": "Circle Bg Color",
+           "default": "#a891f6"
+      },
+          {
+          "type": "color",
+          "id": "circle_bg_right",
+          "label": "Circle Bg Color Right",
+           "default": "#a891f6"
+      },
+         {
+          "type": "color",
+          "id": "circle_bg_right_c",
+          "label": "Circle Cross Color Right",
+           "default": "#fff"
+      },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "default": "<p>Talk about your brand</p>",
+          "label": "t:sections.rich-text.blocks.heading.settings.heading.label"
+        },
+         {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "h2",
+              "label": "t:sections.all.heading_size.options__1.label"
+            },
+            {
+              "value": "h1",
+              "label": "t:sections.all.heading_size.options__2.label"
+            },
+            {
+              "value": "h0",
+              "label": "t:sections.all.heading_size.options__3.label"
+            },
+            {
+              "value": "hxl",
+              "label": "t:sections.all.heading_size.options__4.label"
+            }
+          ],
+          "default": "h1",
+          "label": "t:sections.all.heading_size.label"
+        },
+      
+       {
+        "type": "richtext",
+        "id": "des", 
+        "label": "Description",
+        "default": "<p> Find out why you should choose Bleame instead of other hair removal tools. Find out why you should choose Bleame instead of other hair removal tools.</p>"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo", 
+        "label": "Logo"
+      },
+        {
+        "type": "text",
+        "id": "other", 
+        "label": "Others",
+        "default": "Lash Brand $"
+      },
+      {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+    ],
+ "presets": [
+    {
+      "name": "Comparison V2 ",
+      "blocks": [
+         {
+          "type": "feature"
+        },
+         {
+          "type": "feature"
+        }
+        ,
+         {
+          "type": "feature"
+        }
+        ,
+         {
+          "type": "feature"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+         "type": "text",
+          "id": "title",
+          "label": "Feature Tilte",
+          "default": "Synthetic silk lash fibers"
+        },
+         {
+         "type": "text",
+          "id": "block_value",
+          "label": "Text Value"
+        },
+     {
+      "type": "select",
+      "id": "this_store",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes"
+        },
+        {
+          "value": "no",
+          "label": "No"
+        }
+      ],
+      "default": "yes",
+      "label": "This Store"
+    },
+            {
+      "type": "select",
+      "id": "other_store",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes"
+        },
+        {
+          "value": "no",
+          "label": "No"
+        }
+      ],
+      "default": "no",
+      "label": "Other Store"
+    }
+      ]
+    }
+  ]
+  }
+{% endschema %}

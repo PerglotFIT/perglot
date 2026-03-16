@@ -1,0 +1,939 @@
+{% comment %}
+  FAQ Section - Questions and Answers
+  Fully customizable through Shopify customizer
+{% endcomment %}
+
+<div class="faq-section-wrapper" data-section-id="{{ section.id }}" {% if section.settings.section_anchor_id != blank %}id="{{ section.settings.section_anchor_id }}"{% endif %}>
+  <div class="faq-container">
+    {% if section.settings.show_section_title %}
+      <div class="faq-header">
+        {% if section.settings.section_title != blank %}
+          <h2 class="faq-title">{{ section.settings.section_title }}</h2>
+        {% endif %}
+        {% if section.settings.section_description != blank %}
+          <p class="faq-description">{{ section.settings.section_description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="faq-list">
+      {% for block in section.blocks %}
+        <div class="faq-item {% if block.settings.open_by_default %}faq-item--open{% endif %}" {{ block.shopify_attributes }}>
+          <button class="faq-question" type="button" aria-expanded="{% if block.settings.open_by_default %}true{% else %}false{% endif %}">
+            {% if block.settings.question_icon != blank %}
+              <span class="faq-question-icon">{{ block.settings.question_icon }}</span>
+            {% endif %}
+            <span class="faq-question-text">{{ block.settings.question }}</span>
+            <span class="faq-toggle-icon">
+              <svg class="faq-icon-plus" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg class="faq-icon-minus" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          
+          <div class="faq-answer-wrapper">
+            <div class="faq-answer">
+              {{ block.settings.answer }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    {% if section.settings.show_cta_button and section.settings.cta_button_text != blank %}
+      <div class="faq-cta">
+        <a href="{{ section.settings.cta_button_link }}" class="faq-cta-button">
+          {{ section.settings.cta_button_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.faq-section-wrapper {
+  padding: {{ section.settings.section_padding_top }}px 20px {{ section.settings.section_padding_bottom }}px;
+  background: {{ section.settings.background_color }};
+}
+
+.faq-container {
+  max-width: {{ section.settings.container_max_width }}px;
+  margin: 0 auto;
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: {{ section.settings.header_margin_bottom }}px;
+}
+
+.faq-title {
+  font-size: {{ section.settings.title_font_size }}px;
+  font-weight: {{ section.settings.title_font_weight }};
+  color: {{ section.settings.title_color }};
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.faq-description {
+  font-size: {{ section.settings.description_font_size }}px;
+  color: {{ section.settings.description_color }};
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* FAQ List */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: {{ section.settings.gap_between_items }}px;
+}
+
+/* FAQ Item */
+.faq-item {
+  background: {{ section.settings.item_bg_color }};
+  border-radius: {{ section.settings.item_border_radius }}px;
+  border: {{ section.settings.item_border_width }}px solid {{ section.settings.item_border_color }};
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  box-shadow: {{ section.settings.item_hover_shadow }};
+  border-color: {{ section.settings.item_hover_border_color }};
+}
+
+/* FAQ Question */
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: {{ section.settings.question_icon_gap }}px;
+  padding: {{ section.settings.question_padding_vertical }}px {{ section.settings.question_padding_horizontal }}px;
+  background: {{ section.settings.question_bg_color }};
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.faq-item--open .faq-question {
+  background: {{ section.settings.question_active_bg_color }};
+}
+
+.faq-question:hover {
+  background: {{ section.settings.question_hover_bg_color }};
+}
+
+.faq-question-icon {
+  font-size: {{ section.settings.question_emoji_size }}px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.faq-question-text {
+  flex: 1;
+  font-size: {{ section.settings.question_font_size }}px;
+  font-weight: {{ section.settings.question_font_weight }};
+  color: {{ section.settings.question_color }};
+  line-height: 1.4;
+}
+
+.faq-item--open .faq-question-text {
+  color: {{ section.settings.question_active_color }};
+}
+
+/* Toggle Icon */
+.faq-toggle-icon {
+  width: {{ section.settings.toggle_icon_size }}px;
+  height: {{ section.settings.toggle_icon_size }}px;
+  flex-shrink: 0;
+  position: relative;
+  color: {{ section.settings.toggle_icon_color }};
+}
+
+.faq-item--open .faq-toggle-icon {
+  color: {{ section.settings.toggle_icon_active_color }};
+}
+
+.faq-icon-plus,
+.faq-icon-minus {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.faq-icon-plus {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.faq-icon-minus {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.faq-item--open .faq-icon-plus {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.faq-item--open .faq-icon-minus {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+/* FAQ Answer */
+.faq-answer-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.faq-item--open .faq-answer-wrapper {
+  max-height: 2000px;
+}
+
+.faq-answer {
+  padding: 0 {{ section.settings.question_padding_horizontal }}px {{ section.settings.answer_padding_bottom }}px;
+  font-size: {{ section.settings.answer_font_size }}px;
+  color: {{ section.settings.answer_color }};
+  line-height: 1.7;
+}
+
+.faq-answer p {
+  margin: 0 0 15px 0;
+}
+
+.faq-answer p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-answer ul,
+.faq-answer ol {
+  margin: 15px 0;
+  padding-left: 25px;
+}
+
+.faq-answer li {
+  margin-bottom: 8px;
+}
+
+.faq-answer strong {
+  font-weight: 700;
+  color: {{ section.settings.answer_strong_color }};
+}
+
+/* CTA Button */
+.faq-cta {
+  text-align: center;
+  margin-top: {{ section.settings.cta_margin_top }}px;
+}
+
+.faq-cta-button {
+  display: inline-block;
+  padding: {{ section.settings.cta_button_padding_vertical }}px {{ section.settings.cta_button_padding_horizontal }}px;
+  background: {{ section.settings.cta_button_bg_color }};
+  color: {{ section.settings.cta_button_text_color }};
+  font-size: {{ section.settings.cta_button_font_size }}px;
+  font-weight: {{ section.settings.cta_button_font_weight }};
+  border-radius: {{ section.settings.cta_button_border_radius }}px;
+  border: 2px solid {{ section.settings.cta_button_border_color }};
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.faq-cta-button:hover {
+  background: {{ section.settings.cta_button_hover_bg_color }};
+  color: {{ section.settings.cta_button_hover_text_color }};
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .faq-title {
+    font-size: {{ section.settings.title_font_size | times: 0.75 }}px;
+  }
+  
+  .faq-description {
+    font-size: {{ section.settings.description_font_size | times: 0.9 }}px;
+  }
+  
+  .faq-question {
+    padding: {{ section.settings.question_padding_vertical | times: 0.8 }}px {{ section.settings.question_padding_horizontal | times: 0.8 }}px;
+  }
+  
+  .faq-question-text {
+    font-size: {{ section.settings.question_font_size | times: 0.9 }}px;
+  }
+  
+  .faq-answer {
+    font-size: {{ section.settings.answer_font_size | times: 0.95 }}px;
+    padding: 0 {{ section.settings.question_padding_horizontal | times: 0.8 }}px {{ section.settings.answer_padding_bottom | times: 0.8 }}px;
+  }
+  
+  .faq-cta-button {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-section-wrapper {
+    padding: {{ section.settings.section_padding_top | times: 0.6 }}px 15px {{ section.settings.section_padding_bottom | times: 0.6 }}px;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const faqItems = document.querySelectorAll('[data-section-id="{{ section.id }}"] .faq-item');
+  
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    
+    question.addEventListener('click', function() {
+      const isOpen = item.classList.contains('faq-item--open');
+      
+      // Close all other items if single_open is enabled
+      {% if section.settings.single_open %}
+      faqItems.forEach(otherItem => {
+        if (otherItem !== item) {
+          otherItem.classList.remove('faq-item--open');
+          otherItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        }
+      });
+      {% endif %}
+      
+      // Toggle current item
+      if (isOpen) {
+        item.classList.remove('faq-item--open');
+        question.setAttribute('aria-expanded', 'false');
+      } else {
+        item.classList.add('faq-item--open');
+        question.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Въпроси и Отговори (FAQ)",
+  "tag": "section",
+  "class": "section-faq",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section ID за скрол"
+    },
+    {
+      "type": "text",
+      "id": "section_anchor_id",
+      "label": "Section ID (за скрол линкове)",
+      "info": "Например: faq - използвай само малки букви, цифри и тире. След това използвай #faq в CTA бутоните",
+      "placeholder": "faq"
+    },
+    {
+      "type": "header",
+      "content": "Заглавна част"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_title",
+      "label": "Покажи заглавие",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Заглавие",
+      "default": "Често Задавани Въпроси"
+    },
+    {
+      "type": "textarea",
+      "id": "section_description",
+      "label": "Описание",
+      "default": "Отговори на най-често задаваните въпроси"
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Разстояние под заглавието",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Поведение"
+    },
+    {
+      "type": "checkbox",
+      "id": "single_open",
+      "label": "Само един отворен наведнъж",
+      "info": "Когато отвориш един въпрос, другите се затварят",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Цветове - Общи"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Фон на секцията",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Цвят на заглавието",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Цвят на описанието",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "FAQ Item"
+    },
+    {
+      "type": "color",
+      "id": "item_bg_color",
+      "label": "Цвят на фона",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "item_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Заоблени ъгли",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "item_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Дебелина на бордюр",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "item_border_color",
+      "label": "Цвят на бордюр",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "item_hover_border_color",
+      "label": "Цвят на бордюр при hover",
+      "default": "#667eea"
+    },
+    {
+      "type": "text",
+      "id": "item_hover_shadow",
+      "label": "Сянка при hover",
+      "default": "0 4px 12px rgba(0,0,0,0.1)",
+      "info": "CSS box-shadow стойност"
+    },
+    {
+      "type": "range",
+      "id": "gap_between_items",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Разстояние между въпросите",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Въпрос (Question)"
+    },
+    {
+      "type": "color",
+      "id": "question_bg_color",
+      "label": "Цвят на фона",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "question_hover_bg_color",
+      "label": "Цвят на фона при hover",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "question_active_bg_color",
+      "label": "Цвят на фона когато е отворен",
+      "default": "#f0f4ff"
+    },
+    {
+      "type": "range",
+      "id": "question_padding_vertical",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Вертикален padding",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "question_padding_horizontal",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Хоризонтален padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "question_font_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на шрифт",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "question_font_weight",
+      "label": "Дебелина на шрифт",
+      "options": [
+        {
+          "value": "500",
+          "label": "Средно"
+        },
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Цвят на текста",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "question_active_color",
+      "label": "Цвят на текста когато е отворен",
+      "default": "#667eea"
+    },
+    {
+      "type": "range",
+      "id": "question_emoji_size",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Размер на емоджи",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "question_icon_gap",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Разстояние между емоджи и текст",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Toggle икона (+/-)"
+    },
+    {
+      "type": "range",
+      "id": "toggle_icon_size",
+      "min": 18,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Размер",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "toggle_icon_color",
+      "label": "Цвят",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "toggle_icon_active_color",
+      "label": "Цвят когато е отворен",
+      "default": "#667eea"
+    },
+    {
+      "type": "header",
+      "content": "Отговор (Answer)"
+    },
+    {
+      "type": "range",
+      "id": "answer_padding_bottom",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Долен padding",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "answer_font_size",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на шрифт",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Цвят на текста",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "answer_strong_color",
+      "label": "Цвят на удебелен текст",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Шрифтове - Заглавие"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Размер",
+      "default": 42
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Дебелина",
+      "options": [
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        },
+        {
+          "value": "800",
+          "label": "Много удебелено"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на описание",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Размери"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 600,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Максимална широчина",
+      "default": 900
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Горна подложка",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Долна подложка",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "CTA Бутон"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta_button",
+      "label": "Покажи CTA бутон",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "cta_button_text",
+      "label": "Текст на бутона",
+      "default": "Все още имаш въпроси?"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_link",
+      "label": "Линк на бутона"
+    },
+    {
+      "type": "range",
+      "id": "cta_margin_top",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Разстояние над бутона",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "cta_button_font_size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на шрифт",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "cta_button_font_weight",
+      "label": "Дебелина на шрифт",
+      "options": [
+        {
+          "value": "500",
+          "label": "Средно"
+        },
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "cta_button_padding_vertical",
+      "min": 10,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Вертикален padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "cta_button_padding_horizontal",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Хоризонтален padding",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "cta_button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Заоблени ъгли",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "cta_button_bg_color",
+      "label": "Цвят на фона",
+      "default": "#667eea"
+    },
+    {
+      "type": "color",
+      "id": "cta_button_text_color",
+      "label": "Цвят на текста",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cta_button_border_color",
+      "label": "Цвят на бордюра",
+      "default": "#667eea"
+    },
+    {
+      "type": "color",
+      "id": "cta_button_hover_bg_color",
+      "label": "Цвят на фона при hover",
+      "default": "#5568d3"
+    },
+    {
+      "type": "color",
+      "id": "cta_button_hover_text_color",
+      "label": "Цвят на текста при hover",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "Въпрос",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question_icon",
+          "label": "Икона/Емоджи (опционално)",
+          "info": "Копирай и постави емоджи"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Въпрос",
+          "default": "Често задаван въпрос?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Отговор",
+          "default": "<p>Тук напиши отговора на въпроса. Можеш да използваш удебелен текст, списъци и повече.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Отворен по подразбиране",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Въпроси и Отговори (FAQ)",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question_icon": "💳",
+            "question": "Трябва ли да давам данни за карта?",
+            "answer": "<p><strong>Не!</strong> Не се изисква карта или автоматично подновяване. Плащаш само когато решиш.</p>",
+            "open_by_default": true
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question_icon": "🔄",
+            "question": "Подновява ли се автоматично абонаментът?",
+            "answer": "<p><strong>НЕ!</strong> Абонаментът НЕ се подновява автоматично. Когато изтече, просто поръчай отново ако искаш да продължиш да ползваш услугата.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question_icon": "📄",
+            "question": "Има ли договор или обвързване?",
+            "answer": "<p><strong>Няма договори!</strong> Няма обвързване, минимален срок или неустойки. Спираш когато решиш.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question_icon": "💰",
+            "question": "Има ли скрити такси?",
+            "answer": "<p><strong>Никакви допълнителни такси!</strong> Цената която виждаш е крайната цена. Няма скрити такси, инсталационни такси или други доплащания.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question_icon": "⏱️",
+            "question": "Колко бързо получавам достъп?",
+            "answer": "<p>След завършване на поръчката получаваш <strong>имейл за секунди</strong> с потребителско име, парола и инструкции за инсталация.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question_icon": "📱",
+            "question": "На колко устройства мога да гледам?",
+            "answer": "<p>Зависи от избрания план:</p><ul><li><strong>Стандарт:</strong> 1-2 устройства едновременно</li><li><strong>Premium:</strong> До 5 устройства едновременно</li></ul>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question_icon": "❌",
+            "question": "Мога ли да откажа по всяко време?",
+            "answer": "<p><strong>Да, абсолютно!</strong> Няма период на обвързване. Просто не подновяваш абонамента когато изтече.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question_icon": "🔒",
+            "question": "Сигурен ли е сървисът?",
+            "answer": "<p>Да! Premium абонаментът включва вградена VPN защита и SSL криптиране за пълна сигурност.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

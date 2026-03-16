@@ -1,0 +1,917 @@
+{% comment %}
+  Devices Section - Show all supported devices
+  Fully customizable through Shopify customizer
+{% endcomment %}
+
+<div class="devices-section-wrapper" data-section-id="{{ section.id }}">
+  <div class="devices-container">
+    {% if section.settings.show_section_title %}
+      <div class="devices-header">
+        {% if section.settings.section_title != blank %}
+          <h2 class="devices-title">{{ section.settings.section_title }}</h2>
+        {% endif %}
+        {% if section.settings.section_description != blank %}
+          <p class="devices-description">{{ section.settings.section_description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="devices-grid">
+      {% for block in section.blocks %}
+        <div class="device-card" {{ block.shopify_attributes }}>
+          {% if block.settings.device_icon != blank %}
+            <div class="device-icon">{{ block.settings.device_icon }}</div>
+          {% endif %}
+          
+          {% if block.settings.device_name != blank %}
+            <h3 class="device-name">{{ block.settings.device_name }}</h3>
+          {% endif %}
+          
+          {% if block.settings.device_description != blank %}
+            <p class="device-description">{{ block.settings.device_description }}</p>
+          {% endif %}
+          
+          {% if block.settings.show_badge %}
+            <span class="device-badge">{{ block.settings.badge_text }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    
+    {% if section.settings.show_bottom_text and section.settings.bottom_text != blank %}
+      <div class="devices-bottom-text">
+        <p>{{ section.settings.bottom_text }}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.devices-section-wrapper {
+  padding: {{ section.settings.section_padding_top }}px 20px {{ section.settings.section_padding_bottom }}px;
+  background: {{ section.settings.background_color }};
+}
+
+.devices-container {
+  max-width: {{ section.settings.container_max_width }}px;
+  margin: 0 auto;
+}
+
+.devices-header {
+  text-align: center;
+  margin-bottom: {{ section.settings.header_margin_bottom }}px;
+}
+
+.devices-title {
+  font-size: {{ section.settings.title_font_size }}px;
+  font-weight: {{ section.settings.title_font_weight }};
+  color: {{ section.settings.title_color }};
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.devices-description {
+  font-size: {{ section.settings.description_font_size }}px;
+  color: {{ section.settings.description_color }};
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Devices Grid */
+.devices-grid {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+  gap: {{ section.settings.gap_between_cards }}px;
+}
+
+/* Device Card */
+.device-card {
+  background: {{ section.settings.card_bg_color }};
+  border-radius: {{ section.settings.card_border_radius }}px;
+  padding: {{ section.settings.card_padding }}px;
+  border: {{ section.settings.card_border_width }}px solid {{ section.settings.card_border_color }};
+  box-shadow: {{ section.settings.card_shadow }};
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: {{ section.settings.card_min_height }}px;
+}
+
+.device-card:hover {
+  transform: translateY(-5px);
+  box-shadow: {{ section.settings.card_hover_shadow }};
+  border-color: {{ section.settings.card_hover_border_color }};
+}
+
+/* Device Icon */
+.device-icon {
+  font-size: {{ section.settings.icon_size }}px;
+  margin-bottom: {{ section.settings.icon_margin_bottom }}px;
+  line-height: 1;
+  {% if section.settings.icon_circle_bg %}
+    width: {{ section.settings.icon_circle_size }}px;
+    height: {{ section.settings.icon_circle_size }}px;
+    background: {{ section.settings.icon_circle_bg_color }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  {% endif %}
+}
+
+/* Device Name */
+.device-name {
+  font-size: {{ section.settings.device_name_font_size }}px;
+  font-weight: {{ section.settings.device_name_font_weight }};
+  color: {{ section.settings.device_name_color }};
+  margin-bottom: {{ section.settings.device_name_margin_bottom }}px;
+  line-height: 1.3;
+}
+
+/* Device Description */
+.device-description {
+  font-size: {{ section.settings.device_description_font_size }}px;
+  color: {{ section.settings.device_description_color }};
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Device Badge */
+.device-badge {
+  position: absolute;
+  top: {{ section.settings.badge_top }}px;
+  right: {{ section.settings.badge_right }}px;
+  background: {{ section.settings.badge_bg_color }};
+  color: {{ section.settings.badge_text_color }};
+  font-size: {{ section.settings.badge_font_size }}px;
+  font-weight: {{ section.settings.badge_font_weight }};
+  padding: {{ section.settings.badge_padding_vertical }}px {{ section.settings.badge_padding_horizontal }}px;
+  border-radius: {{ section.settings.badge_border_radius }}px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Bottom Text */
+.devices-bottom-text {
+  text-align: center;
+  margin-top: {{ section.settings.bottom_text_margin_top }}px;
+  padding: {{ section.settings.bottom_text_padding }}px;
+  background: {{ section.settings.bottom_text_bg_color }};
+  border-radius: {{ section.settings.bottom_text_border_radius }}px;
+}
+
+.devices-bottom-text p {
+  font-size: {{ section.settings.bottom_text_font_size }}px;
+  color: {{ section.settings.bottom_text_color }};
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Tablet Responsive */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .devices-grid {
+    grid-template-columns: repeat({{ section.settings.columns_tablet }}, 1fr);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .devices-title {
+    font-size: {{ section.settings.title_font_size | times: 0.75 }}px;
+  }
+  
+  .devices-description {
+    font-size: {{ section.settings.description_font_size | times: 0.9 }}px;
+  }
+  
+  .devices-grid {
+    grid-template-columns: repeat({{ section.settings.columns_mobile }}, 1fr);
+    gap: {{ section.settings.gap_between_cards | times: 0.7 }}px;
+  }
+  
+  .device-card {
+    padding: {{ section.settings.card_padding | times: 0.8 }}px;
+    min-height: auto;
+  }
+  
+  .device-icon {
+    font-size: {{ section.settings.icon_size | times: 0.85 }}px;
+    {% if section.settings.icon_circle_bg %}
+      width: {{ section.settings.icon_circle_size | times: 0.85 }}px;
+      height: {{ section.settings.icon_circle_size | times: 0.85 }}px;
+    {% endif %}
+  }
+  
+  .device-name {
+    font-size: {{ section.settings.device_name_font_size | times: 0.9 }}px;
+  }
+  
+  .device-description {
+    font-size: {{ section.settings.device_description_font_size | times: 0.95 }}px;
+  }
+  
+  .device-badge {
+    font-size: {{ section.settings.badge_font_size | times: 0.9 }}px;
+    padding: {{ section.settings.badge_padding_vertical | times: 0.8 }}px {{ section.settings.badge_padding_horizontal | times: 0.8 }}px;
+  }
+}
+
+@media (max-width: 480px) {
+  .devices-section-wrapper {
+    padding: {{ section.settings.section_padding_top | times: 0.6 }}px 15px {{ section.settings.section_padding_bottom | times: 0.6 }}px;
+  }
+  
+  .devices-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Поддържани Устройства",
+  "tag": "section",
+  "class": "section-devices",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Заглавна част"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_section_title",
+      "label": "Покажи заглавие",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Заглавие",
+      "default": "Гледай на Всяко Устройство"
+    },
+    {
+      "type": "textarea",
+      "id": "section_description",
+      "label": "Описание",
+      "default": "Наслаждавайте се на любимото си съдържание навсякъде, по всяко време"
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Разстояние под заглавието",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Колони на Desktop",
+      "options": [
+        {
+          "value": "3",
+          "label": "3 колони"
+        },
+        {
+          "value": "4",
+          "label": "4 колони"
+        },
+        {
+          "value": "5",
+          "label": "5 колони"
+        },
+        {
+          "value": "6",
+          "label": "6 колони"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "columns_tablet",
+      "label": "Колони на Tablet",
+      "options": [
+        {
+          "value": "2",
+          "label": "2 колони"
+        },
+        {
+          "value": "3",
+          "label": "3 колони"
+        },
+        {
+          "value": "4",
+          "label": "4 колони"
+        }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Колони на Mobile",
+      "options": [
+        {
+          "value": "2",
+          "label": "2 колони"
+        },
+        {
+          "value": "3",
+          "label": "3 колони"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "gap_between_cards",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Разстояние между картите",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Цветове - Общи"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Фон на секцията",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Цвят на заглавието",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Цвят на описанието",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Карта на устройство"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Цвят на фона",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Заоблени ъгли",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "card_min_height",
+      "min": 100,
+      "max": 250,
+      "step": 10,
+      "unit": "px",
+      "label": "Минимална височина",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Дебелина на бордюр",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Цвят на бордюр",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "card_hover_border_color",
+      "label": "Цвят на бордюр при hover",
+      "default": "#667eea"
+    },
+    {
+      "type": "text",
+      "id": "card_shadow",
+      "label": "Сянка",
+      "default": "0 2px 8px rgba(0,0,0,0.08)",
+      "info": "CSS box-shadow стойност"
+    },
+    {
+      "type": "text",
+      "id": "card_hover_shadow",
+      "label": "Сянка при hover",
+      "default": "0 8px 20px rgba(0,0,0,0.12)",
+      "info": "CSS box-shadow стойност"
+    },
+    {
+      "type": "header",
+      "content": "Икона на устройство"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Размер",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "icon_margin_bottom",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Разстояние под иконата",
+      "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_circle_bg",
+      "label": "Добави кръгъл фон зад иконата",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "icon_circle_size",
+      "min": 60,
+      "max": 140,
+      "step": 10,
+      "unit": "px",
+      "label": "Размер на кръга",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "icon_circle_bg_color",
+      "label": "Цвят на кръга",
+      "default": "#f0f4ff"
+    },
+    {
+      "type": "header",
+      "content": "Име на устройство"
+    },
+    {
+      "type": "range",
+      "id": "device_name_font_size",
+      "min": 14,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Размер на шрифт",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "device_name_font_weight",
+      "label": "Дебелина на шрифт",
+      "options": [
+        {
+          "value": "500",
+          "label": "Средно"
+        },
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "device_name_color",
+      "label": "Цвят",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "device_name_margin_bottom",
+      "min": 0,
+      "max": 20,
+      "step": 5,
+      "unit": "px",
+      "label": "Разстояние под името",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Описание на устройство"
+    },
+    {
+      "type": "range",
+      "id": "device_description_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на шрифт",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "device_description_color",
+      "label": "Цвят",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Badge (Етикет)"
+    },
+    {
+      "type": "range",
+      "id": "badge_top",
+      "min": 5,
+      "max": 25,
+      "step": 5,
+      "unit": "px",
+      "label": "Отстояние отгоре",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "badge_right",
+      "min": 5,
+      "max": 25,
+      "step": 5,
+      "unit": "px",
+      "label": "Отстояние отдясно",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Цвят на фона",
+      "default": "#10b981"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Цвят на текста",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "min": 9,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на шрифт",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "badge_font_weight",
+      "label": "Дебелина на шрифт",
+      "options": [
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        },
+        {
+          "value": "800",
+          "label": "Много удебелено"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_vertical",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Вертикален padding",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_horizontal",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Хоризонтален padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "badge_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Заоблени ъгли",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Долен текст"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_text",
+      "label": "Покажи долен текст",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "bottom_text",
+      "label": "Текст",
+      "default": "И много други устройства! Работи на всичко с интернет връзка."
+    },
+    {
+      "type": "range",
+      "id": "bottom_text_margin_top",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Разстояние отгоре",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "bottom_text_padding",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "bottom_text_font_size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на шрифт",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "bottom_text_color",
+      "label": "Цвят на текста",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "bottom_text_bg_color",
+      "label": "Цвят на фона",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "bottom_text_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Заоблени ъгли",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Шрифтове - Заглавие"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Размер",
+      "default": 42
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Дебелина",
+      "options": [
+        {
+          "value": "600",
+          "label": "Полу-удебелено"
+        },
+        {
+          "value": "700",
+          "label": "Удебелено"
+        },
+        {
+          "value": "800",
+          "label": "Много удебелено"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Размер на описание",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Размери"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Максимална широчина",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Горна подложка",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Долна подложка",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "device",
+      "name": "Устройство",
+      "settings": [
+        {
+          "type": "text",
+          "id": "device_icon",
+          "label": "Икона/Емоджи",
+          "default": "📱",
+          "info": "Копирай и постави емоджи"
+        },
+        {
+          "type": "text",
+          "id": "device_name",
+          "label": "Име на устройство",
+          "default": "Телефон"
+        },
+        {
+          "type": "textarea",
+          "id": "device_description",
+          "label": "Описание",
+          "default": "iOS & Android"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Покажи badge",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Текст на badge",
+          "default": "Популярно"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Поддържани Устройства",
+      "blocks": [
+        {
+          "type": "device",
+          "settings": {
+            "device_icon": "📱",
+            "device_name": "Телефон",
+            "device_description": "iOS & Android",
+            "show_badge": true,
+            "badge_text": "Популярно"
+          }
+        },
+        {
+          "type": "device",
+          "settings": {
+            "device_icon": "💻",
+            "device_name": "Компютър",
+            "device_description": "Windows, Mac, Linux"
+          }
+        },
+        {
+          "type": "device",
+          "settings": {
+            "device_icon": "📺",
+            "device_name": "Smart TV",
+            "device_description": "Samsung, LG, Sony"
+          }
+        },
+        {
+          "type": "device",
+          "settings": {
+            "device_icon": "🎮",
+            "device_name": "Fire Stick",
+            "device_description": "Amazon Fire TV"
+          }
+        },
+        {
+          "type": "device",
+          "settings": {
+            "device_icon": "📟",
+            "device_name": "Android Box",
+            "device_description": "Всички модели"
+          }
+        },
+        {
+          "type": "device",
+          "settings": {
+            "device_icon": "",
+            "device_name": "Apple TV",
+            "device_description": "tvOS"
+          }
+        },
+        {
+          "type": "device",
+          "settings": {
+            "device_icon": "📱",
+            "device_name": "Таблет",
+            "device_description": "iPad & Android"
+          }
+        },
+        {
+          "type": "device",
+          "settings": {
+            "device_icon": "🌐",
+            "device_name": "Web Browser",
+            "device_description": "Chrome, Safari, Firefox"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
