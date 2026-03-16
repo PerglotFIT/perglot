@@ -1,0 +1,1106 @@
+{% comment %}
+  Why Perglot - Enhanced Trust Pillars Section
+  Modern design with full customization and image icon support
+{% endcomment %}
+
+<section class="why-perglot-enhanced why-perglot-{{ section.id }}" style="
+  --section-padding-top: {{ section.settings.padding_top }}px;
+  --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  --section-padding-top-mobile: {{ section.settings.mobile_padding_top }}px;
+  --section-padding-bottom-mobile: {{ section.settings.mobile_padding_bottom }}px;
+  --bg-color: {{ section.settings.background_color }};
+  --bg-gradient-start: {{ section.settings.bg_gradient_start }};
+  --bg-gradient-end: {{ section.settings.bg_gradient_end }};
+  --title-color: {{ section.settings.title_color }};
+  --title-size: {{ section.settings.title_font_size }}px;
+  --title-size-mobile: {{ section.settings.mobile_title_font_size }}px;
+  --subtitle-color: {{ section.settings.subtitle_color }};
+  --subtitle-size: {{ section.settings.subtitle_font_size }}px;
+  --subtitle-size-mobile: {{ section.settings.mobile_subtitle_font_size }}px;
+  --pillar-bg: {{ section.settings.pillar_background }};
+  --pillar-bg-hover: {{ section.settings.pillar_background_hover }};
+  --pillar-border-color: {{ section.settings.pillar_border_color }};
+  --icon-bg-color: {{ section.settings.icon_background_color }};
+  --icon-color: {{ section.settings.icon_color }};
+  --pillar-title-color: {{ section.settings.pillar_title_color }};
+  --pillar-text-color: {{ section.settings.pillar_text_color }};
+  ">
+  
+  {% if section.settings.use_gradient_background %}
+    <div class="section-background-gradient"></div>
+  {% endif %}
+  
+  <div class="why-container why-container-{{ section.id }}">
+    {% if section.settings.show_badge and section.settings.badge_text != blank %}
+      <div class="section-badge" style="
+        background: {{ section.settings.badge_bg_color }};
+        color: {{ section.settings.badge_text_color }};
+        ">
+        {{ section.settings.badge_text }}
+      </div>
+    {% endif %}
+    
+    <div class="section-header section-header-{{ section.id }}" style="
+      text-align: center !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      width: 100% !important;
+    ">
+      {% if section.settings.title != blank %}
+        <h2 class="section-title section-title-{{ section.id }}" style="
+          font-weight: {{ section.settings.title_font_weight }};
+          margin-bottom: {{ section.settings.title_margin_bottom }}px;
+          text-align: center !important;
+          display: block !important;
+          width: 100% !important;
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+          ">{{ section.settings.title }}</h2>
+      {% endif %}
+      
+      {% if section.settings.subtitle != blank %}
+        <p class="section-subtitle section-subtitle-{{ section.id }}" style="
+          max-width: {{ section.settings.subtitle_max_width }}px;
+          line-height: {{ section.settings.subtitle_line_height }};
+          text-align: center !important;
+          display: block !important;
+          ">{{ section.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+    
+    <div class="trust-pillars" style="
+      gap: {{ section.settings.pillars_gap }}px;
+      margin-top: {{ section.settings.header_margin_bottom }}px;
+      ">
+      {% for block in section.blocks %}
+        <div class="trust-pillar" {{ block.shopify_attributes }} style="
+          padding: {{ section.settings.pillar_padding_vertical }}px {{ section.settings.pillar_padding_horizontal }}px;
+          border-radius: {{ section.settings.pillar_border_radius }}px;
+          border: {{ section.settings.pillar_border_width }}px solid var(--pillar-border-color);
+          ">
+          
+          <div class="pillar-icon-wrapper" style="
+            width: {{ section.settings.icon_size }}px;
+            height: {{ section.settings.icon_size }}px;
+            margin: 0 auto {{ section.settings.icon_margin_bottom }}px;
+            border-radius: {{ section.settings.icon_border_radius }}px;
+            ">
+            {% if block.settings.icon_image != blank %}
+              <img src="{{ block.settings.icon_image | img_url: '400x400' }}" 
+                   alt="{{ block.settings.title }}" 
+                   class="pillar-icon-img">
+            {% elsif block.settings.icon != blank %}
+              <span class="pillar-icon-emoji">{{ block.settings.icon }}</span>
+            {% endif %}
+          </div>
+          
+          {% if block.settings.title != blank %}
+            <h3 class="pillar-title" style="
+              font-size: {{ section.settings.pillar_title_font_size }}px;
+              font-weight: {{ section.settings.pillar_title_font_weight }};
+              margin-bottom: {{ section.settings.pillar_title_margin_bottom }}px;
+              ">{{ block.settings.title }}</h3>
+          {% endif %}
+          
+          {% if block.settings.description != blank %}
+            <p class="pillar-text" style="
+              font-size: {{ section.settings.pillar_text_font_size }}px;
+              line-height: {{ section.settings.pillar_text_line_height }};
+              ">{{ block.settings.description }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .why-perglot-enhanced {
+    padding: var(--section-padding-top) 0 var(--section-padding-bottom);
+    background: var(--bg-color);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-background-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    opacity: {{ section.settings.gradient_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+  }
+
+  .section-background-gradient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.05) 0%, transparent 50%);
+  }
+
+  .why-perglot-{{ section.id }} .why-container-{{ section.id }} {
+    max-width: {{ section.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 2;
+    display: block !important;
+    float: none !important;
+  }
+
+  .why-perglot-{{ section.id }} .section-badge {
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .why-perglot-{{ section.id }} .section-header-{{ section.id }} {
+    margin-bottom: 0;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    float: none !important;
+  }
+
+  .why-perglot-{{ section.id }} .section-title-{{ section.id }} {
+    font-size: var(--title-size);
+    color: var(--title-color);
+    line-height: 1.2;
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+    float: none !important;
+    clear: both !important;
+  }
+
+  .why-perglot-{{ section.id }} .section-subtitle-{{ section.id }} {
+    font-size: var(--subtitle-size);
+    color: var(--subtitle-color);
+    margin: 0 auto;
+    text-align: center !important;
+    display: block !important;
+    float: none !important;
+    clear: both !important;
+  }
+
+  .why-perglot-enhanced .trust-pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax({{ section.settings.pillar_min_width }}px, 1fr));
+  }
+
+  .why-perglot-enhanced .trust-pillar {
+    background: var(--pillar-bg);
+    transition: all {{ section.settings.transition_duration }}s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center !important;
+  }
+
+  .why-perglot-enhanced .trust-pillar * {
+    text-align: center !important;
+  }
+
+  {% if section.settings.show_pillar_gradient %}
+  .trust-pillar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, {{ section.settings.pillar_gradient_color_1 }}, {{ section.settings.pillar_gradient_color_2 }});
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform {{ section.settings.transition_duration }}s ease;
+  }
+
+  .trust-pillar:hover::before {
+    transform: scaleX(1);
+  }
+  {% endif %}
+
+  {% if section.settings.enable_hover_effect %}
+  .trust-pillar:hover {
+    transform: translateY({{ section.settings.hover_translate_y }}px) scale({{ section.settings.hover_scale }});
+    box-shadow: {{ section.settings.hover_shadow }};
+    background: var(--pillar-bg-hover);
+    border-color: {{ section.settings.pillar_border_hover_color }};
+  }
+  {% endif %}
+
+  .why-perglot-enhanced .pillar-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--icon-bg-color);
+    position: relative;
+    overflow: hidden;
+    transition: all {{ section.settings.transition_duration }}s ease;
+  }
+
+  {% if section.settings.icon_gradient %}
+  .why-perglot-enhanced .pillar-icon-wrapper {
+    background: linear-gradient(135deg, {{ section.settings.icon_gradient_start }}, {{ section.settings.icon_gradient_end }});
+  }
+  {% endif %}
+
+  .why-perglot-enhanced .trust-pillar:hover .pillar-icon-wrapper {
+    transform: scale({{ section.settings.icon_hover_scale }}) rotate({{ section.settings.icon_hover_rotate }}deg);
+  }
+
+  .why-perglot-enhanced .pillar-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: {{ section.settings.icon_image_padding }}%;
+  }
+
+  .why-perglot-enhanced .pillar-icon-emoji {
+    font-size: {{ section.settings.icon_emoji_size }}%;
+    line-height: 1;
+    color: var(--icon-color);
+  }
+
+  .why-perglot-enhanced .pillar-title {
+    color: var(--pillar-title-color);
+    line-height: 1.3;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  .why-perglot-enhanced .pillar-text {
+    color: var(--pillar-text-color);
+    margin: 0;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    .why-perglot-{{ section.id }} .why-container-{{ section.id }} {
+      padding: 0 30px;
+    }
+
+    .why-perglot-enhanced .trust-pillars {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .why-perglot-enhanced .trust-pillar,
+    .why-perglot-enhanced .trust-pillar * {
+      text-align: center !important;
+    }
+    
+    .why-perglot-enhanced .trust-pillar {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+    
+    .why-perglot-enhanced .pillar-title,
+    .why-perglot-enhanced .pillar-text {
+      width: 100% !important;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: {{ section.settings.mobile_breakpoint }}px) {
+    .why-perglot-enhanced {
+      padding: var(--section-padding-top-mobile) 0 var(--section-padding-bottom-mobile);
+    }
+
+    .why-perglot-{{ section.id }} .why-container-{{ section.id }} {
+      padding: 0 20px;
+    }
+
+    .why-perglot-{{ section.id }} .section-title-{{ section.id }} {
+      font-size: var(--title-size-mobile) !important;
+      text-align: center !important;
+    }
+
+    .why-perglot-{{ section.id }} .section-subtitle-{{ section.id }} {
+      font-size: var(--subtitle-size-mobile) !important;
+      text-align: center !important;
+    }
+
+    .why-perglot-enhanced .trust-pillars {
+      gap: {{ section.settings.mobile_pillars_gap }}px !important;
+      grid-template-columns: 1fr;
+    }
+
+    .why-perglot-enhanced .trust-pillar {
+      padding: {{ section.settings.mobile_pillar_padding }}px !important;
+      text-align: center !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+    
+    .why-perglot-enhanced .trust-pillar * {
+      text-align: center !important;
+    }
+
+    .why-perglot-enhanced .pillar-icon-wrapper {
+      width: {{ section.settings.mobile_icon_size }}px !important;
+      height: {{ section.settings.mobile_icon_size }}px !important;
+    }
+
+    .why-perglot-enhanced .pillar-title {
+      font-size: {{ section.settings.mobile_pillar_title_size }}px !important;
+      text-align: center !important;
+      width: 100% !important;
+    }
+
+    .why-perglot-enhanced .pillar-text {
+      font-size: {{ section.settings.mobile_pillar_text_size }}px !important;
+      text-align: center !important;
+      width: 100% !important;
+    }
+  }
+
+  /* Small Mobile */
+  @media (max-width: 480px) {
+    .why-perglot-{{ section.id }} .why-container-{{ section.id }} {
+      padding: 0 15px;
+    }
+    
+    .why-perglot-enhanced .trust-pillar,
+    .why-perglot-enhanced .trust-pillar *,
+    .why-perglot-{{ section.id }} .section-header-{{ section.id }},
+    .why-perglot-{{ section.id }} .section-title-{{ section.id }},
+    .why-perglot-{{ section.id }} .section-subtitle-{{ section.id }} {
+      text-align: center !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Why Perglot Pro",
+  "settings": [
+    {
+      "type": "header",
+      "content": "🎨 Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient_background",
+      "label": "Use Gradient Background",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_start",
+      "label": "Gradient Start Color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_end",
+      "label": "Gradient End Color",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "range",
+      "id": "gradient_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Gradient Opacity",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "📐 Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Section Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Section Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "🏷️ Badge (Optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show Badge",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "ЗАЩО НИЕ"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge Background",
+      "default": "#2B5FA8"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "📝 Title"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Защо шофьори в цяла Европа избират Perglot?"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Title Font Size",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Title Font Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Title Bottom Margin",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "📋 Subtitle"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Надеждно качество, гъвкави решения и подкрепа на всяка крачка"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Font Size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_max_width",
+      "min": 300,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Subtitle Max Width",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "subtitle_line_height",
+      "min": 1.0,
+      "max": 2.5,
+      "step": 0.1,
+      "label": "Subtitle Line Height",
+      "default": 1.6
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Space After Header",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "🏛️ Pillars Layout"
+    },
+    {
+      "type": "range",
+      "id": "pillar_min_width",
+      "min": 200,
+      "max": 400,
+      "step": 20,
+      "unit": "px",
+      "label": "Pillar Min Width",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "pillars_gap",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap Between Pillars",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "🎨 Pillar Style"
+    },
+    {
+      "type": "color",
+      "id": "pillar_background",
+      "label": "Pillar Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "pillar_padding_vertical",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Pillar Padding Vertical",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "pillar_padding_horizontal",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Pillar Padding Horizontal",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "pillar_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Pillar Border Radius",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "pillar_border_width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Pillar Border Width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "pillar_border_color",
+      "label": "Pillar Border Color",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "header",
+      "content": "✨ Pillar Hover Effects"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hover_effect",
+      "label": "Enable Hover Effect",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "pillar_background_hover",
+      "label": "Pillar Background (Hover)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pillar_border_hover_color",
+      "label": "Border Color (Hover)",
+      "default": "#2B5FA8"
+    },
+    {
+      "type": "range",
+      "id": "hover_translate_y",
+      "min": -20,
+      "max": 0,
+      "step": 1,
+      "unit": "px",
+      "label": "Hover Move Up",
+      "default": -8
+    },
+    {
+      "type": "range",
+      "id": "hover_scale",
+      "min": 1.0,
+      "max": 1.2,
+      "step": 0.1,
+      "label": "Hover Scale",
+      "default": 1.1
+    },
+    {
+      "type": "text",
+      "id": "hover_shadow",
+      "label": "Hover Shadow",
+      "default": "0 20px 40px rgba(0,0,0,0.12)"
+    },
+    {
+      "type": "range",
+      "id": "transition_duration",
+      "min": 0.1,
+      "max": 1.0,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Animation Duration",
+      "default": 0.3
+    },
+    {
+      "type": "header",
+      "content": "🎨 Pillar Top Gradient Line"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pillar_gradient",
+      "label": "Show Gradient Line on Hover",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "pillar_gradient_color_1",
+      "label": "Gradient Color 1",
+      "default": "#2B5FA8"
+    },
+    {
+      "type": "color",
+      "id": "pillar_gradient_color_2",
+      "label": "Gradient Color 2",
+      "default": "#F4C430"
+    },
+    {
+      "type": "header",
+      "content": "🔣 Icon Settings"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 40,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon Container Size",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon Border Radius",
+      "default": 15,
+      "info": "Use 100 for circle"
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Icon Background Color",
+      "default": "#f0f7ff"
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_gradient",
+      "label": "Use Gradient for Icon Background",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "icon_gradient_start",
+      "label": "Icon Gradient Start",
+      "default": "#2B5FA8"
+    },
+    {
+      "type": "color",
+      "id": "icon_gradient_end",
+      "label": "Icon Gradient End",
+      "default": "#1E4A7C"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color (for emoji)",
+      "default": "#2B5FA8"
+    },
+    {
+      "type": "range",
+      "id": "icon_emoji_size",
+      "min": 30,
+      "max": 120,
+      "step": 5,
+      "unit": "%",
+      "label": "Emoji Size (% of container)",
+      "default": 90,
+      "info": "Increased default from 80% to 90% for larger icons"
+    },
+    {
+      "type": "range",
+      "id": "icon_image_padding",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "%",
+      "label": "Image Icon Padding",
+      "default": 4,
+      "info": "Padding inside icon container - lower value = bigger icon"
+    },
+    {
+      "type": "range",
+      "id": "icon_margin_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon Bottom Margin",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "icon_hover_scale",
+      "min": 1.0,
+      "max": 1.5,
+      "step": 0.1,
+      "label": "Icon Hover Scale",
+      "default": 1.1
+    },
+    {
+      "type": "range",
+      "id": "icon_hover_rotate",
+      "min": -15,
+      "max": 15,
+      "step": 1,
+      "unit": "deg",
+      "label": "Icon Hover Rotate",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "📝 Pillar Title"
+    },
+    {
+      "type": "range",
+      "id": "pillar_title_font_size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Title Font Size",
+      "default": 22
+    },
+    {
+      "type": "select",
+      "id": "pillar_title_font_weight",
+      "label": "Title Font Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "pillar_title_color",
+      "label": "Title Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "pillar_title_margin_bottom",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Title Bottom Margin",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "📄 Pillar Text"
+    },
+    {
+      "type": "range",
+      "id": "pillar_text_font_size",
+      "min": 13,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text Font Size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "pillar_text_color",
+      "label": "Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "pillar_text_line_height",
+      "min": 1.0,
+      "max": 2.5,
+      "step": 0.1,
+      "label": "Text Line Height",
+      "default": 1.6
+    },
+    {
+      "type": "header",
+      "content": "📱 Mobile Settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_breakpoint",
+      "min": 480,
+      "max": 1024,
+      "step": 16,
+      "unit": "px",
+      "label": "Mobile Breakpoint",
+      "default": 768
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Padding Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Padding Bottom",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "mobile_title_font_size",
+      "min": 18,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Title Size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "mobile_subtitle_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Subtitle Size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_pillars_gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Pillars Gap",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_pillar_padding",
+      "min": 15,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Pillar Padding",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "min": 40,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Icon Size",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mobile_pillar_title_size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Pillar Title Size",
+      "default": 19
+    },
+    {
+      "type": "range",
+      "id": "mobile_pillar_text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Pillar Text Size",
+      "default": 15
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Trust Pillar",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image",
+          "info": "Recommended: Use PNG with transparent background"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon Emoji (fallback)",
+          "default": "✅",
+          "info": "Used if no image is uploaded"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Trust Pillar Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Description of this trust pillar feature"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Perglot Pro",
+      "blocks": [
+        {
+          "type": "pillar",
+          "settings": {
+            "icon": "✅",
+            "title": "30 дни тест + 2 години гаранция",
+            "description": "Опитайте без риск. Не харесвате? Върнете за пълно възстановяване на сумата"
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "icon": "🎬",
+            "title": "Стрийминг във всяка кола",
+            "description": "Превърнете стандартния CarPlay в мултимедиен център с Netflix, YouTube и IPTV"
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "icon": "💬",
+            "title": "Помощ при инсталация",
+            "description": "Нашият екип е на разположение 24/7 за подкрепа на живо и помощ при настройка"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

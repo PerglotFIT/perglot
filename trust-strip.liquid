@@ -1,0 +1,794 @@
+{% comment %}
+  Trust Strip Section - Enhanced
+  Displays trust badges and payment methods with full customization
+{% endcomment %}
+
+<section class="trust-strip-enhanced" style="
+  --section-padding: {{ section.settings.section_padding }}px;
+  --section-padding-mobile: {{ section.settings.section_padding_mobile }}px;
+  --bg-color: {{ section.settings.background_color }};
+  --bg-gradient-start: {{ section.settings.bg_gradient_start }};
+  --bg-gradient-end: {{ section.settings.bg_gradient_end }};
+  --text-color: {{ section.settings.text_color }};
+  --icon-color: {{ section.settings.icon_color }};
+  --icon-bg-color: {{ section.settings.icon_bg_color }};
+  --separator-color: {{ section.settings.separator_color }};
+  ">
+  
+  {% if section.settings.use_gradient %}
+    <div class="trust-gradient-bg"></div>
+  {% endif %}
+  
+  <div class="trust-container">
+    <div class="trust-content-wrapper" style="
+      max-width: {{ section.settings.container_max_width }}px;
+      gap: {{ section.settings.items_gap }}px;
+      ">
+      
+      <!-- Trust Badges -->
+      <div class="trust-badges" style="gap: {{ section.settings.badges_gap }}px;">
+        {% for block in section.blocks %}
+          {% if block.type == 'trust_badge' %}
+            <div class="trust-badge-item" {{ block.shopify_attributes }}>
+              <div class="trust-badge-icon-wrapper" style="
+                width: {{ section.settings.icon_size }}px;
+                height: {{ section.settings.icon_size }}px;
+                border-radius: {{ section.settings.icon_border_radius }}px;
+                ">
+                {% if block.settings.icon_image != blank %}
+                  <img src="{{ block.settings.icon_image | img_url: '120x120' }}" 
+                       alt="{{ block.settings.text }}" 
+                       class="trust-badge-icon-img">
+                {% elsif block.settings.icon != blank %}
+                  <span class="trust-badge-icon-emoji" style="font-size: {{ section.settings.icon_emoji_size }}%;">
+                    {{ block.settings.icon }}
+                  </span>
+                {% endif %}
+              </div>
+              <span class="trust-badge-text" style="
+                font-size: {{ section.settings.text_size }}px;
+                font-weight: {{ section.settings.text_weight }};
+                ">{{ block.settings.text }}</span>
+            </div>
+            
+            {% unless forloop.last %}
+              {% if section.settings.show_separators %}
+                <div class="trust-separator"></div>
+              {% endif %}
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      </div>
+      
+      <!-- Payment Logos -->
+      {% if section.settings.show_payment_logos %}
+        <div class="payment-logos-section">
+          {% if section.settings.payment_label != blank %}
+            <span class="payment-label" style="
+              font-size: {{ section.settings.payment_label_size }}px;
+              color: {{ section.settings.payment_label_color }};
+              ">{{ section.settings.payment_label }}</span>
+          {% endif %}
+          
+          <div class="payment-logos-grid" style="gap: {{ section.settings.payment_logos_gap }}px;">
+            {% if section.settings.payment_logo_1 != blank %}
+              <img src="{{ section.settings.payment_logo_1 | img_url: '150x' }}" 
+                   alt="Payment method" 
+                   class="payment-logo"
+                   style="height: {{ section.settings.payment_logo_height }}px;">
+            {% endif %}
+            {% if section.settings.payment_logo_2 != blank %}
+              <img src="{{ section.settings.payment_logo_2 | img_url: '150x' }}" 
+                   alt="Payment method" 
+                   class="payment-logo"
+                   style="height: {{ section.settings.payment_logo_height }}px;">
+            {% endif %}
+            {% if section.settings.payment_logo_3 != blank %}
+              <img src="{{ section.settings.payment_logo_3 | img_url: '150x' }}" 
+                   alt="Payment method" 
+                   class="payment-logo"
+                   style="height: {{ section.settings.payment_logo_height }}px;">
+            {% endif %}
+            {% if section.settings.payment_logo_4 != blank %}
+              <img src="{{ section.settings.payment_logo_4 | img_url: '150x' }}" 
+                   alt="Payment method" 
+                   class="payment-logo"
+                   style="height: {{ section.settings.payment_logo_height }}px;">
+            {% endif %}
+            {% if section.settings.payment_logo_5 != blank %}
+              <img src="{{ section.settings.payment_logo_5 | img_url: '150x' }}" 
+                   alt="Payment method" 
+                   class="payment-logo"
+                   style="height: {{ section.settings.payment_logo_height }}px;">
+            {% endif %}
+            {% if section.settings.payment_logo_6 != blank %}
+              <img src="{{ section.settings.payment_logo_6 | img_url: '150x' }}" 
+                   alt="Payment method" 
+                   class="payment-logo"
+                   style="height: {{ section.settings.payment_logo_height }}px;">
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust-strip-enhanced {
+    padding: var(--section-padding) 0;
+    background: var(--bg-color);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .trust-gradient-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    opacity: {{ section.settings.gradient_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+  }
+
+  .trust-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .trust-content-wrapper {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .trust-badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .trust-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  {% if section.settings.enable_hover_effect %}
+  .trust-badge-item:hover {
+    transform: translateY(-3px);
+  }
+  {% endif %}
+
+  .trust-badge-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--icon-bg-color);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    {% if section.settings.icon_gradient %}
+      background: linear-gradient(135deg, {{ section.settings.icon_gradient_start }}, {{ section.settings.icon_gradient_end }});
+    {% endif %}
+  }
+
+  .trust-badge-item:hover .trust-badge-icon-wrapper {
+    transform: scale({{ section.settings.icon_hover_scale }});
+  }
+
+  .trust-badge-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 15%;
+  }
+
+  .trust-badge-icon-emoji {
+    line-height: 1;
+    color: var(--icon-color);
+  }
+
+  .trust-badge-text {
+    color: var(--text-color);
+    white-space: nowrap;
+  }
+
+  .trust-separator {
+    width: 1px;
+    height: 40px;
+    background: var(--separator-color);
+    opacity: 0.3;
+  }
+
+  /* Payment Logos */
+  .payment-logos-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .payment-label {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .payment-logos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .payment-logo {
+    opacity: {{ section.settings.payment_logo_opacity | divided_by: 100.0 }};
+    transition: all 0.3s ease;
+    filter: grayscale({{ section.settings.payment_logo_grayscale }}%);
+  }
+
+  .payment-logo:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+    transform: scale(1.05);
+  }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    .trust-container {
+      padding: 0 30px;
+    }
+
+    .trust-content-wrapper {
+      justify-content: center;
+      gap: 30px !important;
+    }
+
+    .trust-badges {
+      justify-content: center;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .trust-strip-enhanced {
+      padding: var(--section-padding-mobile) 0;
+    }
+
+    .trust-container {
+      padding: 0 20px;
+    }
+
+    .trust-content-wrapper {
+      flex-direction: column;
+      text-align: center;
+      gap: {{ section.settings.mobile_items_gap }}px !important;
+    }
+
+    .trust-badges {
+      flex-direction: column;
+      gap: {{ section.settings.mobile_badges_gap }}px !important;
+      width: 100%;
+    }
+
+    .trust-badge-item {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .trust-badge-icon-wrapper {
+      width: {{ section.settings.mobile_icon_size }}px !important;
+      height: {{ section.settings.mobile_icon_size }}px !important;
+    }
+
+    .trust-badge-text {
+      font-size: {{ section.settings.mobile_text_size }}px !important;
+    }
+
+    .trust-separator {
+      display: none;
+    }
+
+    .payment-logos-section {
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .payment-label {
+      font-size: {{ section.settings.mobile_payment_label_size }}px !important;
+    }
+
+    .payment-logos-grid {
+      justify-content: center;
+      gap: {{ section.settings.mobile_payment_logos_gap }}px !important;
+    }
+
+    .payment-logo {
+      height: {{ section.settings.mobile_payment_logo_height }}px !important;
+    }
+  }
+
+  /* Small Mobile */
+  @media (max-width: 480px) {
+    .trust-container {
+      padding: 0 15px;
+    }
+
+    .trust-badge-item {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .trust-badge-text {
+      text-align: center;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Trust Strip Pro",
+  "settings": [
+    {
+      "type": "header",
+      "content": "📐 Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_mobile",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Section Padding (Mobile)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "items_gap",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap Between Badges & Payment",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "badges_gap",
+      "min": 15,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap Between Badges",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "🎨 Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use Gradient Background",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_start",
+      "label": "Gradient Start Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_end",
+      "label": "Gradient End Color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "range",
+      "id": "gradient_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Gradient Opacity",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "✅ Trust Badge Style"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Badge Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Badge Text Size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Badge Text Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "🔣 Icon Settings"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon Container Size",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon Border Radius",
+      "default": 50,
+      "info": "Use 50+ for circle, 0 for square"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg_color",
+      "label": "Icon Background Color",
+      "default": "#e8f5e9"
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_gradient",
+      "label": "Use Gradient for Icon Background",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "icon_gradient_start",
+      "label": "Icon Gradient Start",
+      "default": "#28a745"
+    },
+    {
+      "type": "color",
+      "id": "icon_gradient_end",
+      "label": "Icon Gradient End",
+      "default": "#20c997"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color (for emoji)",
+      "default": "#28a745"
+    },
+    {
+      "type": "range",
+      "id": "icon_emoji_size",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Emoji Size (% of container)",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "✨ Hover Effects"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hover_effect",
+      "label": "Enable Badge Hover Effect",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "icon_hover_scale",
+      "min": 1.0,
+      "max": 1.3,
+      "step": 0.1,
+      "label": "Icon Hover Scale",
+      "default": 1.1
+    },
+    {
+      "type": "header",
+      "content": "➗ Separators"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separators",
+      "label": "Show Separators Between Badges",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "💳 Payment Logos"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_logos",
+      "label": "Show Payment Logos",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "payment_label",
+      "label": "Payment Label Text",
+      "default": "Приемаме:"
+    },
+    {
+      "type": "range",
+      "id": "payment_label_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Payment Label Size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "payment_label_color",
+      "label": "Payment Label Color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "payment_logo_height",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Payment Logo Height",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "payment_logos_gap",
+      "min": 10,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap Between Payment Logos",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "payment_logo_opacity",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Payment Logo Opacity",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "payment_logo_grayscale",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Payment Logo Grayscale",
+      "default": 0,
+      "info": "0 = full color, 100 = black & white"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_logo_1",
+      "label": "Payment Logo 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_logo_2",
+      "label": "Payment Logo 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_logo_3",
+      "label": "Payment Logo 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_logo_4",
+      "label": "Payment Logo 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_logo_5",
+      "label": "Payment Logo 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "payment_logo_6",
+      "label": "Payment Logo 6"
+    },
+    {
+      "type": "header",
+      "content": "📱 Mobile Settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_items_gap",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Items Gap",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_badges_gap",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Badges Gap",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "min": 30,
+      "max": 70,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Icon Size",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Badge Text Size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "mobile_payment_label_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile Payment Label Size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "mobile_payment_logo_height",
+      "min": 20,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Payment Logo Height",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "mobile_payment_logos_gap",
+      "min": 10,
+      "max": 25,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Payment Logos Gap",
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_badge",
+      "name": "Trust Badge",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image",
+          "info": "Recommended: PNG with transparent background"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon Emoji (fallback)",
+          "default": "✓",
+          "info": "Used if no image is uploaded"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Badge Text",
+          "default": "Trust Badge Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Strip Pro",
+      "blocks": [
+        {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "✓",
+            "text": "30 Дни Пробен Период"
+          }
+        },
+        {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "✓",
+            "text": "2 Години Гаранция"
+          }
+        },
+        {
+          "type": "trust_badge",
+          "settings": {
+            "icon": "💬",
+            "text": "24/7 Поддръжка"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

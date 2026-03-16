@@ -1,0 +1,776 @@
+{% comment %}
+  ============================================
+  PERGLOT STEPS SECTION
+  ============================================
+  
+  Секция за показване на стъпки (напр. "Свързване за под 2 минути")
+  Съвместима с Black Friday дизайна
+  
+  ИНСТАЛАЦИЯ:
+  1. Копирай в sections/perglot-steps.liquid
+  2. Theme Customizer → Add section
+{% endcomment %}
+
+{%- liquid
+  assign show_section = true
+  if section.settings.limit_to_product != blank
+    if product.handle != section.settings.limit_to_product
+      assign show_section = false
+    endif
+  endif
+-%}
+
+{% if show_section %}
+<section 
+  class="pg-steps" 
+  id="pg-steps-{{ section.id }}"
+  style="
+    --pg-bg-start: {{ section.settings.bg_color_start }};
+    --pg-bg-end: {{ section.settings.bg_color_end }};
+    --pg-accent: {{ section.settings.accent_color }};
+    --pg-text: {{ section.settings.text_color }};
+    --pg-card-bg: {{ section.settings.card_bg }};
+    --pg-title-desktop: {{ section.settings.title_size_desktop }}px;
+    --pg-desc-desktop: {{ section.settings.desc_size_desktop }}px;
+    --pg-title-mobile: {{ section.settings.title_size_mobile }}px;
+    --pg-desc-mobile: {{ section.settings.desc_size_mobile }}px;
+    --pg-image-ratio-mobile: {{ section.settings.image_ratio_mobile }};
+  "
+>
+  <div class="pg-steps__container">
+    
+    {%- comment -%} Header {%- endcomment -%}
+    {% if section.settings.title != blank %}
+      <div class="pg-steps__header">
+        {% if section.settings.badge_text != blank %}
+          <div class="pg-steps__badge">
+            {{ section.settings.badge_text }}
+          </div>
+        {% endif %}
+        <h2 class="pg-steps__title">
+          {{ section.settings.title }}
+        </h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="pg-steps__subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {%- comment -%} Steps Grid {%- endcomment -%}
+    <div class="pg-steps__grid pg-steps__grid--{{ section.blocks.size }}">
+      {% for block in section.blocks %}
+        {% if block.type == 'step' %}
+          {%- liquid
+            assign card_bg = block.settings.card_bg_color | default: section.settings.card_bg
+            assign badge_bg = block.settings.badge_bg_color | default: section.settings.accent_color
+          -%}
+          <div class="pg-steps__card" style="background: {{ card_bg }};" {{ block.shopify_attributes }}>
+            
+            {%- comment -%} Image {%- endcomment -%}
+            <div class="pg-steps__card-image" style="aspect-ratio: {{ section.settings.image_ratio }};">
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 800 | image_tag: 
+                  loading: 'lazy',
+                  alt: block.settings.title,
+                  class: 'pg-steps__card-img'
+                }}
+              {% else %}
+                <div class="pg-steps__card-placeholder">
+                  {{ 'collection-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+            
+            {%- comment -%} Content {%- endcomment -%}
+            <div class="pg-steps__card-content">
+              
+              {%- comment -%} Step Badge {%- endcomment -%}
+              {% if section.settings.show_step_numbers %}
+                <div class="pg-steps__step-badge" style="background: {{ badge_bg }};">
+                  {{ section.settings.step_label }} {{ forloop.index }}
+                </div>
+              {% endif %}
+              
+              {%- comment -%} Title {%- endcomment -%}
+              {% if block.settings.title != blank %}
+                <h3 class="pg-steps__card-title">{{ block.settings.title }}</h3>
+              {% endif %}
+              
+              {%- comment -%} Description {%- endcomment -%}
+              {% if block.settings.description != blank %}
+                <p class="pg-steps__card-desc">{{ block.settings.description }}</p>
+              {% endif %}
+              
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {%- comment -%} Bottom CTA {%- endcomment -%}
+    {% if section.settings.show_cta and section.settings.cta_text != blank %}
+      <div class="pg-steps__cta">
+        <a href="{{ section.settings.cta_link }}" class="pg-steps__cta-btn">
+          {{ section.settings.cta_text }}
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  /* ============================================
+     CSS VARIABLES
+     ============================================ */
+  .pg-steps {
+    --pg-radius: 16px;
+    --pg-radius-sm: 8px;
+    --pg-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --pg-shadow-hover: 0 12px 35px rgba(0, 0, 0, 0.12);
+  }
+
+  /* ============================================
+     SECTION BASE
+     ============================================ */
+  .pg-steps {
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+    background: linear-gradient(180deg, var(--pg-bg-start) 0%, var(--pg-bg-end) 100%);
+  }
+
+  .pg-steps__container {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  /* ============================================
+     HEADER
+     ============================================ */
+  .pg-steps__header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .pg-steps__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--pg-accent);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+
+  .pg-steps__title {
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: 800;
+    color: var(--pg-text);
+    margin: 0 0 12px 0;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .pg-steps__subtitle {
+    font-size: 16px;
+    color: var(--pg-text);
+    opacity: 0.7;
+    margin: 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ============================================
+     STEPS GRID
+     ============================================ */
+  .pg-steps__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ section.settings.gap }}px;
+  }
+
+  .pg-steps__grid--1 { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+  .pg-steps__grid--2 { grid-template-columns: repeat(2, 1fr); max-width: 800px; margin-left: auto; margin-right: auto; }
+  .pg-steps__grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .pg-steps__grid--4 { grid-template-columns: repeat(4, 1fr); }
+  .pg-steps__grid--5 { grid-template-columns: repeat(5, 1fr); }
+
+  /* ============================================
+     STEP CARD
+     ============================================ */
+  .pg-steps__card {
+    background: var(--pg-card-bg);
+    border-radius: var(--pg-radius);
+    overflow: hidden;
+    box-shadow: var(--pg-shadow);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pg-steps__card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--pg-shadow-hover);
+  }
+
+  /* Image - LARGER */
+  .pg-steps__card-image {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #f0f0f0;
+  }
+
+  .pg-steps__card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .pg-steps__card:hover .pg-steps__card-img {
+    transform: scale(1.05);
+  }
+
+  .pg-steps__card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8e8e8;
+  }
+
+  .pg-steps__card-placeholder svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  /* Content */
+  .pg-steps__card-content {
+    padding: 20px;
+  }
+
+  /* Step Badge - background set inline per block */
+  .pg-steps__step-badge {
+    display: inline-block;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Title - uses CSS variable */
+  .pg-steps__card-title {
+    font-size: var(--pg-title-desktop);
+    font-weight: 700;
+    color: var(--pg-text);
+    margin: 0 0 10px 0;
+    line-height: 1.3;
+  }
+
+  /* Description - uses CSS variable */
+  .pg-steps__card-desc {
+    font-size: var(--pg-desc-desktop);
+    color: var(--pg-text);
+    opacity: 0.7;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* ============================================
+     CTA BUTTON
+     ============================================ */
+  .pg-steps__cta {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .pg-steps__cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--pg-accent);
+    color: #fff;
+    padding: 16px 36px;
+    border-radius: var(--pg-radius-sm);
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(23, 85, 160, 0.3);
+  }
+
+  .pg-steps__cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(23, 85, 160, 0.4);
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  @media (max-width: 1024px) {
+    .pg-steps__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .pg-steps__grid--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .pg-steps {
+      padding: 40px 15px 50px;
+    }
+
+    .pg-steps__header {
+      margin-bottom: 30px;
+    }
+
+    .pg-steps__badge {
+      padding: 8px 18px;
+      font-size: 11px;
+    }
+
+    .pg-steps__title {
+      font-size: 26px;
+    }
+
+    .pg-steps__subtitle {
+      font-size: 14px;
+    }
+
+    .pg-steps__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .pg-steps__grid--3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pg-steps__card-content {
+      padding: 16px;
+    }
+
+    .pg-steps__step-badge {
+      font-size: 10px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+    }
+
+    .pg-steps__cta {
+      margin-top: 30px;
+    }
+
+    .pg-steps__cta-btn {
+      padding: 14px 28px;
+      font-size: 14px;
+    }
+  }
+
+  /* Mobile - VERTICAL CARDS (image on top, text below) */
+  @media (max-width: 480px) {
+    .pg-steps__title {
+      font-size: 22px;
+    }
+
+    /* Single column on mobile */
+    .pg-steps__grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 0 10px;
+    }
+
+    .pg-steps__grid--3,
+    .pg-steps__grid--4 {
+      grid-template-columns: 1fr;
+    }
+
+    /* Vertical card layout - image on top */
+    .pg-steps__card {
+      flex-direction: column;
+      border-radius: 14px;
+    }
+
+    .pg-steps__card:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Image - LARGER, full width on top */
+    .pg-steps__card-image {
+      width: 100%;
+      min-width: 100%;
+      aspect-ratio: var(--pg-image-ratio-mobile) !important;
+      height: auto;
+    }
+
+    .pg-steps__card-content {
+      padding: 18px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .pg-steps__step-badge {
+      font-size: 11px;
+      padding: 6px 12px;
+      margin-bottom: 10px;
+    }
+
+    /* Use mobile font size variables */
+    .pg-steps__card-title {
+      font-size: var(--pg-title-mobile);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .pg-steps__card-desc {
+      font-size: var(--pg-desc-mobile);
+      line-height: 1.6;
+      margin: 0;
+      opacity: 0.75;
+      /* No line clamp - show full text */
+    }
+  }
+
+  /* Extra small screens */
+  @media (max-width: 380px) {
+    .pg-steps__grid {
+      padding: 0 8px;
+      gap: 14px;
+    }
+
+    .pg-steps__card-content {
+      padding: 16px 14px 18px;
+    }
+  }
+</style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "📋 Стъпки / How To",
+  "tag": "section",
+  "class": "pg-steps-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "📍 Показване"
+    },
+    {
+      "type": "text",
+      "id": "limit_to_product",
+      "label": "Покажи само на продукт (handle)",
+      "info": "Остави празно за всички страници"
+    },
+    {
+      "type": "header",
+      "content": "🏷️ Заглавие"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge текст (опционално)",
+      "default": "⚡ Лесно"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Заглавие",
+      "default": "СВЪРЗВАНЕ ЗА ПОД 2 МИНУТИ"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Подзаглавие",
+      "default": "Следвай тези прости стъпки"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Размер на заглавието",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "🔢 Стъпки"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_step_numbers",
+      "label": "Покажи номера на стъпки",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "step_label",
+      "label": "Етикет за стъпка",
+      "default": "Стъпка"
+    },
+    {
+      "type": "header",
+      "content": "🎨 Цветове"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_start",
+      "label": "Фон (начало на gradient)",
+      "default": "#E7F4E9"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_end",
+      "label": "Фон (край на gradient)",
+      "default": "#d4ecd6"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent цвят",
+      "default": "#1755A0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Цвят на текста",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Фон на картите",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "🔘 CTA бутон"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Покажи CTA бутон",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Текст на бутона",
+      "default": "Поръчай сега"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Линк на бутона"
+    },
+    {
+      "type": "header",
+      "content": "📝 Размер на текста - Desktop"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Заглавие на карта (Desktop)",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "desc_size_desktop",
+      "label": "Описание на карта (Desktop)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "📱 Размер на текста - Mobile"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Заглавие на карта (Mobile)",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "desc_size_mobile",
+      "label": "Описание на карта (Mobile)",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "📷 Снимки"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Размер на снимките (Desktop)",
+      "options": [
+        { "value": "16/9", "label": "Широки (16:9)" },
+        { "value": "16/11", "label": "Средни (16:11)" },
+        { "value": "4/3", "label": "Стандартни (4:3)" },
+        { "value": "1/1", "label": "Квадратни (1:1)" },
+        { "value": "3/4", "label": "Високи (3:4)" }
+      ],
+      "default": "16/11"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio_mobile",
+      "label": "Размер на снимките (Mobile)",
+      "options": [
+        { "value": "16/9", "label": "Широки (16:9)" },
+        { "value": "4/3", "label": "Стандартни (4:3)" },
+        { "value": "1/1", "label": "Квадратни (1:1)" }
+      ],
+      "default": "16/9"
+    },
+    {
+      "type": "header",
+      "content": "📐 Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Максимална ширина",
+      "min": 900,
+      "max": 1400,
+      "step": 50,
+      "default": 1200,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Разстояние между карти",
+      "min": 12,
+      "max": 40,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding отгоре",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding отдолу",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "default": 70,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "📋 Стъпка",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Снимка",
+          "info": "Препоръчителен размер: минимум 800x600px"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Заглавие",
+          "default": "Заглавие на стъпката"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Описание",
+          "default": "Кратко описание на тази стъпка."
+        },
+        {
+          "type": "color",
+          "id": "card_bg_color",
+          "label": "Фон на картата",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "badge_bg_color",
+          "label": "Фон на badge (Стъпка X)",
+          "default": "#1755A0"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "📋 Стъпки / How To",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Включи в запалката",
+            "description": "Свържете адаптера в 12V запалката. При желание може да се използва и USB/Type C портът на автомобила."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Свържи телефона си с екрана",
+            "description": "Активирай Bluetooth на PerglotScreen и на телефона си. Избери името на устройството от списъка и потвърди сдвояването."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Свържи с аудио системата",
+            "description": "PerglotScreen има вградени говорители, но за по-добър звук го свържи с аудио системата на колата или FM трансмитер."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Свързване към интернет",
+            "description": "Активирай Hotspot от настройките на телефона си за да получиш достъп до интернет на PerglotScreen."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,151 @@
+{% comment %}
+  Video Section - With Desktop Width Control
+{% endcomment %}
+
+<section 
+  class="video-section" 
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="video-wrapper" style="--desktop-width: {{ section.settings.desktop_width }}%;">
+    {% if section.settings.video_url != blank %}
+      <video 
+        autoplay 
+        muted 
+        loop 
+        playsinline
+        preload="auto"
+        class="video-player"
+        {% if section.settings.poster != blank %}
+          poster="{{ section.settings.poster | image_url: width: 1920 }}"
+        {% endif %}
+      >
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+
+    {% elsif section.settings.video != blank %}
+      {{ section.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, class: 'video-player' }}
+
+    {% else %}
+      <div class="video-placeholder">
+        <p>Добави Video URL в настройките</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .video-section {
+    width: 100%;
+  }
+
+  .video-wrapper {
+    margin: 0 auto;
+    width: var(--desktop-width);
+  }
+
+  .video-player {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .video-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+  }
+
+  /* На мобилен винаги full width */
+  @media screen and (max-width: 749px) {
+    .video-wrapper {
+      width: 100% !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Video",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify Video"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "Директен линк към .mp4 файл"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "Poster image"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Size"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width",
+      "label": "Desktop width",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "default": 60,
+      "unit": "%",
+      "info": "На мобилен винаги е 100%"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video"
+    }
+  ]
+}
+{% endschema %}
