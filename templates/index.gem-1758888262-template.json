@@ -1,0 +1,42 @@
+{
+  "sections": {
+    "gp_section_559930317993935728": {
+      "settings": {
+        "checksum": "21540ccc748d0f52a8cb2bfa30c9cf15d49b23708aa2dfab6dfd6f78538177a9_1_1_1_0_"
+      },
+      "type": "gp-section-559930317993935728"
+    },
+    "gp_section_559930317994066800": {
+      "settings": {
+        "checksum": "e4c7afda076748981e3693fa185437171a9e9f9f4719240cb5271711410c7b33_1_1_1_0_"
+      },
+      "type": "gp-section-559930317994066800"
+    },
+    "gp_section_559930317994132336": {
+      "settings": {
+        "checksum": "73cdb77141f68512f9a605988c23ffd75426fabd97eff4c48219f59a3637141d_1_1_1_0_"
+      },
+      "type": "gp-section-559930317994132336"
+    },
+    "gp_section_559930317994197872": {
+      "settings": {
+        "checksum": "064d8205a89338a062c672dceaacbfcc5043da8c034bc52905c73ce3e3d9ed7f_1_1_1_0_"
+      },
+      "type": "gp-section-559930317994197872"
+    },
+    "gp_section_559930317994263408": {
+      "settings": {
+        "checksum": "5cf67f6527a99622a0fe39fe2742ef1c6c009a3ed9b18e22af31219dbac6342d_1_1_1_0_",
+        "section_preload": "true"
+      },
+      "type": "gp-section-559930317994263408"
+    }
+  },
+  "order": [
+    "gp_section_559930317994263408",
+    "gp_section_559930317993935728",
+    "gp_section_559930317994066800",
+    "gp_section_559930317994197872",
+    "gp_section_559930317994132336"
+  ]
+}
